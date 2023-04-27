@@ -4,6 +4,7 @@ package com.smarternote.core.di.components
 
 import android.content.Context
 import com.smarternote.core.di.BaseAppComponent
+import com.smarternote.core.network.SLLSocketFactory
 import com.squareup.moshi.Moshi
 import okhttp3.CookieJar
 import okhttp3.Interceptor
@@ -12,8 +13,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.net.ssl.SSLSocketFactory
-import javax.net.ssl.X509TrustManager
 
 class NetworkComponent(
     private val context: Context,
@@ -68,20 +67,12 @@ class NetworkComponent(
         }
 
         val sslSocketFactory = createSSLSocketFactory()
-        val trustManager = createX509TrustManager()
-
-
         val okHttpClientBuilder = OkHttpClient.Builder().apply {
             connectTimeout(timeout, TimeUnit.SECONDS)
             readTimeout(timeout, TimeUnit.SECONDS)
             writeTimeout(timeout, TimeUnit.SECONDS)
-
+            sslSocketFactory(sslSocketFactory.sSLSocketFactory, sslSocketFactory.trustManager)
             addInterceptor(defaultHeadersInterceptor)
-
-            if (sslSocketFactory != null && trustManager != null) {
-                sslSocketFactory(sslSocketFactory, trustManager)
-            }
-
             cookieJar(createCookieJar())
         }
 
@@ -106,18 +97,11 @@ class NetworkComponent(
             .build()
     }
 
-    private fun createSSLSocketFactory(): SSLSocketFactory? {
-        // 根据需要实现您的SSL工厂创建逻辑
-        return null
-    }
-
-    private fun createX509TrustManager(): X509TrustManager? {
-        // 根据需要实现您的X509TrustManager创建逻辑
-        return null
+    private fun createSSLSocketFactory(): SLLSocketFactory.SSLParams {
+        return SLLSocketFactory.getSslSocketFactory(emptyArray(), null, null)
     }
 
     private fun createCookieJar(): CookieJar {
-        // 根据需要实现您的CookieJar创建逻辑
         return CookieJar.NO_COOKIES
     }
 }
