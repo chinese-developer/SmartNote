@@ -27,11 +27,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         dataBinding = true
@@ -47,6 +47,21 @@ dependencies {
     implementation("androidx.core:core-ktx:${Dependencies.AndroidX.coreKtx}")
     //  AndroidX 库中的一个核心库，它提供了许多与 Android UI 相关的类和函数
     implementation("androidx.appcompat:appcompat:${Dependencies.AndroidX.appcompat}")
+    // 用于实现基于 SharedPreferences 的数据存储方式，支持数据加密和数据迁移。
+    implementation("androidx.datastore:datastore-preferences:${Dependencies.AndroidX.dataStore}")
+    // 包含 DataStore 通用的核心代码和 API。
+    implementation("androidx.datastore:datastore-core:${Dependencies.AndroidX.dataStore}")
+    // 包含了 DataStore 基于 SQLite 实现的模块，使用该模块可以支持更大的数据量，并且使用起来更加灵活和高效。
+    implementation("androidx.datastore:datastore:${Dependencies.AndroidX.dataStore}")
     // Google 提供的一个 Android UI 库，它提供了一些现代化的、美观的 UI 控件和样式
     implementation("com.google.android.material:material:${Dependencies.UI.material}")
+    implementation("com.google.code.gson:gson:${Dependencies.gson}")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:${Dependencies.retrofit}")
+    implementation("com.squareup.retrofit2:converter-moshi:${Dependencies.retrofit}")
+    implementation("com.squareup.okhttp3:logging-interceptor:${Dependencies.loggingInterceptor}")
+    implementation("com.squareup.moshi:moshi:${Dependencies.moshi}")
+    implementation("com.squareup.moshi:moshi-kotlin:${Dependencies.moshi}")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshi}")
 }

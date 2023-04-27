@@ -18,10 +18,13 @@ abstract class BaseApplication : Application() {
         instance = this
 
         // 初始化组件
-        componentManager.initComponents(this)
+        componentManager.initComponents(this, isDebugBuild())
+
     }
 
     fun <T : BaseAppComponent> getComponent(componentClass: Class<T>): T? {
         return componentManager.getComponent(componentClass)
     }
+
+    abstract fun isDebugBuild(): Boolean
 }

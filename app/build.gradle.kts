@@ -1,6 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-import Sdk.compileSdk
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -13,6 +12,7 @@ plugins {
   // 这是一个 Hilt 插件，用于为 Android 应用程序提供依赖注入支持。
   id("dagger.hilt.android.plugin")
 }
+
 android {
   // Android Gradle Plugin 8.0.0，这个版本中引入了新的命名空间属性，移除 AndroidManifest.xml package name。
   namespace = "com.smarternote.app"
@@ -67,6 +67,7 @@ android {
       enableV2Signing = true
     }
   }
+
   buildTypes {
     // 这个方法用于获取名为 "release" 的 BuildType 对象，它是用于构建发布版应用程序的。
     getByName("release") {
@@ -80,16 +81,20 @@ android {
       // 这个参数用于指定代码混淆的规则文件。在这里，它指定了两个规则文件，分别是 proguard-android-optimize.txt 和 proguard-rules.pro，用于对应用程序的代码进行混淆和优化。
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
+    getByName("debug") {
+      isDebuggable = true
+    }
   }
+
   compileOptions {
-    // 这个参数用于指定 Java 源代码的兼容性版本。在这里，它被设置为 Java 11，表示 Java 源代码是用 Java 11 编写的。
-    sourceCompatibility = JavaVersion.VERSION_11
-    // ：这个参数用于指定 Java 目标代码的兼容性版本。在这里，它也被设置为 Java 11，表示编译出的 Java 代码是针对 Java 11 进行优化的。
-    targetCompatibility = JavaVersion.VERSION_11
+    // 这个参数用于指定 Java 源代码的兼容性版本。在这里，它被设置为 Java 17，表示 Java 源代码是用 Java 17 编写的。
+    sourceCompatibility = JavaVersion.VERSION_17
+    // 这个参数用于指定 Java 目标代码的兼容性版本。在这里，它也被设置为 Java 17，表示编译出的 Java 代码是针对 Java 17 进行优化的。
+    targetCompatibility = JavaVersion.VERSION_17
   }
   kotlinOptions {
-    // Kotlin 代码编译时所使用的目标 JVM 版本，编译出的代码可以在支持 Java 11 的 JVM 上运行。
-    jvmTarget = "11"
+    // Kotlin 代码编译时所使用的目标 JVM 版本，编译出的代码可以在支持 Java 17 的 JVM 上运行。
+    jvmTarget = "17"
   }
   buildFeatures {
     // 这个参数用于启用数据绑定功能，数据绑定是一种用于简化 Android 应用程序中视图和数据绑定的技术，通过数据绑定，可以在视图中直接使用应用程序中的数据，从而简化了应用程序的代码。
@@ -111,7 +116,7 @@ dependencies {
 
 /**
  * 这段代码是在 Gradle 中配置 Kotlin 编译器选项的一部分。它的作用是设置 Kotlin 代码编译时所使用的目标 JVM 版本。
- * 具体来说，这段代码将 jvmTarget 参数设置为 11，表示编译出的代码可以在支持 Java 11 的 JVM 上运行。
+ * 具体来说，这段代码将 jvmTarget 参数设置为 17，表示编译出的代码可以在支持 Java 17 的 JVM 上运行。
  * 这个参数会应用到所有类型为 KotlinCompile 的 Gradle 任务中，它将设置在编译 Kotlin 代码时所使用的选项。
  *
  * 通过设置这个参数，可以确保编译出的 Kotlin 代码具有更好的兼容性和可靠性，并且可以在更多的 JVM 上运行。
@@ -119,6 +124,6 @@ dependencies {
  */
 tasks.withType<KotlinCompile> {
   kotlinOptions {
-    jvmTarget = "11"
+    jvmTarget = "17"
   }
 }

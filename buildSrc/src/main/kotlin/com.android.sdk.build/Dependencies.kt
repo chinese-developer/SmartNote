@@ -24,6 +24,7 @@ object Dependencies {
   object AndroidX {
     const val coreKtx = "1.10.0"
     const val appcompat = "1.6.1"
+    const val dataStore = "1.0.0"
   }
 
   object UI {
@@ -53,7 +54,6 @@ object Dependencies {
   const val stetho = "1.6.0"
   const val timber = "4.7.1"
   const val mmkv = "1.2.14"
-  const val dataStore = "1.0.0"
   const val workManager = "2.8.1"
   const val paging = "3.1.1"
   const val lottie = "5.2.0"
