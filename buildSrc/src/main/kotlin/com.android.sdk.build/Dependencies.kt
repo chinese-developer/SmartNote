@@ -29,6 +29,8 @@ object Dependencies {
 
   object UI {
     const val material = "1.8.0"
+    const val glide = "4.15.1"
+    const val databinding = "8.0.0"
   }
 
   const val lifecycleViewModelCompose = "2.5.1"
@@ -42,7 +44,7 @@ object Dependencies {
   const val rxPermisstions = "0.12"
   const val rxJava3 = "3.0.0"
   const val rxAndroid = "2.1.1"
-  const val databinding = "7.2.2"
+
   const val coreKtx = "1.8.0"
   const val appcompat = "1.5.0"
 

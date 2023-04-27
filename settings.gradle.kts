@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 /**
  * 用于管理 Gradle 插件的版本和来源。
  * 在该代码块内，可以定义一组 Gradle 插件仓库，从这些仓库中搜索和下载所需的插件。
@@ -23,4 +25,5 @@ dependencyResolutionManagement {
 rootProject.name = "SmartNote"
 include(":app")
 include(":core")
+include(":themes")
 include(":feature_sport")

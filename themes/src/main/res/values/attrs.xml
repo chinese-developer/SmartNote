@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DynamicTextView">
+        <attr name="dynamic_style" format="reference" />
+        <attr name="dyncmic_openUrlOnClick" format="boolean" />
+        <attr name="dyncmic_copyOnClick" format="boolean" />
+        <attr name="dyncmic_rippleOnClick" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="DynamicEditText">
+        <attr name="dynamic_style" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="DynamicButton">
+        <attr name="dynamic_style" format="reference" />
+        <attr name="dyncmic_openUrlOnClick" format="boolean" />
+        <attr name="dyncmic_copyOnClick" format="boolean" />
+        <attr name="dyncmic_rippleOnClick" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="DynamicImageView">
+        <attr name="dynamic_style" format="reference" />
+    </declare-styleable>
+</resources>
