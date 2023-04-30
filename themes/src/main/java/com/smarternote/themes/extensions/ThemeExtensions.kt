@@ -1,23 +1,21 @@
-package com.smarternote.themes
+package com.smarternote.themes.extensions
 
 import androidx.appcompat.app.AppCompatActivity
+import com.smarternote.themes.R
+import com.smarternote.themes.ThemeManager
 
 fun AppCompatActivity.registerThemeObserver() {
-    ThemeManager.addObserver(this)
+    ThemeManager.addThemeObserver(this)
 }
 
 fun AppCompatActivity.unregisterThemeObserver() {
-    ThemeManager.removeObserver(this)
+    ThemeManager.removeThemeObserver(this)
 }
 
 fun AppCompatActivity.switchTheme(themeResId: Int) {
     ThemeManager.currentTheme = themeResId
 }
 
-fun AppCompatActivity.applyModuleATheme() {
-    switchTheme(R.style.Theme_SmartNote)
-}
-
-fun AppCompatActivity.applyModuleBTheme() {
+fun AppCompatActivity.applyFeatureSportTheme() {
     switchTheme(R.style.Theme_SmartNote)
 }

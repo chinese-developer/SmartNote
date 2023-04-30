@@ -3,9 +3,13 @@ package com.smarternote.themes.view
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.smarternote.themes.R
+import com.smarternote.themes.ThemeManager
 import com.smarternote.themes.utils.copyToClipboard
 import com.smarternote.themes.utils.openWebPage
 import com.smarternote.themes.utils.showToast
@@ -13,7 +17,7 @@ import com.smarternote.themes.utils.showToast
 
 class DynamicTextView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : AppCompatTextView(context, attrs, defStyleAttr) {
+) : AppCompatTextView(context, attrs, defStyleAttr), LifecycleObserver {
 
     private var copyOnClick = false
     private var openUrlOnClick = false
@@ -23,6 +27,10 @@ class DynamicTextView @JvmOverloads constructor(
 
     init {
         applyDynamicStyle(context, attrs)
+
+        if (context is LifecycleOwner) {
+            context.lifecycle.addObserver(this)
+        }
 
         // 设置点击监听
         setOnClickListener {
@@ -47,6 +55,10 @@ class DynamicTextView @JvmOverloads constructor(
         copyOnClick = typedArray.getBoolean(R.styleable.DynamicTextView_dyncmic_copyOnClick, false)
         openUrlOnClick = typedArray.getBoolean(R.styleable.DynamicTextView_dyncmic_openUrlOnClick, false)
         rippleOnClick = typedArray.getBoolean(R.styleable.DynamicButton_dyncmic_rippleOnClick, false)
+
+        ThemeManager.dynamicViewsThemeConfig.observe(context as LifecycleOwner) { config ->
+            setTextColor(ContextCompat.getColor(context, config.textColor))
+        }
 
         if (dynamicStyleResId != 0) {
             TextViewCompat.setTextAppearance(this, dynamicStyleResId)

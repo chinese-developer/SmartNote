@@ -1,32 +1,26 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Theme.SmartNote" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-    </style>
 
-    <style name="Widget"/>
-    <style name="TextAppearance"/>
+    <style name="Widget" />
+
+    <style name="Widget.ImageView" />
+
+    <style name="Widget.TextView" parent="Widget.AppCompat.TextView" />
+
+    <style name="Widget.EditText" parent="Widget.AppCompat.EditText" />
+
+    <style name="Widget.Button" parent="Widget.AppCompat.Button" />
+
+    <style name="TextAppearance" parent="TextAppearance.AppCompat" />
 
     <!-- Default ImageView styles -->
-    <style name="Widget.ImageView.Default" parent="Widget.AppCompat.ImageView">
+    <style name="Widget.ImageView.Default">
         <item name="android:scaleType">centerCrop</item>
     </style>
 
     <!-- Default text styles -->
     <style name="TextAppearance.Default">
-        <item name="android:textSize">16sp</item>
-        <!-- 使用?attr语法从当前主题中引用颜色值。这样，当切换主题时，这些属性将自动更新为新主题中的颜色值。 -->
-        <item name="android:textColor">?attr/android:textColorPrimary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?attr/dynamicTextColor</item>
     </style>
 
     <!-- Default TextView styles -->
@@ -37,14 +31,14 @@
     </style>
 
     <!-- Default EditText styles -->
-    <style name="Widget.EditText.Default" parent="Widget.AppCompat.EditText">
+    <style name="Widget.EditText.Default">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@style/TextAppearance.Default</item>
     </style>
 
     <!-- Default Button styles -->
-    <style name="Widget.Button.Default" parent="Widget.AppCompat.Button">
+    <style name="Widget.Button.Default">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@style/TextAppearance.Default</item>

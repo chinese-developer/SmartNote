@@ -104,9 +104,8 @@ android {
 
 dependencies {
   implementation(project(":core"))
-
-  // 添加其他模块的依赖，例如：
-  // implementation(project(":module1"))
+  implementation(project(":themes"))
+  implementation(project(":feature_sport"))
 
   // Google Dagger Hilt 的 Android 集成库，用于为 Android 应用程序提供依赖注入支持
   implementation("com.google.dagger:hilt-android:${Dependencies.hilt}")

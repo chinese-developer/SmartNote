@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 白天模式 -->
+    <!-- 黑夜模式 -->
+
     <color name="colorPrimary">#FF6200EE</color>
     <color name="colorPrimaryVariant">#FF3700B3</color>
     <color name="colorOnPrimary">#FFFFFFFF</color>
@@ -12,7 +13,7 @@
     <color name="statusBarColor">#FFBB86FC</color>
 
     <!-- Default text color -->
-    <color name="text_color_primary">#333333</color>
+    <color name="text_color_primary">#FFFFFF</color>
     <color name="text_color_secondary">#666666</color>
     <color name="text_color_tertiary">#999999</color>
     <color name="text_color_quaternary">#111111</color>

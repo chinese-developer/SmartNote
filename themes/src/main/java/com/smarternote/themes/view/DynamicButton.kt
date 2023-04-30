@@ -3,9 +3,12 @@ package com.smarternote.themes.view
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.LifecycleOwner
 import com.smarternote.themes.R
+import com.smarternote.themes.ThemeManager
 import com.smarternote.themes.utils.copyToClipboard
 import com.smarternote.themes.utils.openWebPage
 import com.smarternote.themes.utils.showToast
@@ -47,6 +50,10 @@ class DynamicButton @JvmOverloads constructor(
         copyOnClick = typedArray.getBoolean(R.styleable.DynamicButton_dyncmic_copyOnClick, false)
         openUrlOnClick = typedArray.getBoolean(R.styleable.DynamicButton_dyncmic_openUrlOnClick, false)
         rippleOnClick = typedArray.getBoolean(R.styleable.DynamicButton_dyncmic_rippleOnClick, false)
+
+        ThemeManager.dynamicViewsThemeConfig.observe(context as LifecycleOwner) { config ->
+            setTextColor(ContextCompat.getColor(context, config.textColor))
+        }
 
         if (dynamicStyleResId != 0) {
             TextViewCompat.setTextAppearance(this, dynamicStyleResId)

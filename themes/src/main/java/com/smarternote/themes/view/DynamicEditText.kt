@@ -7,9 +7,12 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.LifecycleOwner
 import com.smarternote.themes.R
+import com.smarternote.themes.ThemeManager
 
 class DynamicEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -57,6 +60,10 @@ class DynamicEditText @JvmOverloads constructor(
     private fun applyDynamicStyle(context: Context, attrs: AttributeSet?) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.DynamicEditText)
         val dynamicStyleResId = typedArray.getResourceId(R.styleable.DynamicEditText_dynamic_style, 0)
+
+        ThemeManager.dynamicViewsThemeConfig.observe(context as LifecycleOwner) { config ->
+            editText.setTextColor(ContextCompat.getColor(context, config.textColor))
+        }
 
         if (dynamicStyleResId != 0) {
             TextViewCompat.setTextAppearance(editText, dynamicStyleResId)

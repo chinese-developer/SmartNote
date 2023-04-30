@@ -57,8 +57,7 @@ class DynamicImageView @JvmOverloads constructor(
 
     private fun applyDynamicStyle(context: Context, attrs: AttributeSet?) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.DynamicImageView)
-        val dynamicStyleResId =
-            typedArray.getResourceId(R.styleable.DynamicImageView_dynamic_style, 0)
+        val dynamicStyleResId = typedArray.getResourceId(R.styleable.DynamicImageView_dynamic_style, 0)
 
         typedArray.recycle()
     }

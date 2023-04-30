@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        === 白天模式 ===
+        ThemeOverlay: 专门用于在当前主题的基础上更改或覆盖一些属性。
+        它并不是一个完整的主题，因此不需要一个父主题。
+        使用ThemeOverlay可以让您在不更改整个主题的情况下覆盖一些样式属性。
+    -->
+
+    <style name="ThemeOverlay.Default" parent="">
+        <item name="dynamicTextColor">@color/text_color_primary</item>
+        <item name="dynamicBackgroundColor">@color/background_color_primary</item>
+    </style>
+
+    <!-- FeatureSport ThemeOverlay -->
+    <style name="ThemeOverlay.FeatureSport" parent="">
+        <item name="dynamicTextColor">@color/text_color_secondary</item>
+    </style>
+
+</resources>
