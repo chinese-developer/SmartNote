@@ -67,6 +67,9 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:${Dependencies.moshi}")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshi}")
 
+    // 开源的动画库，它使得开发者能够以一种简单的方式在移动应用中添加高质量的动画效果
+    implementation("com.airbnb.android:lottie:${Dependencies.Github.lottie}")
+
     // 日志记录
     implementation("com.jakewharton.timber:timber:${Dependencies.Github.timber}")
 

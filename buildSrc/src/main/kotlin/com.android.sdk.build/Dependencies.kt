@@ -24,7 +24,7 @@ object Dependencies {
   object Github {
     const val autoSize = "v1.2.1"
     const val timber = "5.0.1"
-
+    const val lottie = "6.0.0"
   }
 
   const val lifecycleViewModelCompose = "2.5.1"
@@ -48,7 +48,6 @@ object Dependencies {
   const val mmkv = "1.2.14"
   const val workManager = "2.8.1"
   const val paging = "3.1.1"
-  const val lottie = "5.2.0"
   const val room = "2.4.3"
   const val paletteKtx = "1.0.0"
   const val exoplayer = "2.18.1"
