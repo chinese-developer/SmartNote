@@ -66,4 +66,7 @@ dependencies {
     implementation("com.squareup.moshi:moshi:${Dependencies.moshi}")
     implementation("com.squareup.moshi:moshi-kotlin:${Dependencies.moshi}")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshi}")
+
+    // 今日头条屏幕适配方案 https://github.com/JessYanCoding/AndroidAutoSize
+    api("me.jessyan:autosize:${Dependencies.Github.autoSize}")
 }

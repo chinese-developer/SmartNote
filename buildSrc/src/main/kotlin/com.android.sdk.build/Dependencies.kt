@@ -33,6 +33,10 @@ object Dependencies {
     const val databinding = "8.0.0"
   }
 
+  object Github {
+    const val autoSize = "1.2.1"
+  }
+
   const val lifecycleViewModelCompose = "2.5.1"
   const val pagingCompose = "1.0.0-alpha16"
   const val constraintLayoutCompose = "1.0.1"

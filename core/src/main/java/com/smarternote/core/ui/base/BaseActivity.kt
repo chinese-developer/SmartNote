@@ -9,6 +9,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private var themeOverlay by Delegates.notNull<Int>()
 
+    private val activityResultContract by lazy {
+
+    }
+
     override fun attachBaseContext(newBase: Context) {
         val contextThemeWrapper = ContextThemeWrapper(newBase, themeOverlay)
         super.attachBaseContext(contextThemeWrapper)
