@@ -36,6 +36,11 @@ android {
     buildFeatures {
         dataBinding = true
     }
+    kapt {
+        arguments {
+            arg("AROUTER_MODULE_NAME", project.name)
+        }
+    }
 }
 
 dependencies {

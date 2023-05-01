@@ -21,7 +21,7 @@ class MyEditText @JvmOverloads constructor(
     private var deleteIconWidth: Int = 0
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.dynamic_edit_text, this, true)
+        LayoutInflater.from(context).inflate(R.layout.themes_my_edit_text, this, true)
         editText = findViewById(R.id.edit_text)
         deleteIcon = findViewById(R.id.delete_icon)
         deleteIconWidth = deleteIcon.layoutParams.width

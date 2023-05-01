@@ -17,5 +17,5 @@ fun AppCompatActivity.switchTheme(themeResId: Int) {
 }
 
 fun AppCompatActivity.applyFeatureSportTheme() {
-    switchTheme(R.style.Theme_SmartNote)
+    switchTheme(com.smarternote.themes.R.style.Theme_SmartNote)
 }

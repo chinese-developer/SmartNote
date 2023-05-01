@@ -84,6 +84,11 @@ android {
     getByName("debug") {
       isDebuggable = true
     }
+    kapt {
+      arguments {
+        arg("AROUTER_MODULE_NAME", project.name)
+      }
+    }
   }
 
   compileOptions {
@@ -105,9 +110,9 @@ android {
 dependencies {
   // 通过 api 依赖，只会访问到被依赖模块中的 api 依赖项，而无法访问 implementation。同时 api 依赖也会传递给依赖 app 模块的其他模块。
   // 通过 implementation 依赖，会访问到被依赖模块中的 implementation 和 api 依赖项。
-  api(project(":core"))
-  api(project(":themes"))
-  api(project(":feature_sport"))
+  implementation(project(":core"))
+  implementation(project(":themes"))
+  implementation(project(":feature_sport"))
 
   // Google Dagger Hilt 的 Android 集成库，用于为 Android 应用程序提供依赖注入支持
   implementation("com.google.dagger:hilt-android:${Dependencies.hilt}")

@@ -34,6 +34,11 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    kapt {
+        arguments {
+            arg("AROUTER_MODULE_NAME", project.name)
+        }
+    }
 }
 
 dependencies {

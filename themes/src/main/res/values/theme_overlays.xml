@@ -8,13 +8,13 @@
     -->
 
     <style name="ThemeOverlay.Default" parent="">
-        <item name="dynamicTextColor">@color/text_color_primary</item>
-        <item name="dynamicBackgroundColor">@color/background_color_primary</item>
+        <item name="myApp_textColor_primary">@color/text_color_primary</item>
+        <item name="myApp_backgroundColor_primary">@color/background_color_primary</item>
     </style>
 
     <!-- FeatureSport ThemeOverlay -->
     <style name="ThemeOverlay.FeatureSport" parent="">
-        <item name="dynamicTextColor">@color/text_color_secondary</item>
+        <item name="myApp_textColor_primary">@color/text_color_secondary</item>
     </style>
 
 </resources>

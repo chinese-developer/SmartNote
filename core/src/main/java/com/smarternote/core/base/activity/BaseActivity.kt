@@ -25,7 +25,7 @@ import kotlin.properties.Delegates
 
 open class BaseActivity : AppCompatActivity(), CustomAdapt {
 
-  private var themeOverlay by Delegates.notNull<Int>()
+  private var themeOverlay: Int = -1
 
   private val activityResultContract by lazy {
     object : ActivityResultContract<Intent, ActivityResult>() {
@@ -38,8 +38,7 @@ open class BaseActivity : AppCompatActivity(), CustomAdapt {
 
   private val activityResultCallback by lazy {
     ActivityResultCallback<ActivityResult> {
-      Timber.tag(activity_lifecycle)
-        .i(">>>> <${javaClass.simpleName}> onActivityResult [activityResult=$it]")
+      Timber.tag(activity_lifecycle).i(">>>> <${javaClass.simpleName}> onActivityResult [activityResult=$it]")
       onActivityResultCallback(it)
     }
   }
@@ -77,10 +76,13 @@ open class BaseActivity : AppCompatActivity(), CustomAdapt {
   }
 
   override fun attachBaseContext(newBase: Context) {
-    val contextThemeWrapper = ContextThemeWrapper(newBase, themeOverlay)
-    super.attachBaseContext(contextThemeWrapper)
+    if (themeOverlay != -1) {
+      val contextThemeWrapper = ContextThemeWrapper(newBase, themeOverlay)
+      super.attachBaseContext(contextThemeWrapper)
+    } else {
+      super.attachBaseContext(newBase)
+    }
   }
-
 
   open fun showLoadingDialog(): AppLoadingDialog? {
     if (isLoadingDialogShowing()) hideLoadingDialog()

@@ -2,11 +2,10 @@ package com.smarternote.app
 
 import androidx.lifecycle.MutableLiveData
 import com.smarternote.core.BaseApplication
-import dagger.hilt.android.HiltAndroidApp
 
 class ConfigApplication : BaseApplication() {
 
-    val buildType: MutableLiveData<String> = MutableLiveData()
+    private val buildType: MutableLiveData<String> = MutableLiveData()
 
     override fun onCreate() {
         super.onCreate()

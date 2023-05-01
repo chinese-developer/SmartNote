@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Base application theme. -->
+  <style name="Theme.SmartNote" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <!-- 应用程序的主色调 -->
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <!-- 主色调的变种颜色 -->
+    <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+    <!-- 主色调上的文本颜色 -->
+    <item name="colorOnPrimary">@color/colorOnPrimary</item>
+    <!-- 应用程序的次色调 -->
+    <item name="colorSecondary">@color/colorSecondary</item>
+    <!-- 次色调的变种颜色 -->
+    <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+    <!-- 次色调上的文本颜色 -->
+    <item name="colorOnSecondary">@android:color/black</item>
+    <!-- 状态栏的颜色 -->
+    <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+    <!-- Customize your theme here. -->
+    <!-- 使用?attr语法从当前主题中引用颜色值。这样，当切换主题时，这些属性将自动更新为新主题中的颜色值。 -->
+    <item name="myApp_textColor_primary">@color/text_color_primary</item>
+    <item name="myApp_textColor_secondary">@color/text_color_secondary</item>
+    <item name="myApp_textColor_tertiary">@color/text_color_tertiary</item>
+    <item name="myApp_textColor_quaternary">@color/text_color_quaternary</item>
+    <item name="myApp_backgroundColor_primary">@color/background_color_primary</item>
+    <item name="myApp_statusBarColor_primary">@color/statusBarColor</item>
+  </style>
+</resources>

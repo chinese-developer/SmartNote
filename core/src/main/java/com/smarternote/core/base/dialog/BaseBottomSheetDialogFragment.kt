@@ -15,7 +15,7 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
   protected lateinit var dialog: BottomSheetDialog
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    dialog = BottomSheetDialog(requireContext(), com.smarternote.themes.R.style.Widget_Dialog_material3)
+    dialog = BottomSheetDialog(requireContext(), com.smarternote.themes.R.style.Widget_Dialog_Material3)
     dialog.window?.apply {
       decorView.setPadding(0, 0, 0, 0)
       val lp: LayoutParams = attributes

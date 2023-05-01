@@ -8,6 +8,17 @@ import com.airbnb.lottie.LottieAnimationView
 import com.smarternote.core.R
 import java.lang.ref.SoftReference
 
+/**
+ * 全局 Loading 弹窗
+ *
+ * 可配置的 Loading 动画资源:
+ * [AppLoadingDialog._animateSrc] 单独为某个 Activity 配置的动画资源
+ * [AppLoadingDialog.globeAnimateSrc] 全局动画资源
+ * [AppLoadingDialog.defaultAnimateSrc] 默认动画资源，为 app_loading.json 文件
+ *
+ * 优先级: animateSrc > globeAnimateSrc > defaultAnimateSrc
+ *
+ */
 class AppLoadingDialog internal constructor(
     activity: Activity,
     private var _animateSrc: String? = null
@@ -64,7 +75,7 @@ class AppLoadingDialog internal constructor(
     }
 
     companion object {
-        private const val defaultAnimateSrc = "loading.json"
+        private const val defaultAnimateSrc = "app_loading.json"
         var globeAnimateSrc: String? = null
     }
 
