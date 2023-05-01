@@ -73,6 +73,10 @@ dependencies {
     // 日志记录
     implementation("com.jakewharton.timber:timber:${Dependencies.Github.timber}")
 
+    // ARouter 跨组件通信的路由框架
+    implementation("com.alibaba:arouter-api:${Dependencies.Github.arouter}")
+    kapt("com.alibaba:arouter-compiler:${Dependencies.Github.arouter}")
+
     // 今日头条屏幕适配方案 https://github.com/JessYanCoding/AndroidAutoSize
     api("com.github.JessYanCoding:AndroidAutoSize:${Dependencies.Github.autoSize}")
 

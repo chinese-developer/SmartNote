@@ -1,8 +1,13 @@
 @file:Suppress("UnstableApiUsage")
 
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-android")
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -33,8 +38,10 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":themes"))
 
     // AndroidX 库中的一个核心库，它提供了许多与 Android 开发相关的扩展函数和属性
     implementation("androidx.core:core-ktx:${Dependencies.AndroidX.coreKtx}")
+
+    // ARouter 跨组件通信的路由框架
+    kapt("com.alibaba:arouter-compiler:${Dependencies.Github.arouter}")
 }

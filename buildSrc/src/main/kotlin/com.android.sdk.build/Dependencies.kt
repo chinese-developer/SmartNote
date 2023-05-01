@@ -25,6 +25,7 @@ object Dependencies {
     const val autoSize = "v1.2.1"
     const val timber = "5.0.1"
     const val lottie = "6.0.0"
+    const val arouter = "1.5.2"
   }
 
   const val lifecycleViewModelCompose = "2.5.1"

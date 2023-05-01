@@ -1,4 +1,4 @@
-package com.smarternote.core.base.activity
+package com.smarternote.core.base.delegates
 
 /**
  * 返回键监听

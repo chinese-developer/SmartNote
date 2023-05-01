@@ -1,4 +1,4 @@
-package com.smarternote.core.base.activity
+package com.smarternote.core.base.delegates
 
 import android.app.Activity
 import androidx.annotation.LayoutRes

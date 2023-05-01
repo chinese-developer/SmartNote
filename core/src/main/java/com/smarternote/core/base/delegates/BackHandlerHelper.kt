@@ -1,4 +1,4 @@
-package com.smarternote.core.base.activity
+package com.smarternote.core.base.delegates
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

@@ -13,8 +13,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
+import com.alibaba.android.arouter.launcher.ARouter
 import com.smarternote.core.BaseApplication
-import com.smarternote.core.config.LogTagsConfig
+import com.smarternote.core.base.delegates.BackHandlerHelper
 import com.smarternote.core.config.LogTagsConfig.activity_lifecycle
 import com.smarternote.core.ui.dialog.AppLoadingDialog
 import com.smarternote.core.ui.dialog.AppLoadingDialogManager
@@ -25,10 +26,6 @@ import kotlin.properties.Delegates
 open class BaseActivity : AppCompatActivity(), CustomAdapt {
 
   private var themeOverlay by Delegates.notNull<Int>()
-
-  fun setThemeOverlay(themeOverlay: Int) {
-    this.themeOverlay = themeOverlay
-  }
 
   private val activityResultContract by lazy {
     object : ActivityResultContract<Intent, ActivityResult>() {
@@ -48,6 +45,10 @@ open class BaseActivity : AppCompatActivity(), CustomAdapt {
   }
 
   protected val activityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(activityResultContract, activityResultCallback)
+
+  fun setThemeOverlay(themeOverlay: Int) {
+    this.themeOverlay = themeOverlay
+  }
 
   /**
    * 是否按照宽度进行等比例适配 (为了保证在高宽比不同的屏幕上也能正常适配, 所以只能在宽度和高度之中选择一个作为基准进行适配)
@@ -115,7 +116,7 @@ open class BaseActivity : AppCompatActivity(), CustomAdapt {
   override fun onResume() {
     super.onResume()
     Timber.tag(activity_lifecycle).i(">>>> <${javaClass.simpleName}> onResume")
-    BaseApplication.get().currentActivity = this
+    BaseApplication.instance.currentActivity = this
   }
 
   override fun onPause() {
