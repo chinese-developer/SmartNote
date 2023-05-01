@@ -103,12 +103,16 @@ android {
 }
 
 dependencies {
-  implementation(project(":core"))
-  implementation(project(":themes"))
-  implementation(project(":feature_sport"))
+  // 通过 api 依赖，只会访问到被依赖模块中的 api 依赖项，而无法访问 implementation。同时 api 依赖也会传递给依赖 app 模块的其他模块。
+  // 通过 implementation 依赖，会访问到被依赖模块中的 implementation 和 api 依赖项。
+  api(project(":core"))
+  api(project(":themes"))
+  api(project(":feature_sport"))
 
   // Google Dagger Hilt 的 Android 集成库，用于为 Android 应用程序提供依赖注入支持
   implementation("com.google.dagger:hilt-android:${Dependencies.hilt}")
+  // AndroidX 库中的一个核心库，它提供了许多与 Android 开发相关的扩展函数和属性
+  implementation("androidx.core:core-ktx:${Dependencies.AndroidX.coreKtx}")
   // kapt 是 Kotlin 注解处理器的缩写。在编译时，kapt 将会处理使用了 Hilt 相关注解的 Kotlin 代码，并生成相应的依赖注入相关的代码。
   kapt("com.google.dagger:hilt-android-compiler:${Dependencies.hilt}")
 }

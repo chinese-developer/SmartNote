@@ -32,6 +32,10 @@ android {
 dependencies {
     // AndroidX 库中的一个核心库，它提供了许多与 Android UI 相关的类和函数
     implementation("androidx.appcompat:appcompat:${Dependencies.AndroidX.appcompat}")
+    // Google 提供的一个 Android UI 库，它提供了一些现代化的、美观的 UI 控件和样式
+    implementation("com.google.android.material:material:${Dependencies.UI.material}")
+    // AndroidX 库中的一个核心库，它提供了许多与 Android 开发相关的扩展函数和属性
+    implementation("androidx.core:core-ktx:${Dependencies.AndroidX.coreKtx}")
     // Android平台上的图片加载库，由Google官方推荐
     implementation("com.github.bumptech.glide:glide:${Dependencies.UI.glide}")
     kapt("com.com.github.bumptech.glide:compiler:${Dependencies.UI.glide}")

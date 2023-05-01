@@ -34,4 +34,7 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":themes"))
+
+    // AndroidX 库中的一个核心库，它提供了许多与 Android 开发相关的扩展函数和属性
+    implementation("androidx.core:core-ktx:${Dependencies.AndroidX.coreKtx}")
 }

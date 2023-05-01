@@ -13,7 +13,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.smarternote.themes.R
 
-class DynamicImageView @JvmOverloads constructor(
+class MyImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -43,7 +43,7 @@ class DynamicImageView @JvmOverloads constructor(
     private var lastClickTime: Long = 0
 
     init {
-        applyDynamicStyle(context, attrs)
+        applyStyle(context, attrs)
 
         setOnClickListener {
             val currentTime = System.currentTimeMillis()
@@ -55,9 +55,9 @@ class DynamicImageView @JvmOverloads constructor(
         }
     }
 
-    private fun applyDynamicStyle(context: Context, attrs: AttributeSet?) {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.DynamicImageView)
-        val dynamicStyleResId = typedArray.getResourceId(R.styleable.DynamicImageView_dynamic_style, 0)
+    private fun applyStyle(context: Context, attrs: AttributeSet?) {
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MyImageView)
+        val myStyleResId = typedArray.getResourceId(R.styleable.MyImageView_myImageView_style, 0)
 
         typedArray.recycle()
     }
@@ -87,7 +87,7 @@ class DynamicImageView @JvmOverloads constructor(
     requireAll = false
 )
 fun setImageProperties(
-    dynamicImageView: DynamicImageView,
+    myImageView: MyImageView,
     imageUrl: String?,
     imageResId: Int?,
     placeholderResId: Int?,
@@ -97,14 +97,14 @@ fun setImageProperties(
     transitionDuration: Int?,
     isGif: Boolean?,
 ) {
-    dynamicImageView.imageUrl = imageUrl
-    dynamicImageView.imageResId = imageResId
-    dynamicImageView.placeholderResId = placeholderResId
-    dynamicImageView.errorResId = errorResId
-    dynamicImageView.placeholderDrawable = placeholderDrawable
-    dynamicImageView.errorDrawable = errorDrawable
-    dynamicImageView.transitionDuration = transitionDuration ?: 300
-    dynamicImageView.isGif = isGif ?: false
+    myImageView.imageUrl = imageUrl
+    myImageView.imageResId = imageResId
+    myImageView.placeholderResId = placeholderResId
+    myImageView.errorResId = errorResId
+    myImageView.placeholderDrawable = placeholderDrawable
+    myImageView.errorDrawable = errorDrawable
+    myImageView.transitionDuration = transitionDuration ?: 300
+    myImageView.isGif = isGif ?: false
 }
 
 /**
@@ -113,10 +113,10 @@ fun setImageProperties(
  */
 @BindingAdapter("onClick, onClickWithParams", requireAll = false)
 fun setOnImageClickListener(
-    dynamicImageView: DynamicImageView,
+    view: MyImageView,
     listener: (() -> Unit)?,
     listenerWithParams: ((imageUrl: String?, imageResId: Int?) -> Unit)?
 ) {
-    dynamicImageView.onImageClickListener = listener
-    dynamicImageView.onImageClickWithParamsListener = listenerWithParams
+    view.onImageClickListener = listener
+    view.onImageClickWithParamsListener = listenerWithParams
 }

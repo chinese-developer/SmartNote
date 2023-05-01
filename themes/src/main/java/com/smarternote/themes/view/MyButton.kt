@@ -13,7 +13,7 @@ import com.smarternote.themes.utils.copyToClipboard
 import com.smarternote.themes.utils.openWebPage
 import com.smarternote.themes.utils.showToast
 
-class DynamicButton @JvmOverloads constructor(
+class MyButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : AppCompatButton(context, attrs, defStyleAttr) {
 
@@ -24,7 +24,7 @@ class DynamicButton @JvmOverloads constructor(
     var onClickListener: (() -> Unit)? = null
 
     init {
-        applyDynamicStyle(context, attrs)
+        applyStyle(context, attrs)
 
         // 设置点击监听
         setOnClickListener {
@@ -43,20 +43,20 @@ class DynamicButton @JvmOverloads constructor(
         }
     }
 
-    private fun applyDynamicStyle(context: Context, attrs: AttributeSet?) {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.DynamicButton)
-        val dynamicStyleResId = typedArray.getResourceId(R.styleable.DynamicButton_dynamic_style, 0)
+    private fun applyStyle(context: Context, attrs: AttributeSet?) {
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MyButton)
+        val myStyleResId = typedArray.getResourceId(R.styleable.MyButton_myButton_style, 0)
 
-        copyOnClick = typedArray.getBoolean(R.styleable.DynamicButton_dyncmic_copyOnClick, false)
-        openUrlOnClick = typedArray.getBoolean(R.styleable.DynamicButton_dyncmic_openUrlOnClick, false)
-        rippleOnClick = typedArray.getBoolean(R.styleable.DynamicButton_dyncmic_rippleOnClick, false)
+        copyOnClick = typedArray.getBoolean(R.styleable.MyButton_myButton_copyOnClick, false)
+        openUrlOnClick = typedArray.getBoolean(R.styleable.MyButton_myButton_openUrlOnClick, false)
+        rippleOnClick = typedArray.getBoolean(R.styleable.MyButton_myButton_rippleOnClick, false)
 
         ThemeManager.dynamicViewsThemeConfig.observe(context as LifecycleOwner) { config ->
             setTextColor(ContextCompat.getColor(context, config.textColor))
         }
 
-        if (dynamicStyleResId != 0) {
-            TextViewCompat.setTextAppearance(this, dynamicStyleResId)
+        if (myStyleResId != 0) {
+            TextViewCompat.setTextAppearance(this, myStyleResId)
         }
 
         if (rippleOnClick) {
@@ -72,8 +72,8 @@ class DynamicButton @JvmOverloads constructor(
  */
 @BindingAdapter("onClick")
 fun setOnButtonClickListener(
-    dynamicButton: DynamicButton,
+    view: MyButton,
     listener: (() -> Unit)?,
 ) {
-    dynamicButton.onClickListener = listener
+    view.onClickListener = listener
 }

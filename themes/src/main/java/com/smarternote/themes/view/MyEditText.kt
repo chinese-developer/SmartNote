@@ -7,14 +7,11 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.LifecycleOwner
 import com.smarternote.themes.R
-import com.smarternote.themes.ThemeManager
 
-class DynamicEditText @JvmOverloads constructor(
+class MyEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
@@ -29,7 +26,7 @@ class DynamicEditText @JvmOverloads constructor(
         deleteIcon = findViewById(R.id.delete_icon)
         deleteIconWidth = deleteIcon.layoutParams.width
 
-        applyDynamicStyle(context, attrs)
+        applyStyle(context, attrs)
 
         editText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -57,16 +54,12 @@ class DynamicEditText @JvmOverloads constructor(
         }
     }
 
-    private fun applyDynamicStyle(context: Context, attrs: AttributeSet?) {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.DynamicEditText)
-        val dynamicStyleResId = typedArray.getResourceId(R.styleable.DynamicEditText_dynamic_style, 0)
+    private fun applyStyle(context: Context, attrs: AttributeSet?) {
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MyEditText)
+        val myStyleResId = typedArray.getResourceId(R.styleable.MyEditText_myEditText_style, 0)
 
-        ThemeManager.dynamicViewsThemeConfig.observe(context as LifecycleOwner) { config ->
-            editText.setTextColor(ContextCompat.getColor(context, config.textColor))
-        }
-
-        if (dynamicStyleResId != 0) {
-            TextViewCompat.setTextAppearance(editText, dynamicStyleResId)
+        if (myStyleResId != 0) {
+            TextViewCompat.setTextAppearance(editText, myStyleResId)
         }
 
         typedArray.recycle()

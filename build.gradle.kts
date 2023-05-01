@@ -10,9 +10,9 @@ plugins {
 buildscript {
     // dependencies: 定义了 Gradle 需要下载哪些依赖项，并且通过 classpath 指定了 Gradle 插件依赖的版本。
     dependencies {
-        classpath("com.android.tools.build:gradle:7.3.3")
+        classpath("com.android.tools.build:gradle:8.0.0")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${Dependencies.hilt}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dependencies.Core.kotlin}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.21")
     }
 }
 

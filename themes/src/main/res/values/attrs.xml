@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="DynamicTheme">
-        <attr name="dynamicTextColor" format="color|reference" />
-        <attr name="dynamicBackgroundColor" format="color|reference" />
-        <attr name="dynamicStatusBarColor" format="color|reference" />
+    <declare-styleable name="MyTheme">
+        <attr name="myApp_textColor_primary" format="color|reference" />
+        <attr name="myApp_textColor_primaryVariant" format="color|reference" />
+        <attr name="myApp_textColor_secondary" format="color|reference" />
+        <attr name="myApp_textColor_SecondaryVariant" format="color|reference" />
+        <attr name="myApp_textColor_tertiary" format="color|reference" />
+        <attr name="myApp_textColor_quaternary" format="color|reference" />
+        <attr name="myApp_backgroundColor_primary" format="color|reference" />
+        <attr name="myApp_statusBarColor_primary" format="color|reference" />
     </declare-styleable>
 
-    <declare-styleable name="DynamicTextView">
-        <attr name="dynamic_style" format="reference" />
-        <attr name="dyncmic_openUrlOnClick" format="boolean" />
-        <attr name="dyncmic_copyOnClick" format="boolean" />
-        <attr name="dyncmic_rippleOnClick" format="boolean" />
+    <declare-styleable name="MyTextView">
+        <attr name="myTextView_style" format="reference" />
+        <attr name="myTextView_openUrlOnClick" format="boolean" />
+        <attr name="myTextView_copyOnClick" format="boolean" />
+        <attr name="myTextView_rippleOnClick" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="DynamicEditText">
-        <attr name="dynamic_style" format="reference" />
+    <declare-styleable name="MyEditText">
+        <attr name="myEditText_style" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="DynamicButton">
-        <attr name="dynamic_style" format="reference" />
-        <attr name="dyncmic_openUrlOnClick" format="boolean" />
-        <attr name="dyncmic_copyOnClick" format="boolean" />
-        <attr name="dyncmic_rippleOnClick" format="boolean" />
+    <declare-styleable name="MyButton">
+        <attr name="myButton_style" format="reference" />
+        <attr name="myButton_openUrlOnClick" format="boolean" />
+        <attr name="myButton_copyOnClick" format="boolean" />
+        <attr name="myButton_rippleOnClick" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="DynamicImageView">
-        <attr name="dynamic_style" format="reference" />
+    <declare-styleable name="MyImageView">
+        <attr name="myImageView_style" format="reference" />
     </declare-styleable>
 </resources>

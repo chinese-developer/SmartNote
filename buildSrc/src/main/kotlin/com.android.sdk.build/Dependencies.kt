@@ -1,17 +1,5 @@
 object Dependencies {
 
-  object Compose {
-    const val version = "1.3.0-beta01"
-    const val material = "1.0.0-beta02"
-    const val activity = "1.5.1"
-
-    const val coil = "2.2.0"
-    const val permissions = "0.25.1"
-
-    const val fontAwesomeCompose = "1.1.0"
-    const val accompanistCoil = "0.15.0"
-  }
-
   object Plugin {
 
   }
@@ -34,7 +22,9 @@ object Dependencies {
   }
 
   object Github {
-    const val autoSize = "1.2.1"
+    const val autoSize = "v1.2.1"
+    const val timber = "5.0.1"
+
   }
 
   const val lifecycleViewModelCompose = "2.5.1"
@@ -49,23 +39,18 @@ object Dependencies {
   const val rxJava3 = "3.0.0"
   const val rxAndroid = "2.1.1"
 
-  const val coreKtx = "1.8.0"
-  const val appcompat = "1.5.0"
-
   const val androidLifecycleGrouped = "2.2.0"
   const val androidLifecycleKtxGrouped = "2.5.1"
 
   const val jsoup = "1.15.3"
   const val reflect = "0.9.14"
   const val stetho = "1.6.0"
-  const val timber = "4.7.1"
   const val mmkv = "1.2.14"
   const val workManager = "2.8.1"
   const val paging = "3.1.1"
   const val lottie = "5.2.0"
   const val room = "2.4.3"
   const val paletteKtx = "1.0.0"
-  const val material = "1.6.1"
   const val exoplayer = "2.18.1"
   const val loggingInterceptor = "5.0.0-alpha.10"
   const val retrofit = "2.9.0"

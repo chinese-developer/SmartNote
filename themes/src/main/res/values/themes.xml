@@ -4,6 +4,8 @@
 
     <style name="Widget.ImageView" />
 
+    <style name="Widget.Dialog" parent="Theme.Material3.Light.NoActionBar" />
+
     <style name="Widget.TextView" parent="Widget.AppCompat.TextView" />
 
     <style name="Widget.EditText" parent="Widget.AppCompat.EditText" />
@@ -20,7 +22,7 @@
     <!-- Default text styles -->
     <style name="TextAppearance.Default">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">?attr/dynamicTextColor</item>
+        <item name="android:textColor">?attr/myApp_textColor_primary</item>
     </style>
 
     <!-- Default TextView styles -->
@@ -43,5 +45,12 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@style/TextAppearance.Default</item>
         <item name="android:backgroundTint">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Widget.Dialog.material3">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:windowCloseOnTouchOutside">true</item> <!-- 点击外部对话框可消失 -->
+        <item name="android:backgroundDimEnabled">true</item> <!-- 弹窗后背景发暗 -->
     </style>
 </resources>

@@ -18,8 +18,12 @@
 
         <!-- Customize your theme here. -->
         <!-- 使用?attr语法从当前主题中引用颜色值。这样，当切换主题时，这些属性将自动更新为新主题中的颜色值。 -->
-        <item name="dynamicTextColor">?attr/dynamicTextColor</item>
-        <item name="dynamicBackgroundColor">?attr/dynamicBackgroundColor</item>
+        <item name="myApp_textColor_primary">@color/text_color_primary</item>
+        <item name="myApp_textColor_secondary">@color/text_color_secondary</item>
+        <item name="myApp_textColor_tertiary">@color/text_color_tertiary</item>
+        <item name="myApp_textColor_quaternary">@color/text_color_quaternary</item>
+        <item name="myApp_backgroundColor_primary">@color/background_color_primary</item>
+        <item name="myApp_statusBarColor_primary">@color/statusBarColor</item>
     </style>
 
 </resources>

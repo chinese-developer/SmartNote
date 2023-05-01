@@ -45,9 +45,9 @@ dependencies {
 
     // Kotlin 标准库, 依赖项包含了一些额外的Java 8特定的扩展函数
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Dependencies.Core.kotlin}")
-    //  AndroidX 库中的一个核心库，它提供了许多与 Android 开发相关的扩展函数和属性
+    // AndroidX 库中的一个核心库，它提供了许多与 Android 开发相关的扩展函数和属性
     implementation("androidx.core:core-ktx:${Dependencies.AndroidX.coreKtx}")
-    //  AndroidX 库中的一个核心库，它提供了许多与 Android UI 相关的类和函数
+    // AndroidX 库中的一个核心库，它提供了许多与 Android UI 相关的类和函数
     implementation("androidx.appcompat:appcompat:${Dependencies.AndroidX.appcompat}")
     // 用于实现基于 SharedPreferences 的数据存储方式，支持数据加密和数据迁移。
     implementation("androidx.datastore:datastore-preferences:${Dependencies.AndroidX.dataStore}")
@@ -67,6 +67,10 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:${Dependencies.moshi}")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshi}")
 
+    // 日志记录
+    implementation("com.jakewharton.timber:timber:${Dependencies.Github.timber}")
+
     // 今日头条屏幕适配方案 https://github.com/JessYanCoding/AndroidAutoSize
-    api("me.jessyan:autosize:${Dependencies.Github.autoSize}")
+    api("com.github.JessYanCoding:AndroidAutoSize:${Dependencies.Github.autoSize}")
+
 }
