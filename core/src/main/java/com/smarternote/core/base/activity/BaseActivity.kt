@@ -13,8 +13,11 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
+import com.smarternote.core.BaseApplication
 import com.smarternote.core.config.LogTagsConfig
 import com.smarternote.core.config.LogTagsConfig.activity_lifecycle
+import com.smarternote.core.ui.dialog.AppLoadingDialog
+import com.smarternote.core.ui.dialog.AppLoadingDialogManager
 import me.jessyan.autosize.internal.CustomAdapt
 import timber.log.Timber
 import kotlin.properties.Delegates
@@ -78,19 +81,17 @@ open class BaseActivity : AppCompatActivity(), CustomAdapt {
   }
 
 
-  open fun showLoadingDialog(): LoadingDialog? {
-    if (isLoadingDialogShowing()) {
-      hideLoadingDialog()
-    }
-    return LoadingHandler.instance.showLoading(this)
+  open fun showLoadingDialog(): AppLoadingDialog? {
+    if (isLoadingDialogShowing()) hideLoadingDialog()
+    return AppLoadingDialogManager.showLoadingDialog(this)
   }
 
   open fun hideLoadingDialog() {
-    LoadingHandler.instance.hideLoading(this)
+    AppLoadingDialogManager.hideLoadingDialog(this)
   }
 
   open fun isLoadingDialogShowing(): Boolean {
-    return LoadingHandler.instance.isShowing(this)
+    return AppLoadingDialogManager.isLoadingDialogShowing(this)
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,7 +115,7 @@ open class BaseActivity : AppCompatActivity(), CustomAdapt {
   override fun onResume() {
     super.onResume()
     Timber.tag(activity_lifecycle).i(">>>> <${javaClass.simpleName}> onResume")
-    QYApp.get().currentActivity = this
+    BaseApplication.get().currentActivity = this
   }
 
   override fun onPause() {

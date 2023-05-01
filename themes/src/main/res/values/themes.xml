@@ -15,42 +15,64 @@
     <style name="TextAppearance" parent="TextAppearance.AppCompat" />
 
     <!-- Default ImageView styles -->
-    <style name="Widget.ImageView.Default">
+    <style name="Widget.ImageView.Default" parent="Widget.ImageView">
         <item name="android:scaleType">centerCrop</item>
     </style>
 
     <!-- Default text styles -->
-    <style name="TextAppearance.Default">
+    <style name="TextAppearance.Default" parent="TextAppearance">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">?attr/myApp_textColor_primary</item>
     </style>
 
     <!-- Default TextView styles -->
-    <style name="Widget.TextView.Default">
+    <style name="Widget.TextView.Default" parent="Widget.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@style/TextAppearance.Default</item>
     </style>
 
     <!-- Default EditText styles -->
-    <style name="Widget.EditText.Default">
+    <style name="Widget.EditText.Default" parent="Widget.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@style/TextAppearance.Default</item>
     </style>
 
     <!-- Default Button styles -->
-    <style name="Widget.Button.Default">
+    <style name="Widget.Button.Default" parent="Widget.Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@style/TextAppearance.Default</item>
         <item name="android:backgroundTint">?attr/colorPrimary</item>
     </style>
 
-    <style name="Widget.Dialog.material3">
+    <style name="Widget.Dialog.material3" parent="Widget.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackground">@android:color/transparent</item>
         <item name="android:windowCloseOnTouchOutside">true</item> <!-- 点击外部对话框可消失 -->
         <item name="android:backgroundDimEnabled">true</item> <!-- 弹窗后背景发暗 -->
+    </style>
+
+    <!-- App 全局 loading dialog style -->
+    <style name="Widget.Dialog.AppLoadingDialog" parent="android:style/Theme.Dialog">
+        <!-- 设置对话框的背景 -->
+       <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 设置对话框为全屏模式 -->
+       <item name="android:windowFullscreen">true</item>
+        <!-- 隐藏对话框标题栏 -->
+       <item name="android:windowNoTitle">true</item>
+        <!-- 将对话框窗口设置为半透明 -->
+       <item name="android:windowIsTranslucent">true</item>
+        <!-- 设置对话框为悬浮窗口 -->
+       <item name="android:windowIsFloating">true</item>
+        <!-- 设置对话框的背景是否启用遮罩效果（即是否将背景变暗）-->
+       <item name="android:backgroundDimEnabled">false</item>
+        <!-- 设置对话框是否有内容覆盖层 -->
+       <item name="android:windowContentOverlay">false</item>
+        <!-- 设置对话框窗口的边框 -->
+       <item name="android:windowFrame">@null</item>
+        <!-- 设置对话框进出动画的样式为输入法动画 -->
+       <item name="android:windowAnimationStyle">@android:style/Animation.InputMethod</item>
     </style>
 </resources>
