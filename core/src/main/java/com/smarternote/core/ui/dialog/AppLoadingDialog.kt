@@ -22,7 +22,7 @@ import java.lang.ref.SoftReference
 class AppLoadingDialog internal constructor(
     activity: Activity,
     private var _animateSrc: String? = null
-) : Dialog(activity, com.smarternote.themes.R.style.Widget_Dialog_AppLoadingDialog) {
+) : Dialog(activity, com.smarternote.themes.R.style.My_Widget_Dialog_AppLoadingDialog) {
 
     private val lottieAnimationView: LottieAnimationView by lazy { findViewById(R.id.lottile_animation_view) }
     private val ownerActivitySoft = SoftReference(activity)
@@ -32,7 +32,7 @@ class AppLoadingDialog internal constructor(
 
     init {
         setContentView(R.layout.core_lottile_loading_dialog)
-        window?.setWindowAnimations(com.smarternote.themes.R.style.Animation_WindowEnterExit_Null)
+        window?.setWindowAnimations(com.smarternote.themes.R.style.My_Animation_WindowEnterExit_Null)
         lottieAnimationView.setAnimation(_animateSrc ?: globeAnimateSrc ?: defaultAnimateSrc)
         setDissmissType(TYPE.WEAK)
     }

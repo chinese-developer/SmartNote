@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="MyTheme">
+    <declare-styleable name="SmarterNoteTheme">
         <attr name="myApp_textColor_primary" format="color|reference" />
         <attr name="myApp_textColor_primaryVariant" format="color|reference" />
         <attr name="myApp_textColor_secondary" format="color|reference" />
@@ -33,4 +33,5 @@
     <declare-styleable name="MyImageView">
         <attr name="myImageView_style" format="reference" />
     </declare-styleable>
+
 </resources>

@@ -57,7 +57,7 @@ class MyImageView @JvmOverloads constructor(
 
     private fun applyStyle(context: Context, attrs: AttributeSet?) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MyImageView)
-        val myStyleResId = typedArray.getResourceId(R.styleable.MyImageView_myImageView_style, 0)
+//        val myStyleResId = typedArray.getResourceId(R.styleable.MyImageView_myImageView_style, 0)
 
         typedArray.recycle()
     }
@@ -83,7 +83,7 @@ class MyImageView @JvmOverloads constructor(
 
 @BindingAdapter(
     "imageUrl", "imageResId", "placeholderResId", "errorResId",
-    "transitionDuration", "errorDrawable", "placeholderDrawable",
+    "errorDrawable", "placeholderDrawable", "transitionDuration", "isGif",
     requireAll = false
 )
 fun setImageProperties(
@@ -111,7 +111,7 @@ fun setImageProperties(
  * app:onClick="@{() -> viewModel.onImageClick()}"
  * app:onClickWithParams = "@{(imageUrl, imageResId) -> viewModel.onImageClick(imageUrl, imageResId)}"
  */
-@BindingAdapter("onClick, onClickWithParams", requireAll = false)
+@BindingAdapter("onClick", "onClickWithParams", requireAll = false)
 fun setOnImageClickListener(
     view: MyImageView,
     listener: (() -> Unit)?,

@@ -51,9 +51,9 @@ class MyButton @JvmOverloads constructor(
         openUrlOnClick = typedArray.getBoolean(R.styleable.MyButton_myButton_openUrlOnClick, false)
         rippleOnClick = typedArray.getBoolean(R.styleable.MyButton_myButton_rippleOnClick, false)
 
-        ThemeManager.dynamicViewsThemeConfig.observe(context as LifecycleOwner) { config ->
-            setTextColor(ContextCompat.getColor(context, config.textColor))
-        }
+//        ThemeManager.dynamicViewsThemeConfig.observe(context as LifecycleOwner) { config ->
+//            setTextColor(ContextCompat.getColor(context, config.textColor))
+//        }
 
         if (myStyleResId != 0) {
             TextViewCompat.setTextAppearance(this, myStyleResId)

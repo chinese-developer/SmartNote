@@ -36,11 +36,11 @@ android {
     buildFeatures {
         dataBinding = true
     }
-    kapt {
-        arguments {
-            arg("AROUTER_MODULE_NAME", project.name)
-        }
-    }
+//    kapt {
+//        arguments {
+//            arg("AROUTER_MODULE_NAME", project.name)
+//        }
+//    }
 }
 
 dependencies {
@@ -73,14 +73,14 @@ dependencies {
     kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshi}")
 
     // 开源的动画库，它使得开发者能够以一种简单的方式在移动应用中添加高质量的动画效果
-    implementation("com.airbnb.android:lottie:${Dependencies.Github.lottie}")
+    implementation("com.airbnb.android:lottie:${Dependencies.lottie}")
 
     // 日志记录
-    implementation("com.jakewharton.timber:timber:${Dependencies.Github.timber}")
+    implementation("com.jakewharton.timber:timber:${Dependencies.timber}")
 
     // ARouter 跨组件通信的路由框架
-    implementation("com.alibaba:arouter-api:${Dependencies.Github.arouter}")
-    kapt("com.alibaba:arouter-compiler:${Dependencies.Github.arouter}")
+//    implementation("com.alibaba:arouter-api:${Dependencies.arouter}")
+//    kapt("com.alibaba:arouter-compiler:${Dependencies.arouter}")
 
     // 今日头条屏幕适配方案 https://github.com/JessYanCoding/AndroidAutoSize
     api("com.github.JessYanCoding:AndroidAutoSize:${Dependencies.Github.autoSize}")

@@ -13,7 +13,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
-import com.alibaba.android.arouter.launcher.ARouter
 import com.smarternote.core.BaseApplication
 import com.smarternote.core.base.delegates.BackHandlerHelper
 import com.smarternote.core.config.LogTagsConfig.activity_lifecycle
@@ -98,7 +97,7 @@ open class BaseActivity : AppCompatActivity(), CustomAdapt {
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    ARouter.getInstance().inject(this)
+//    ARouter.getInstance().inject(this)
     super.onCreate(savedInstanceState)
     Timber.tag(activity_lifecycle).i(">>>> <${javaClass.simpleName}> onCreate")
 

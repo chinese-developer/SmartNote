@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:id="@+id/container"
@@ -13,7 +10,6 @@
         android:background="@drawable/core_bg_lottie_loadinng_dialog"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:ignore="UselessParent"
         >
 
         <com.airbnb.lottie.LottieAnimationView
@@ -25,4 +21,4 @@
             app:lottie_loop="true" />
     </FrameLayout>
 
-</FrameLayout>
+</merge>

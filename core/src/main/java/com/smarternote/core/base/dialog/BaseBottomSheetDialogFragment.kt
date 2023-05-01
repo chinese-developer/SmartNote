@@ -15,13 +15,13 @@ abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
   protected lateinit var dialog: BottomSheetDialog
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    dialog = BottomSheetDialog(requireContext(), com.smarternote.themes.R.style.Widget_Dialog_Material3)
+    dialog = BottomSheetDialog(requireContext(), com.smarternote.themes.R.style.My_Widget_Dialog_Material3)
     dialog.window?.apply {
       decorView.setPadding(0, 0, 0, 0)
       val lp: LayoutParams = attributes
       lp.width = LayoutParams.MATCH_PARENT
       lp.height = LayoutParams.WRAP_CONTENT
-      lp.windowAnimations = com.smarternote.themes.R.style.Animation_WindowEnterExit_BottomInOut
+      lp.windowAnimations = com.smarternote.themes.R.style.My_Animation_WindowEnterExit_BottomInOut
       lp.gravity = Gravity.BOTTOM
       attributes = lp
       setBackgroundDrawableResource(android.R.color.transparent)

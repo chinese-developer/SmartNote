@@ -10,6 +10,13 @@
       tools:ignore="ScopedStorage" />
   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
+  <!--
+    allowBackup: 指定应用程序是否允许进行备份和还原操作。
+    dataExtractionRules: 指定应用程序的数据提取规则，用于确定哪些数据可以被备份和还原。
+    fullBackupContent: 指定应用程序的完全备份内容，用于确定哪些数据可以被完全备份。
+    supportsRtl: 指定应用程序是否支持从右向左的布局。在这个示例中，应用程序支持从右向左的布局。
+    targetApi: 指定 Gradle 编译工具的目标 API 版本。在这个示例中，Gradle 编译工具的目标 API 版本为 31。。
+  -->
   <application
       android:name=".ConfigApplication"
       android:allowBackup="true"
@@ -20,6 +27,6 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/Theme.SmartNote"
-      tools:targetApi="31" />
+      tools:targetApi="33" />
 
 </manifest>

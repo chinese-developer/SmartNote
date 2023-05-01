@@ -19,8 +19,7 @@ inline fun runOnUiThread(crossinline block: () -> Unit) {
  * 扩展函数，实现将文本复制到剪贴板
  */
 fun Context.copyToClipboard(text: CharSequence) {
-  val clipboard =
-    getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+  val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
   val clip = android.content.ClipData.newPlainText("Copied Text", text)
   clipboard.setPrimaryClip(clip)
 }

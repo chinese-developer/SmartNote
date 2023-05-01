@@ -1,7 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -34,11 +32,11 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    kapt {
-        arguments {
-            arg("AROUTER_MODULE_NAME", project.name)
-        }
-    }
+//    kapt {
+//        arguments {
+//            arg("AROUTER_MODULE_NAME", project.name)
+//        }
+//    }
 }
 
 dependencies {
@@ -48,5 +46,5 @@ dependencies {
     implementation("androidx.core:core-ktx:${Dependencies.AndroidX.coreKtx}")
 
     // ARouter 跨组件通信的路由框架
-    kapt("com.alibaba:arouter-compiler:${Dependencies.Github.arouter}")
+//    kapt("com.alibaba:arouter-compiler:${Dependencies.arouter}")
 }
