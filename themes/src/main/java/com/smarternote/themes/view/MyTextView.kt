@@ -24,26 +24,28 @@ class MyTextView @JvmOverloads constructor(
     var onClickListener: (() -> Unit)? = null
 
     init {
-        applyStyle(context, attrs)
+        if (!isInEditMode) {
+            applyStyle(context, attrs)
 
-        if (context is LifecycleOwner) {
-            context.lifecycle.addObserver(this)
-        }
-
-        // 设置点击监听
-        setOnClickListener {
-            if (copyOnClick) {
-                context.copyToClipboard(text)
-                context.showToast("内容已复制！")
+            if (context is LifecycleOwner) {
+                context.lifecycle.addObserver(this)
             }
-            if (openUrlOnClick) {
-                text?.let { urlString ->
-                    if (urlString.startsWith("http") || urlString.startsWith("https")) {
-                        context.openWebPage(urlString.toString())
+
+            // 设置点击监听
+            setOnClickListener {
+                if (copyOnClick) {
+                    context.copyToClipboard(text)
+                    context.showToast("内容已复制！")
+                }
+                if (openUrlOnClick) {
+                    text?.let { urlString ->
+                        if (urlString.startsWith("http") || urlString.startsWith("https")) {
+                            context.openWebPage(urlString.toString())
+                        }
                     }
                 }
+                onClickListener?.invoke()
             }
-            onClickListener?.invoke()
         }
     }
 

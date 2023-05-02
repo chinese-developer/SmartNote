@@ -15,42 +15,44 @@ class MyEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val editText: AppCompatEditText
-    private val deleteIcon: ImageView
+    private lateinit var editText: AppCompatEditText
+    private lateinit var deleteIcon: ImageView
     private var onDeleteIconClickListener: (() -> Unit)? = null
     private var deleteIconWidth: Int = 0
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.layout_my_edittext, this, true)
-        editText = findViewById(R.id.edit_text)
-        deleteIcon = findViewById(R.id.delete_icon)
-        deleteIconWidth = deleteIcon.layoutParams.width
+        if (!isInEditMode) {
+            LayoutInflater.from(context).inflate(R.layout.layout_my_edittext, this, true)
+            editText = findViewById(R.id.edit_text)
+            deleteIcon = findViewById(R.id.delete_icon)
+            deleteIconWidth = deleteIcon.layoutParams.width
 
-        applyStyle(context, attrs)
+            applyStyle(context, attrs)
 
-        editText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                if (editText.text?.isNotEmpty() == true) {
-                    animateDeleteIcon(show = true)
+            editText.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    if (editText.text?.isNotEmpty() == true) {
+                        animateDeleteIcon(show = true)
+                    }
+                } else {
+                    animateDeleteIcon(show = false)
                 }
-            } else {
-                animateDeleteIcon(show = false)
             }
-        }
 
-        editText.addTextChangedListener {
-            if (it?.isNotEmpty() == true) {
-                if (editText.hasFocus()) {
-                    animateDeleteIcon(show = true)
+            editText.addTextChangedListener {
+                if (it?.isNotEmpty() == true) {
+                    if (editText.hasFocus()) {
+                        animateDeleteIcon(show = true)
+                    }
+                } else {
+                    animateDeleteIcon(show = false)
                 }
-            } else {
-                animateDeleteIcon(show = false)
             }
-        }
 
-        deleteIcon.setOnClickListener {
-            editText.setText("")
-            onDeleteIconClickListener?.invoke()
+            deleteIcon.setOnClickListener {
+                editText.setText("")
+                onDeleteIconClickListener?.invoke()
+            }
         }
     }
 

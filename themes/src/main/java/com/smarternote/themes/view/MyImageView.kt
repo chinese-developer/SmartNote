@@ -43,14 +43,16 @@ class MyImageView @JvmOverloads constructor(
     private var lastClickTime: Long = 0
 
     init {
-        applyStyle(context, attrs)
+        if (!isInEditMode) {
+            applyStyle(context, attrs)
 
-        setOnClickListener {
-            val currentTime = System.currentTimeMillis()
-            if (currentTime - lastClickTime >= 500) {
-                onImageClickListener?.invoke()
-                onImageClickWithParamsListener?.invoke(imageUrl, imageResId)
-                lastClickTime = currentTime
+            setOnClickListener {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastClickTime >= 500) {
+                    onImageClickListener?.invoke()
+                    onImageClickWithParamsListener?.invoke(imageUrl, imageResId)
+                    lastClickTime = currentTime
+                }
             }
         }
     }

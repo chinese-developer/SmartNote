@@ -32,6 +32,9 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    buildFeatures {
+        dataBinding = true
+    }
 //    kapt {
 //        arguments {
 //            arg("AROUTER_MODULE_NAME", project.name)

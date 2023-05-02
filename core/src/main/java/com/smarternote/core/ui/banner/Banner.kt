@@ -20,7 +20,7 @@ class Banner<T> @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private lateinit var banner: BGABanner
+    private lateinit var bgaBanner: BGABanner
     private lateinit var magicIndicator: MagicIndicator
     private val circleNavigator by lazy { CircleNavigator(context) }
     private var adapter: BGABanner.Adapter<ViewGroup, T>? = null
@@ -31,15 +31,15 @@ class Banner<T> @JvmOverloads constructor(
         if (!isInEditMode) {
             inflate(context, R.layout.core_layout_banner, this)
 
-            banner = findViewById(R.id.banner)
-            magicIndicator = findViewById(R.id.indicator)
+            bgaBanner = findViewById(R.id.bga_banner)
+            magicIndicator = findViewById(R.id.magic_indicator)
 
             circleNavigator.circleCount = itemList.size
             circleNavigator.circleColor = Color.RED
-            circleNavigator.circleClickListener = CircleNavigator.OnCircleClickListener { index -> banner.currentItem = index }
+            circleNavigator.circleClickListener = CircleNavigator.OnCircleClickListener { index -> bgaBanner.currentItem = index }
             magicIndicator.navigator = circleNavigator
 
-            banner.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            bgaBanner.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                 override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                     magicIndicator.onPageScrolled(position % itemList.size, positionOffset, positionOffsetPixels)
                 }
@@ -67,14 +67,14 @@ class Banner<T> @JvmOverloads constructor(
                     }
                 }
             }
-            banner.setAdapter(adapter)
-            banner.setAutoPlayAble(true)
+            bgaBanner.setAdapter(adapter)
+            bgaBanner.setAutoPlayAble(true)
         }
-        banner.setData(itemList, null)
+        bgaBanner.setData(itemList, null)
     }
 
     fun setOnBannerItemClick(onBannerItemClick: (Int) -> Unit) {
-        banner.setDelegate(object : BGABanner.Delegate<ViewGroup, T> {
+        bgaBanner.setDelegate(object : BGABanner.Delegate<ViewGroup, T> {
             override fun onBannerItemClick(banner: BGABanner?, itemView: ViewGroup?, model: T?, position: Int) {
                 onBannerItemClick(position)
             }
