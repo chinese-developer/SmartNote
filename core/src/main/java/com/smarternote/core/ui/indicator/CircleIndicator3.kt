@@ -10,34 +10,32 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 /**
  * CircleIndicator work with ViewPager2
  */
-class CircleIndicator3 constructor(
+class CircleIndicator3 @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : BaseCircleIndicator(context, attrs, defStyleAttr) {
 
-    private var mViewpager: ViewPager2? = null
+    private lateinit var mViewpager: ViewPager2
 
-    fun setViewPager(viewPager: ViewPager2?) {
+    fun setViewPager(viewPager: ViewPager2) {
         mViewpager = viewPager
-        if (mViewpager != null && mViewpager!!.adapter != null) {
-            mLastPosition = -1
-            createIndicators()
-            mViewpager!!.unregisterOnPageChangeCallback(mInternalPageChangeCallback)
-            mViewpager!!.registerOnPageChangeCallback(mInternalPageChangeCallback)
-            mInternalPageChangeCallback.onPageSelected(mViewpager!!.currentItem)
-        }
+        mLastPosition = -1
+        createIndicators()
+        mViewpager.unregisterOnPageChangeCallback(mInternalPageChangeCallback)
+        mViewpager.registerOnPageChangeCallback(mInternalPageChangeCallback)
+        mInternalPageChangeCallback.onPageSelected(mViewpager.currentItem)
     }
 
     private fun createIndicators() {
-        val adapter = mViewpager!!.adapter
+        val adapter = mViewpager.adapter
         val count: Int = adapter?.itemCount ?: 0
-        createIndicators(count, mViewpager!!.currentItem)
+        createIndicators(count, mViewpager.currentItem)
     }
 
     private val mInternalPageChangeCallback: OnPageChangeCallback = object : OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
-            if (position == mLastPosition || mViewpager!!.adapter == null || mViewpager!!.adapter!!.itemCount <= 0) {
+            if (position == mLastPosition || mViewpager.adapter == null || mViewpager.adapter!!.itemCount <= 0) {
                 return
             }
             animatePageSelected(position)
@@ -46,17 +44,14 @@ class CircleIndicator3 constructor(
     val adapterDataObserver: AdapterDataObserver = object : AdapterDataObserver() {
         override fun onChanged() {
             super.onChanged()
-            if (mViewpager == null) {
-                return
-            }
-            val adapter = mViewpager!!.adapter
+            val adapter = mViewpager.adapter
             val newCount = adapter?.itemCount ?: 0
             val currentCount = childCount
             mLastPosition = if (newCount == currentCount) {
                 // No change
                 return
             } else if (mLastPosition < newCount) {
-                mViewpager!!.currentItem
+                mViewpager.currentItem
             } else {
                 RecyclerView.NO_POSITION
             }

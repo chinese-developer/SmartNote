@@ -82,7 +82,7 @@ class MyImageView @JvmOverloads constructor(
 
 
 @BindingAdapter(
-    "imageUrl", "imageResId", "placeholderResId", "errorResId",
+    "android:src", "imageResId", "placeholderResId", "errorResId",
     "errorDrawable", "placeholderDrawable", "transitionDuration", "isGif",
     requireAll = false
 )

@@ -1,3 +1,5 @@
+@file:Suppress("NotifyDataSetChanged")
+
 package com.smarternote.core.ui.banner
 
 import android.content.Context
@@ -61,10 +63,10 @@ class Banner @JvmOverloads constructor(
     fun setData(data: List<String>, onItemClickListener: (Int) -> Unit): Banner {
         if (!::internalAdapter.isInitialized) {
             internalAdapter = BannerAdapter(data.take(maxDataSize), onItemClickListener)
-            viewPager.isUserInputEnabled = data.size > 1
+            // viewPager.isUserInputEnabled = data.size > 1
             viewPager.adapter = internalAdapter
-            viewPager.offscreenPageLimit = 1
-            viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            // viewPager.offscreenPageLimit = 1
+            // viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
             indicator.setViewPager(viewPager)
             internalAdapter.registerAdapterDataObserver(indicator.adapterDataObserver)
         }

@@ -19,23 +19,23 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import com.smarternote.core.R
 
-open class BaseCircleIndicator constructor(
+open class BaseCircleIndicator @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    protected var mIndicatorMargin = -1
-    protected var mIndicatorWidth = -1
-    protected var mIndicatorHeight = -1
-    protected var mIndicatorBackgroundResId = 0
-    protected var mIndicatorUnselectedBackgroundResId = 0
-    protected lateinit var mIndicatorTintColor: ColorStateList
-    protected lateinit var mIndicatorTintUnselectedColor: ColorStateList
-    protected lateinit var mAnimatorOut: Animator
-    protected lateinit var mAnimatorIn: Animator
-    protected lateinit var mImmediateAnimatorOut: Animator
-    protected lateinit var mImmediateAnimatorIn: Animator
+    private var mIndicatorMargin = -1
+    private var mIndicatorWidth = -1
+    private var mIndicatorHeight = -1
+    private var mIndicatorBackgroundResId = 0
+    private var mIndicatorUnselectedBackgroundResId = 0
+    private lateinit var mIndicatorTintColor: ColorStateList
+    private lateinit var mIndicatorTintUnselectedColor: ColorStateList
+    private lateinit var mAnimatorOut: Animator
+    private lateinit var mAnimatorIn: Animator
+    private lateinit var mImmediateAnimatorOut: Animator
+    private lateinit var mImmediateAnimatorIn: Animator
     protected var mLastPosition = -1
     private var mIndicatorCreatedListener: IndicatorCreatedListener? = null
 
@@ -74,7 +74,7 @@ open class BaseCircleIndicator constructor(
         return config
     }
 
-    fun initialize(config: IndicatorConfig) {
+    private fun initialize(config: IndicatorConfig) {
         val miniSize = (TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             DEFAULT_INDICATOR_WIDTH.toFloat(), resources.displayMetrics
@@ -130,11 +130,11 @@ open class BaseCircleIndicator constructor(
         mIndicatorCreatedListener = indicatorCreatedListener
     }
 
-    protected fun createAnimatorOut(config: IndicatorConfig): Animator {
+    private fun createAnimatorOut(config: IndicatorConfig): Animator {
         return AnimatorInflater.loadAnimator(context, config.animatorResId)
     }
 
-    protected fun createAnimatorIn(config: IndicatorConfig): Animator {
+    private fun createAnimatorIn(config: IndicatorConfig): Animator {
         val animatorIn: Animator
         if (config.animatorReverseResId === 0) {
             animatorIn = AnimatorInflater.loadAnimator(context, config.animatorResId)
@@ -190,7 +190,7 @@ open class BaseCircleIndicator constructor(
         mLastPosition = currentPosition
     }
 
-    protected fun addIndicator(orientation: Int) {
+    private fun addIndicator(orientation: Int) {
         val indicator = View(context)
         val params = generateDefaultLayoutParams()
         params.width = mIndicatorWidth
@@ -238,7 +238,7 @@ open class BaseCircleIndicator constructor(
         mLastPosition = position
     }
 
-    protected fun changeIndicatorBackground() {
+    private fun changeIndicatorBackground() {
         val count = childCount
         if (count <= 0) {
             return
@@ -276,7 +276,7 @@ open class BaseCircleIndicator constructor(
         }
     }
 
-    protected class ReverseInterpolator : Interpolator {
+    private class ReverseInterpolator : Interpolator {
         override fun getInterpolation(value: Float): Float {
             return Math.abs(1.0f - value)
         }

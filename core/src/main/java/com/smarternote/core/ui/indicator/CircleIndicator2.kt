@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.SnapHelper
 /**
  * CircleIndicator2 work with RecyclerView and SnapHelper
  */
-class CircleIndicator2 constructor(
+class CircleIndicator2 @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,

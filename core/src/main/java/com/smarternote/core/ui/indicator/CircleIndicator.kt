@@ -9,7 +9,7 @@ import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 /**
  * CircleIndicator work with ViewPager
  */
-class CircleIndicator constructor(
+class CircleIndicator @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,

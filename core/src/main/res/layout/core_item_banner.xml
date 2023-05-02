@@ -16,7 +16,7 @@
     并根据 adjustViewBounds 自适应调整大小，
     避免了裁剪和缩放导致的问题。
 -->
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.smarternote.themes.view.MyImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/imageView"
     android:layout_width="match_parent"
