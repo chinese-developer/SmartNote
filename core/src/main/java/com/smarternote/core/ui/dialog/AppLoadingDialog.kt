@@ -31,7 +31,7 @@ class AppLoadingDialog internal constructor(
         get() = ownerActivitySoft.get()
 
     init {
-        setContentView(R.layout.core_lottile_loading_dialog)
+        setContentView(R.layout.core_app_loading_dialog)
         window?.setWindowAnimations(com.smarternote.themes.R.style.My_Animation_WindowEnterExit_Null)
         lottieAnimationView.setAnimation(_animateSrc ?: globeAnimateSrc ?: defaultAnimateSrc)
         setDissmissType(TYPE.WEAK)
