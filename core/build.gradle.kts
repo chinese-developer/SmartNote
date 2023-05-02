@@ -89,4 +89,7 @@ dependencies {
     // 今日头条屏幕适配方案 https://github.com/JessYanCoding/AndroidAutoSize
     api("com.github.JessYanCoding:AndroidAutoSize:${Dependencies.Github.autoSize}")
 
+    // 一个强大、可扩展且易于使用的 ViewPager 指示器
+    api("com.github.hackware1993:MagicIndicator:${Dependencies.Github.magicIndicator}")
+
 }

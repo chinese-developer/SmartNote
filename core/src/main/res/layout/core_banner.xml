@@ -14,10 +14,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <com.smarternote.core.ui.indicator.CircleIndicator3
+    <net.lucode.hackware.magicindicator.MagicIndicator
         android:id="@+id/indicator"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:mi_indicator_style="wrap_content"
+        app:mi_item_spacing="10dp"
+        app:mi_scroll_offset="40dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="@id/viewPager"
         app:layout_constraintEnd_toEndOf="@id/viewPager"

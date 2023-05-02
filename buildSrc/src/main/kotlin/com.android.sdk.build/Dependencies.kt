@@ -23,6 +23,7 @@ object Dependencies {
 
   object Github {
     const val autoSize = "v1.2.1"
+    const val magicIndicator = "1.7.0"
   }
 
   const val timber = "5.0.1"
