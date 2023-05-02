@@ -43,4 +43,6 @@ dependencies {
     implementation("androidx.core:core-ktx:${Dependencies.AndroidX.coreKtx}")
     // Android平台上的一个数据绑定库，它可以帮助开发者将应用程序的UI和数据模型进行绑定，从而方便地进行数据展示和操作。
     implementation("androidx.databinding:databinding-runtime:${Dependencies.UI.databinding}")
+    // 开源的动画库，它使得开发者能够以一种简单的方式在移动应用中添加高质量的动画效果
+    implementation("com.airbnb.android:lottie:${Dependencies.lottie}")
 }

@@ -1,3 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="text_refresh_header">松开刷新</string>
 </resources>

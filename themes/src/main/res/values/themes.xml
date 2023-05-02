@@ -7,8 +7,6 @@
 
     <style name="My.Widget.ImageView" />
 
-    <style name="My.ProgressBar" />
-
     <style name="My.Widget.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox" />
 
     <style name="My.Widget.Dialog" parent="Theme.Material3.Light.NoActionBar" />
@@ -20,6 +18,8 @@
     <style name="My.Widget.Button" parent="Widget.AppCompat.Button" />
 
     <style name="My.Animation" parent="android:Animation"/>
+
+    <style name="My.ProgressBar" parent="Widget.Material3.LinearProgressIndicator"/>
 
     <style name="My.TextAppearance" parent="TextAppearance.AppCompat" />
 
@@ -43,6 +43,7 @@
         <!-- Customize your theme here. -->
         <!-- 使用?attr语法从当前主题中引用颜色值。这样，当切换主题时，这些属性将自动更新为新主题中的颜色值。 -->
         <item name="myApp_textColor_primary">@color/text_color_primary</item>
+        <item name="myApp_textColor_primaryVariant">@color/text_color_primaryVariant</item>
         <item name="myApp_textColor_secondary">@color/text_color_secondary</item>
         <item name="myApp_textColor_tertiary">@color/text_color_tertiary</item>
         <item name="myApp_textColor_quaternary">@color/text_color_quaternary</item>
@@ -77,10 +78,11 @@
         <item name="android:foreground">@drawable/ripple_background_r10</item>
     </style>
 
+    <!-- Default ProgressBar Loading styles -->
     <style name="My.ProgressBar.Loading" parent="My.ProgressBar">
         <item name="android:layout_width">20dp</item>
         <item name="android:layout_height">20dp</item>
-        <item name="android:indeterminateDrawable"></item>
+        <item name="android:indeterminateDrawable">@drawable/layer_list_progress</item>
         <item name="android:indeterminateDuration">1500</item>
     </style>
 
@@ -93,6 +95,26 @@
     <style name="My.TextAppearance.Default" parent="My.TextAppearance">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">?attr/myApp_textColor_primary</item>
+        <item name="android:fontFamily">@font/pingfang_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColorHighlight">@color/color_text_high_light_pressed</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="My.TextAppearance.Medium" parent="My.TextAppearance.Default">
+        <item name="android:fontFamily">@font/pingfang_medium</item>
+    </style>
+
+    <style name="My.TextAppearance.Bold" parent="My.TextAppearance.Default">
+        <item name="android:fontFamily">@font/pingfang_semibold</item>
+    </style>
+
+    <style name="My.TextAppearance.DinAlternateBold" parent="My.TextAppearance.Default">
+        <item name="android:fontFamily">@font/din_alternate_bold</item>
+    </style>
+
+    <style name="My.TextAppearance.Digit" parent="My.TextAppearance.Default">
+        <item name="android:fontFamily">@font/montserrat_regular</item>
     </style>
 
     <!-- Default TextView styles -->
@@ -155,4 +177,5 @@
         <item name="android:windowEnterAnimation">@null</item>
         <item name="android:windowExitAnimation">@null</item>
     </style>
+    
 </resources>

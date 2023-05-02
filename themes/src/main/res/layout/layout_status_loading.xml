@@ -1,0 +1,20 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/myApp_backgroundColor_primary"
+    android:fillViewport="true"
+    tools:ignore="MissingDefaultResource"
+    >
+
+  <com.airbnb.lottie.LottieAnimationView
+      android:id="@+id/lottie_animation_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:scaleType="fitStart"
+      app:lottie_autoPlay="true"
+      app:lottie_fileName="refreshing.json"
+      app:lottie_loop="true" />
+
+</androidx.core.widget.NestedScrollView>

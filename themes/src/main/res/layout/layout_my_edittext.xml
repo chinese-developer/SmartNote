@@ -16,4 +16,5 @@
         android:padding="10dp"
         android:src="@android:drawable/ic_input_delete"
         tools:ignore="ContentDescription" />
+
 </merge>
