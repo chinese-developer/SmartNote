@@ -55,7 +55,7 @@ class Banner<T> @JvmOverloads constructor(
         }
     }
 
-    fun setData(itemList: List<T>, bindView: (T) -> View) {
+    fun setData(itemList: List<T>, bindView: (T) -> ViewGroup) {
         this.itemList = itemList
         this.bindView = bindView
         if (adapter == null) {
