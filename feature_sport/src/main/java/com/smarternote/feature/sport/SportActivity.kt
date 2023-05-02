@@ -1,9 +1,8 @@
 package com.smarternote.feature.sport
 
 import android.os.Bundle
-import android.widget.Toast
 import com.smarternote.core.base.activity.StatusBarBaseActivity
-import com.smarternote.core.ui.banner.Banner
+import com.smarternote.core.ui.banner.BannerWithIndicator
 
 class SportActivity : StatusBarBaseActivity() {
 
@@ -15,15 +14,8 @@ class SportActivity : StatusBarBaseActivity() {
 
         setContentView(R.layout.activity_sport)
 
-        val banner = findViewById<Banner>(R.id.banner)
-        banner.lifecycleOwner = this
-        banner.setData(imageUrlList) { position ->
-            Toast.makeText(this, "Clicked on item: $position", Toast.LENGTH_SHORT).show()
-        }.setAutoPlay(true)
+        val banner = findViewById<BannerWithIndicator>(R.id.banner)
+        banner.setupBannerAndIndicator(imageUrlList, { imageView, s ->  }, { i ->  })
 
-//        banner.addPageTransformer { page, position ->
-//            page.alpha = 1 - Math.abs(position)
-//            page.scaleY = 1 - Math.abs(position) * 0.1f
-//        }
     }
 }

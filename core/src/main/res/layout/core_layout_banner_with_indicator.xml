@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <cn.bingoogolapple.bgabanner.BGABanner
+        android:id="@+id/banner"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:banner_pageChangeDuration="3000"
+        app:banner_pointAutoPlayAble="true"
+        app:banner_pointContainerBackground="@android:color/transparent"
+        app:banner_pointTopBottomMargin="15dp"
+        app:banner_transitionEffect="alpha"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <net.lucode.hackware.magicindicator.MagicIndicator
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/banner"
+        app:layout_constraintEnd_toEndOf="@id/banner"
+        app:layout_constraintStart_toStartOf="@id/banner" />
+
+</merge>
