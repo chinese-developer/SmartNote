@@ -2,6 +2,7 @@ package com.smarternote.feature.sport
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import com.smarternote.core.base.activity.StatusBarBaseActivity
 import com.smarternote.core.ui.banner.Banner
 import com.smarternote.feature.sport.databinding.ItemBannerBinding
@@ -10,18 +11,24 @@ class SportActivity : StatusBarBaseActivity() {
 
     val imageUrl = "https://lh6.googleusercontent.com/-55osAWw3x0Q/URquUtcFr5I/AAAAAAAAAbs/rWlj1RUKrYI/s1024/A%252520Photographer.jpg"
     val imageUrlList = arrayListOf(imageUrl, imageUrl, imageUrl, imageUrl)
+    val viewList = mutableListOf<View>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_sport)
 
+        val binding = ItemBannerBinding.inflate(LayoutInflater.from(this), null, false)
+        viewList.add(binding.root)
+        viewList.add(binding.root)
+        viewList.add(binding.root)
+
         val banner = findViewById<Banner<String>>(R.id.banner)
-        banner.setData(imageUrlList) { parentView, imageUrl ->
-            val binding = ItemBannerBinding.inflate(LayoutInflater.from(this), parentView, false)
-            binding.imageUrl = imageUrl
-            binding.executePendingBindings()
-            parentView.addView(binding.root)
+        banner.setData(viewList) { itemView, imageUrl ->
+            itemView as ItemBannerBinding
+            itemView.imageUrl = imageUrl
+            itemView.executePendingBindings()
+
         }
     }
 }

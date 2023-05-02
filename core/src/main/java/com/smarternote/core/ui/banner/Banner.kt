@@ -23,9 +23,9 @@ class Banner<T> @JvmOverloads constructor(
     private lateinit var bgaBanner: BGABanner
     private lateinit var magicIndicator: MagicIndicator
     private val circleNavigator by lazy { CircleNavigator(context) }
-    private var adapter: BGABanner.Adapter<ViewGroup, T>? = null
-    private var itemList = listOf<T>()
-    private var bindView: ((ViewGroup, T) -> Unit)? = null
+    private var adapter: BGABanner.Adapter<View, T>? = null
+    private var viewList = listOf<View>()
+    private var bindView: ((View, T) -> Unit)? = null
 
     init {
         if (!isInEditMode) {
@@ -34,18 +34,18 @@ class Banner<T> @JvmOverloads constructor(
             bgaBanner = findViewById(R.id.bga_banner)
             magicIndicator = findViewById(R.id.magic_indicator)
 
-            circleNavigator.circleCount = itemList.size
+            circleNavigator.circleCount = viewList.size
             circleNavigator.circleColor = Color.RED
             circleNavigator.circleClickListener = CircleNavigator.OnCircleClickListener { index -> bgaBanner.currentItem = index }
             magicIndicator.navigator = circleNavigator
 
             bgaBanner.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                 override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                    magicIndicator.onPageScrolled(position % itemList.size, positionOffset, positionOffsetPixels)
+                    magicIndicator.onPageScrolled(position % viewList.size, positionOffset, positionOffsetPixels)
                 }
 
                 override fun onPageSelected(position: Int) {
-                    magicIndicator.onPageSelected(position % itemList.size)
+                    magicIndicator.onPageSelected(position % viewList.size)
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {
@@ -55,12 +55,12 @@ class Banner<T> @JvmOverloads constructor(
         }
     }
 
-    fun setData(itemList: List<T>, bindView: (ViewGroup, T) -> Unit) {
-        this.itemList = itemList
+    fun setData(viewList: List<View>, bindView: (View, T) -> Unit) {
+        this.viewList = viewList
         this.bindView = bindView
         if (adapter == null) {
-            adapter = object : BGABanner.Adapter<ViewGroup, T> {
-                override fun fillBannerItem(banner: BGABanner?, itemView: ViewGroup, model: T?, position: Int) {
+            adapter = object : BGABanner.Adapter<View, T> {
+                override fun fillBannerItem(banner: BGABanner?, itemView: View, model: T?, position: Int) {
                     if (model != null) {
                         bindView(itemView, model)
                     }
@@ -69,7 +69,7 @@ class Banner<T> @JvmOverloads constructor(
             bgaBanner.setAdapter(adapter)
             bgaBanner.setAutoPlayAble(true)
         }
-        bgaBanner.setData(itemList, null)
+        bgaBanner.setData(this.viewList, null)
     }
 
 
