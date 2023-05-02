@@ -55,13 +55,14 @@ class Banner<T> @JvmOverloads constructor(
         }
     }
 
-    fun setData(itemList: List<T>, bindView: (T) -> ViewGroup) {
+    fun setData(itemList: List<T>, bindView: (T) -> View) {
         this.itemList = itemList
         this.bindView = bindView
         if (adapter == null) {
             adapter = object : BGABanner.Adapter<ViewGroup, T> {
                 override fun fillBannerItem(banner: BGABanner?, itemView: ViewGroup, model: T?, position: Int) {
                     if (model != null) {
+                        itemView.removeAllViews()
                         val loadedView = bindView(model)
                         itemView.addView(loadedView)
                     }
