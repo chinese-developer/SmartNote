@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="imageUrl"
+            type="String" />
+    </data>
+    <!--
+        当 adjustViewBounds 属性为 true 时，
+        ImageView 控件会根据图片的实际宽高比例来自适应调整控件的大小，
+        从而避免图片变形或裁剪。
+
+        可以选择将 scaleType 属性设置为 FIT_XY，
+        这样图片就会充满整个 ImageView 控件，
+        并根据 adjustViewBounds 自适应调整大小，
+        避免了裁剪和缩放导致的问题。
+    -->
+    <com.smarternote.themes.view.MyImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@{imageUrl}"
+        android:adjustViewBounds="true"
+        tools:ignore="ContentDescription" />
+</layout>

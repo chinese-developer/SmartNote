@@ -46,7 +46,7 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    implementation(project(":themes"))
+    api(project(":themes"))
 
     // Kotlin 标准库, 依赖项包含了一些额外的Java 8特定的扩展函数
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Dependencies.Core.kotlin}")
