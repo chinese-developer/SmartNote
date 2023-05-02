@@ -17,11 +17,11 @@ class SportActivity : StatusBarBaseActivity() {
         setContentView(R.layout.activity_sport)
 
         val banner = findViewById<Banner<String>>(R.id.banner)
-        banner.setData(imageUrlList) { imageUrl ->
-            val binding = ItemBannerBinding.inflate(LayoutInflater.from(this), null, false)
+        banner.setData(imageUrlList) { parentView, imageUrl ->
+            val binding = ItemBannerBinding.inflate(LayoutInflater.from(this), parentView, false)
             binding.imageUrl = imageUrl
             binding.executePendingBindings()
-            binding.root
+            parentView.addView(binding.root)
         }
     }
 }

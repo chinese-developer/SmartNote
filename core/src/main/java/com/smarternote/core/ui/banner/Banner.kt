@@ -25,7 +25,7 @@ class Banner<T> @JvmOverloads constructor(
     private val circleNavigator by lazy { CircleNavigator(context) }
     private var adapter: BGABanner.Adapter<ViewGroup, T>? = null
     private var itemList = listOf<T>()
-    private var bindView: ((T) -> View)? = null
+    private var bindView: ((ViewGroup, T) -> Unit)? = null
 
     init {
         if (!isInEditMode) {
@@ -55,16 +55,14 @@ class Banner<T> @JvmOverloads constructor(
         }
     }
 
-    fun setData(itemList: List<T>, bindView: (T) -> View) {
+    fun setData(itemList: List<T>, bindView: (ViewGroup, T) -> Unit) {
         this.itemList = itemList
         this.bindView = bindView
         if (adapter == null) {
             adapter = object : BGABanner.Adapter<ViewGroup, T> {
                 override fun fillBannerItem(banner: BGABanner?, itemView: ViewGroup, model: T?, position: Int) {
                     if (model != null) {
-                        itemView.removeAllViews()
-                        val loadedView = bindView(model)
-                        itemView.addView(loadedView)
+                        bindView(itemView, model)
                     }
                 }
             }
@@ -73,6 +71,7 @@ class Banner<T> @JvmOverloads constructor(
         }
         bgaBanner.setData(itemList, null)
     }
+
 
     fun setOnBannerItemClick(onBannerItemClick: (Int) -> Unit) {
         bgaBanner.setDelegate(object : BGABanner.Delegate<ViewGroup, T> {
