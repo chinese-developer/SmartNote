@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="My.Widget.CheckBox.FeatureSport.Default" parent="My.Widget.CheckBox">
+        <item name="colorControlNormal">#DDDDDD</item>
+        <item name="android:colorControlActivated">#4FAFAA</item>
+    </style>
+
+</resources>

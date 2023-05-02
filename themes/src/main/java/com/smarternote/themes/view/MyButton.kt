@@ -3,12 +3,9 @@ package com.smarternote.themes.view
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
-import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.LifecycleOwner
 import com.smarternote.themes.R
-import com.smarternote.themes.ThemeManager
 import com.smarternote.themes.utils.copyToClipboard
 import com.smarternote.themes.utils.openWebPage
 import com.smarternote.themes.utils.showToast

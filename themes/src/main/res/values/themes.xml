@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="My" />
+    <style name="My"/>
 
-    <style name="My.Widget" />
-
-    <style name="My.Animation"/>
+    <style name="My.Widget" parent="android:Widget"/>
 
     <style name="My.Widget.ImageView" />
+
+    <style name="My.ProgressBar" />
+
+    <style name="My.Widget.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox" />
 
     <style name="My.Widget.Dialog" parent="Theme.Material3.Light.NoActionBar" />
 
@@ -16,6 +18,8 @@
     <style name="My.Widget.EditText" parent="Widget.AppCompat.EditText" />
 
     <style name="My.Widget.Button" parent="Widget.AppCompat.Button" />
+
+    <style name="My.Animation" parent="android:Animation"/>
 
     <style name="My.TextAppearance" parent="TextAppearance.AppCompat" />
 
@@ -44,6 +48,40 @@
         <item name="myApp_textColor_quaternary">@color/text_color_quaternary</item>
         <item name="myApp_backgroundColor_primary">@color/background_color_primary</item>
         <item name="myApp_statusBarColor_primary">@color/statusBarColor</item>
+    </style>
+
+    <style name="My.Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+    </style>
+
+    <!-- Default Divider styles -->
+    <style name="My.Divider.Default" parent="@style/My.Divider">
+        <item name="background">@color/divider</item>
+    </style>
+
+    <style name="My.Ripple">
+        <item name="android:clickable">true</item>
+    </style>
+
+    <!-- Default Ripple styles -->
+    <style name="My.Ripple.Default" parent="My.Ripple">
+        <item name="android:foreground">@drawable/ripple_background</item>
+    </style>
+
+    <style name="My.Ripple.Radius8" parent="My.Ripple">
+        <item name="android:foreground">@drawable/ripple_background_r8</item>
+    </style>
+
+    <style name="My.Ripple.Radius10" parent="My.Ripple">
+        <item name="android:foreground">@drawable/ripple_background_r10</item>
+    </style>
+
+    <style name="My.ProgressBar.Loading" parent="My.ProgressBar">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:indeterminateDrawable"></item>
+        <item name="android:indeterminateDuration">1500</item>
     </style>
 
     <!-- Default ImageView styles -->
@@ -101,7 +139,7 @@
         <!-- 设置对话框的背景是否启用遮罩效果（即是否将背景变暗）-->
        <item name="android:backgroundDimEnabled">false</item>
         <!-- 设置对话框是否有内容覆盖层 -->
-       <item name="android:windowContentOverlay">false</item>
+       <item name="android:windowContentOverlay">@null</item>
         <!-- 设置对话框窗口的边框 -->
        <item name="android:windowFrame">@null</item>
         <!-- 设置对话框进出动画的样式为输入法动画 -->
