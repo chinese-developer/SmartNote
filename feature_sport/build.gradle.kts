@@ -40,11 +40,9 @@ android {
 }
 
 dependencies {
-    implementation(project(":core"))
-
-    // AndroidX 库中的一个核心库，它提供了许多与 Android 开发相关的扩展函数和属性
-    implementation("androidx.core:core-ktx:${Dependencies.AndroidX.coreKtx}")
+    api(project(":core"))
 
     // ARouter 跨组件通信的路由框架
+//    implementation("com.alibaba:arouter-api:${Dependencies.arouter}")
 //    kapt("com.alibaba:arouter-compiler:${Dependencies.arouter}")
 }

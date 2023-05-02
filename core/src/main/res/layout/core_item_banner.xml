@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="imageUrl"
+            type="String" />
+    </data>
 <!--
     当 adjustViewBounds 属性为 true 时，
     ImageView 控件会根据图片的实际宽高比例来自适应调整控件的大小，
@@ -15,5 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scaleType="fitXY"
+    android:src="@{imageUrl}"
     android:adjustViewBounds="true"
     tools:ignore="ContentDescription" />
+</layout>

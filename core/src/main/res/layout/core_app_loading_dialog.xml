@@ -7,7 +7,7 @@
         android:layout_width="65dp"
         android:layout_height="65dp"
         android:layout_gravity="center"
-        android:background="@drawable/core_bg_lottie_loadinng_dialog"
+        android:background="@drawable/bg_lottie_loadinng_dialog"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         >
