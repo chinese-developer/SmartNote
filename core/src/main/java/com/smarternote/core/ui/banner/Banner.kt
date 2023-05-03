@@ -10,11 +10,11 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import com.smarternote.core.utils.slowScroll
 import kotlin.math.abs
 
 
@@ -58,16 +58,8 @@ class Banner @JvmOverloads constructor(
             compositePagetransformer = CompositePageTransformer()
             setPageTransformer(compositePagetransformer)
             registerOnPageChangeCallback(OnPageChangeCallback())
+            slowScroll()
             adapter = this@Banner.adapter
-        }
-        val slowRecyclerView = SlowRecyclerView(context)
-        viewPager.children.forEach { child ->
-            if (child is RecyclerView) {
-                viewPager.removeView(child)
-                slowRecyclerView.layoutParams = child.layoutParams
-                viewPager.addView(slowRecyclerView)
-                return@forEach
-            }
         }
         addView(viewPager)
 
@@ -242,22 +234,6 @@ class Banner @JvmOverloads constructor(
             }
         }
         return super.onInterceptTouchEvent(ev)
-    }
-
-    private val slowScrollPageTransformer = ViewPager2.PageTransformer { page, position ->
-        page.translationX = -page.width * position * flingFactor
-    }
-
-    inner class SlowRecyclerView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
-    ) : RecyclerView(context, attrs, defStyleAttr) {
-        override fun fling(velocityX: Int, velocityY: Int): Boolean {
-            val newVelocityX = (velocityX * flingFactor).toInt()
-            val newVelocityY = (velocityY * flingFactor).toInt()
-            return super.fling(newVelocityX, newVelocityY)
-        }
     }
 
     inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
