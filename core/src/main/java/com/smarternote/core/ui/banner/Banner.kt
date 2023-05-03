@@ -6,10 +6,13 @@ import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
+import android.util.DisplayMetrics
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -33,6 +36,7 @@ class Banner @JvmOverloads constructor(
     private var autoPlay = true
 
     var currentPage = 0
+    private var speedFactor = 0.3f
     private var aspectRatio = 16f / 9f
     private var autoTurningTime = 4000L
     private var indicator: Indicator? = null
@@ -54,10 +58,11 @@ class Banner @JvmOverloads constructor(
             offscreenPageLimit = 1
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             compositePagetransformer = CompositePageTransformer()
-            compositePagetransformer.addTransformer(CustomSpeedPageTransformer())
             setPageTransformer(compositePagetransformer)
             registerOnPageChangeCallback(OnPageChangeCallback())
             adapter = this@Banner.adapter
+            val recyclerView = getChildAt(0) as RecyclerView
+            recyclerView.layoutManager = SlowLinearLayoutManager(context)
         }
         addView(viewPager)
 
@@ -105,6 +110,11 @@ class Banner @JvmOverloads constructor(
     }
 
     fun setAutoTurningTime(autoTurningTime: Long): Banner {
+        this.autoTurningTime = autoTurningTime
+        return this
+    }
+
+    fun setSpeedFactor(autoTurningTime: Long): Banner {
         this.autoTurningTime = autoTurningTime
         return this
     }
@@ -229,11 +239,23 @@ class Banner @JvmOverloads constructor(
         return super.onInterceptTouchEvent(ev)
     }
 
-    inner class CustomSpeedPageTransformer : ViewPager2.PageTransformer {
-        private val speed = 0.5f
-        override fun transformPage(page: View, position: Float) {
-            val adjustedPosition: Float = position * speed
-            page.translationX = -adjustedPosition * page.width
+    inner class SlowLinearSmoothScroller(context: Context) : LinearSmoothScroller(context) {
+
+        override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
+            return speedFactor / displayMetrics.densityDpi
+        }
+    }
+
+    inner class SlowLinearLayoutManager(context: Context) : LinearLayoutManager(context, HORIZONTAL, false) {
+
+        override fun smoothScrollToPosition(
+            recyclerView: RecyclerView?,
+            state: RecyclerView.State?,
+            position: Int
+        ) {
+            val smoothScroller = SlowLinearSmoothScroller(context)
+            smoothScroller.targetPosition = position
+            startSmoothScroll(smoothScroller)
         }
     }
 
