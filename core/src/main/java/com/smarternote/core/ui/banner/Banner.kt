@@ -1,4 +1,4 @@
-@file:Suppress("NotifyDataSetChanged")
+@file:Suppress("NotifyDataSetChanged", "UNCHECKED_CAST", "unused")
 package com.smarternote.core.ui.banner
 
 import android.content.Context
@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
@@ -246,8 +245,7 @@ class Banner @JvmOverloads constructor(
         }
 
         fun register(adapter: RecyclerView.Adapter<out ViewHolder>) {
-            @Suppress("UNCHECKED_CAST")
-            this.externalAdapter = adapter as Adapter<ViewHolder>
+            this.externalAdapter = adapter as RecyclerView.Adapter<ViewHolder>
         }
     }
 }
