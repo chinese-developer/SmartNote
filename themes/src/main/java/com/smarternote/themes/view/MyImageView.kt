@@ -22,13 +22,17 @@ class MyImageView @JvmOverloads constructor(
     var imageUrl: String? = null
         set(value) {
             field = value
-            loadImage()
+            if (value != null) {
+                loadImage()
+            }
         }
 
     var imageResId: Int? = null
         set(value) {
             field = value
-            loadImage()
+            if (value != null) {
+                loadImage()
+            }
         }
 
     var placeholderResId: Int? = null
