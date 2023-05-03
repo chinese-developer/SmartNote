@@ -10,7 +10,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -29,6 +28,7 @@ class Banner @JvmOverloads constructor(
     private val handler = Handler(Looper.getMainLooper())
     private val compositePagetransformer: CompositePageTransformer
 
+    private var isPollingStarted = false
     private var autoPlayRunnable = getAutoPlayRunnable()
     private var autoPlay = true
 
@@ -150,10 +150,15 @@ class Banner @JvmOverloads constructor(
     }
 
     private fun startPolling() {
+        if (isPollingStarted) {
+            return
+        }
+        isPollingStarted = true
         handler.postDelayed(autoPlayRunnable, autoTurningTime)
     }
 
     private fun stopPolling() {
+        isPollingStarted = false
         handler.removeCallbacks(autoPlayRunnable)
     }
 
