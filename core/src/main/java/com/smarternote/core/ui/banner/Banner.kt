@@ -2,6 +2,7 @@
 package com.smarternote.core.ui.banner
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
@@ -44,6 +46,7 @@ class Banner @JvmOverloads constructor(
     }
 
     init {
+        buildDefaultIndicator()
         adapter = WrapperAdapter()
         viewPager = ViewPager2(context).apply {
             layoutParams = ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
@@ -65,6 +68,18 @@ class Banner @JvmOverloads constructor(
 //        }
     }
 
+    private fun buildDefaultIndicator() {
+        indicator = IndicatorView(context)
+            .setIndicatorRatio(4f)
+            .setIndicatorRadius(2f)
+            .setIndicatorSelectedRatio(6f)
+            .setIndicatorSelectedRadius(2f)
+            .setIndicatorSpacing(0f)
+            .setIndicatorStyle(IndicatorView.IndicatorStyle.INDICATOR_CIRCLE_RECT)
+            .setIndicatorColor(Color.parseColor("#1AFFFFFF"))
+            .setIndicatorSelectorColor(Color.parseColor("#99FFFFFF"))
+    }
+
     private fun getAutoPlayRunnable() = object : Runnable {
         override fun run() {
             if (adapter.itemCount > 0) {
@@ -79,7 +94,7 @@ class Banner @JvmOverloads constructor(
         startPolling()
     }
 
-    fun setAdapter(adapter: RecyclerView.Adapter<ViewHolder>): Banner {
+    fun setAdapter(adapter: RecyclerView.Adapter<out ViewHolder>): Banner {
         this.adapter.register(adapter)
         this.adapter.notifyDataSetChanged()
         return this
@@ -95,7 +110,7 @@ class Banner @JvmOverloads constructor(
         return this
     }
 
-    fun setIndicator(indicator: Indicator): Banner {
+    fun setIndicator(indicator: Indicator?): Banner {
         this.indicator = indicator
         return this
     }
@@ -127,11 +142,11 @@ class Banner @JvmOverloads constructor(
         stopPolling()
     }
 
-    fun startPolling() {
-        handler.postDelayed(autoPlayRunnable, 3000)
+    private fun startPolling() {
+        handler.postDelayed(autoPlayRunnable, autoTurningTime)
     }
 
-    fun stopPolling() {
+    private fun stopPolling() {
         handler.removeCallbacks(autoPlayRunnable)
     }
 
@@ -229,8 +244,9 @@ class Banner @JvmOverloads constructor(
             return externalAdapter.onBindViewHolder(holder, position)
         }
 
-        fun register(adapter: RecyclerView.Adapter<ViewHolder>) {
-            this.externalAdapter = adapter
+        fun register(adapter: RecyclerView.Adapter<out ViewHolder>) {
+            @Suppress("UNCHECKED_CAST")
+            this.externalAdapter = adapter as Adapter<ViewHolder>
         }
     }
 }
