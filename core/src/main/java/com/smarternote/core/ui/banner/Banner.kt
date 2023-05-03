@@ -60,9 +60,9 @@ class Banner @JvmOverloads constructor(
             compositePagetransformer = CompositePageTransformer()
             setPageTransformer(compositePagetransformer)
             registerOnPageChangeCallback(OnPageChangeCallback())
-            adapter = this@Banner.adapter
             val recyclerView = getChildAt(0) as RecyclerView
             recyclerView.layoutManager = SlowLinearLayoutManager(context)
+            adapter = this@Banner.adapter
         }
         addView(viewPager)
 
