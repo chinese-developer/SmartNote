@@ -91,7 +91,5 @@ dependencies {
 
     // 一个强大、可扩展且易于使用的 ViewPager 指示器
     api("com.github.hackware1993:MagicIndicator:${Dependencies.Github.magicIndicator}")
-    // Android 轮播库
-    api("com.github.bingoogolapple:BGABanner-Android:${Dependencies.Github.bgaBanner}")
 
 }

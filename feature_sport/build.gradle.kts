@@ -48,4 +48,6 @@ dependencies {
     // ARouter 跨组件通信的路由框架
 //    implementation("com.alibaba:arouter-api:${Dependencies.arouter}")
 //    kapt("com.alibaba:arouter-compiler:${Dependencies.arouter}")
+
+    implementation("io.github.cymchad:BaseRecyclerViewAdapterHelper:4.0.0-beta06")
 }

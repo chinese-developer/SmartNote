@@ -1,84 +1,236 @@
-@file:Suppress("ObjectLiteralToLambda")
-
+@file:Suppress("NotifyDataSetChanged")
 package com.smarternote.core.ui.banner
 
 import android.content.Context
-import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.viewpager.widget.ViewPager
-import cn.bingoogolapple.bgabanner.BGABanner
-import com.smarternote.core.R
-import net.lucode.hackware.magicindicator.MagicIndicator
-import net.lucode.hackware.magicindicator.buildins.circlenavigator.CircleNavigator
+import android.widget.FrameLayout
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.viewpager2.widget.CompositePageTransformer
+import androidx.viewpager2.widget.ViewPager2
+import kotlin.math.abs
 
-class Banner<T> @JvmOverloads constructor(
+
+class Banner @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr) {
+    defStyleAttr: Int = 0,
+) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private lateinit var bgaBanner: BGABanner
-    private lateinit var magicIndicator: MagicIndicator
-    private val circleNavigator by lazy { CircleNavigator(context) }
-    private var adapter: BGABanner.Adapter<View, T>? = null
-    private var viewList = listOf<View>()
-    private var bindView: ((View, T) -> Unit)? = null
+    private val viewPager: ViewPager2
+    private val adapter: WrapperAdapter
+    private val handler = Handler(Looper.getMainLooper())
+    private val compositePagetransformer: CompositePageTransformer
+
+    private var autoPlayRunnable = getAutoPlayRunnable()
+    private var autoPlay = true
+
+    var currentPage = 0
+    private var autoTurningTime = 4000L
+    private var indicator: Indicator? = null
+    private var onPageChangeCallback: ViewPager2.OnPageChangeCallback? = null
+
+    companion object {
+        /**
+         * 滑动距离的阈值
+         */
+        private const val SCALED_TOUCH_SLOP = 8
+
+    }
 
     init {
-        if (!isInEditMode) {
-            inflate(context, R.layout.core_layout_banner, this)
+        adapter = WrapperAdapter()
+        viewPager = ViewPager2(context).apply {
+            layoutParams = ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            offscreenPageLimit = 1
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            compositePagetransformer = CompositePageTransformer()
+            compositePagetransformer.addTransformer(CustomSpeedPageTransformer())
+            setPageTransformer(compositePagetransformer)
+            registerOnPageChangeCallback(OnPageChangeCallback())
+        }
+        addView(viewPager)
 
-            bgaBanner = findViewById(R.id.bga_banner)
-            magicIndicator = findViewById(R.id.magic_indicator)
+//        viewPager.setPageTransformer { page, position ->
+//            val absPos = abs(position)
+//            page.scaleY = (1 - absPos) * 0.15f + 0.85f
+//            page.alpha = 1 - absPos
+//            page.translationX = -page.width * position
+//            page.translationY = 30 * absPos
+//        }
+    }
 
-            circleNavigator.circleCount = viewList.size
-            circleNavigator.circleColor = Color.RED
-            circleNavigator.circleClickListener = CircleNavigator.OnCircleClickListener { index -> bgaBanner.currentItem = index }
-            magicIndicator.navigator = circleNavigator
-
-            bgaBanner.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                    magicIndicator.onPageScrolled(position % viewList.size, positionOffset, positionOffsetPixels)
-                }
-
-                override fun onPageSelected(position: Int) {
-                    magicIndicator.onPageSelected(position % viewList.size)
-                }
-
-                override fun onPageScrollStateChanged(state: Int) {
-                    magicIndicator.onPageScrollStateChanged(state)
-                }
-            })
+    private fun getAutoPlayRunnable() = object : Runnable {
+        override fun run() {
+            if (adapter.itemCount > 0) {
+                viewPager.currentItem = viewPager.currentItem + 1
+            }
+            handler.postDelayed(this, autoTurningTime)
         }
     }
 
-    fun setData(viewList: List<View>, bindView: (View, T) -> Unit) {
-        this.viewList = viewList
-        this.bindView = bindView
-        if (adapter == null) {
-            adapter = object : BGABanner.Adapter<View, T> {
-                override fun fillBannerItem(banner: BGABanner?, itemView: View, model: T?, position: Int) {
-                    if (model != null) {
-                        bindView(itemView, model)
+    fun build() {
+        indicator?.initIndicatorCount(adapter.itemCount)
+        startPolling()
+    }
+
+    fun setAdapter(adapter: RecyclerView.Adapter<ViewHolder>): Banner {
+        this.adapter.register(adapter)
+        this.adapter.notifyDataSetChanged()
+        return this
+    }
+
+    fun setAutoTurningTime(autoTurningTime: Long): Banner {
+        this.autoTurningTime = autoTurningTime
+        return this
+    }
+
+    fun setPageTransformer(transformer: ViewPager2.PageTransformer): Banner {
+        viewPager.setPageTransformer(transformer)
+        return this
+    }
+
+    fun setIndicator(indicator: Indicator): Banner {
+        this.indicator = indicator
+        return this
+    }
+
+    fun setOnpageChangeCallback(onPageChangeCallback: ViewPager2.OnPageChangeCallback): Banner {
+        this.onPageChangeCallback = onPageChangeCallback
+        return this
+    }
+
+    fun setAutoPlay(enable: Boolean): Banner {
+        autoPlay = enable
+        if (enable) {
+            startPolling()
+        } else {
+            stopPolling()
+        }
+        return this
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (autoPlay) {
+            startPolling()
+        }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        stopPolling()
+    }
+
+    fun startPolling() {
+        handler.postDelayed(autoPlayRunnable, 3000)
+    }
+
+    fun stopPolling() {
+        handler.removeCallbacks(autoPlayRunnable)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (autoPlay && viewPager.isUserInputEnabled) {
+            when (ev?.action) {
+                MotionEvent.ACTION_DOWN -> stopPolling()
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_OUTSIDE -> startPolling()
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
+    private var startX = 0f
+    private var lastX = 0f
+    private var startY = 0f
+    private var lastY = 0f
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        when (ev?.action) {
+            MotionEvent.ACTION_DOWN -> {
+                // 当手指按下时，记录初始位置信息。
+                startX = ev.rawX
+                lastX = startX
+                startY = ev.rawY
+                lastY = startY
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                // 当手指移动时，根据 ViewPager2 的方向计算水平或垂直方向上的滑动距离，根据一定的阈值判断是否需要禁止父布局拦截事件。
+                lastX = ev.rawX
+                lastY = ev.rawY
+                if (viewPager.isUserInputEnabled) {
+                    val distanceX = abs(lastX - startX)
+                    val distanceY = abs(lastY - startY)
+                    val disallowIntercept = if (viewPager.orientation == ViewPager2.ORIENTATION_HORIZONTAL) {
+                        distanceX > SCALED_TOUCH_SLOP && distanceX > distanceY
+                    } else {
+                        distanceY > SCALED_TOUCH_SLOP && distanceY > distanceX
                     }
+                    parent.requestDisallowInterceptTouchEvent(disallowIntercept)
                 }
             }
-            bgaBanner.setAdapter(adapter)
-            bgaBanner.setAutoPlayAble(true)
-        }
-        bgaBanner.setData(this.viewList, null)
-    }
 
-
-    fun setOnBannerItemClick(onBannerItemClick: (Int) -> Unit) {
-        bgaBanner.setDelegate(object : BGABanner.Delegate<ViewGroup, T> {
-            override fun onBannerItemClick(banner: BGABanner?, itemView: ViewGroup?, model: T?, position: Int) {
-                onBannerItemClick(position)
+            MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
+                // 当手指抬起或取消时，判断是否发生了足够的滑动距离，如果滑动距离超过一定的阈值，则认为需要拦截事件，否则交给子视图进行处理。
+                return abs(lastX - startX) > SCALED_TOUCH_SLOP || abs(lastY - startY) > SCALED_TOUCH_SLOP
             }
-        })
+        }
+        return super.onInterceptTouchEvent(ev)
     }
 
+    inner class CustomSpeedPageTransformer : ViewPager2.PageTransformer {
+        private val speed = 0.5f
+        override fun transformPage(page: View, position: Float) {
+            val adjustedPosition: Float = position * speed
+            page.translationX = -adjustedPosition * page.width
+        }
+    }
+
+    inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            onPageChangeCallback?.onPageScrolled(position, positionOffset, positionOffsetPixels)
+            indicator?.onPageScrolled(position, positionOffset, positionOffsetPixels)
+        }
+
+        override fun onPageSelected(position: Int) {
+            currentPage = position
+            onPageChangeCallback?.onPageSelected(position)
+            indicator?.onPageSelected(position)
+        }
+
+        override fun onPageScrollStateChanged(state: Int) {
+            onPageChangeCallback?.onPageScrollStateChanged(state)
+            indicator?.onPageScrollStateChanged(state)
+            if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+                if (currentPage == adapter.itemCount - 1) {
+                    viewPager.setCurrentItem(0, false)
+                }
+            }
+        }
+    }
+
+    inner class WrapperAdapter : RecyclerView.Adapter<ViewHolder>() {
+
+        private lateinit var externalAdapter: RecyclerView.Adapter<ViewHolder>
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            return externalAdapter.onCreateViewHolder(parent, viewType)
+        }
+
+        override fun getItemCount(): Int {
+            return externalAdapter.itemCount
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            return externalAdapter.onBindViewHolder(holder, position)
+        }
+
+        fun register(adapter: RecyclerView.Adapter<ViewHolder>) {
+            this.externalAdapter = adapter
+        }
+    }
 }
