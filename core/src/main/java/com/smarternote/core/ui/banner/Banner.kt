@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -48,7 +49,7 @@ class Banner @JvmOverloads constructor(
         buildDefaultIndicator()
         adapter = WrapperAdapter()
         viewPager = ViewPager2(context).apply {
-            layoutParams = ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             offscreenPageLimit = 1
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             compositePagetransformer = CompositePageTransformer()
@@ -150,6 +151,19 @@ class Banner @JvmOverloads constructor(
         handler.removeCallbacks(autoPlayRunnable)
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
+
+        if (widthMode == MeasureSpec.EXACTLY) {
+            val heightSize = (widthSize * 9 / 16f).toInt()
+            val newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY)
+            super.onMeasure(widthMeasureSpec, newHeightMeasureSpec)
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        }
+    }
+
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (autoPlay && viewPager.isUserInputEnabled) {
             when (ev?.action) {
@@ -221,8 +235,11 @@ class Banner @JvmOverloads constructor(
         override fun onPageScrollStateChanged(state: Int) {
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
-            if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                if (currentPage == adapter.itemCount - 1) {
+            if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                val itemCount = adapter.itemCount
+                if (currentPage == 0) {
+                    viewPager.setCurrentItem(itemCount - 1, false)
+                } else if (currentPage == itemCount - 1) {
                     viewPager.setCurrentItem(0, false)
                 }
             }
