@@ -33,6 +33,7 @@ class Banner @JvmOverloads constructor(
     private var autoPlay = true
 
     var currentPage = 0
+    private var aspectRatio = 16f / 9f
     private var autoTurningTime = 4000L
     private var indicator: Indicator? = null
     private var onPageChangeCallback: ViewPager2.OnPageChangeCallback? = null
@@ -121,6 +122,11 @@ class Banner @JvmOverloads constructor(
         return this
     }
 
+    fun setAspectRatio(ratio: Float): Banner {
+        aspectRatio = ratio
+        return this
+    }
+
     fun setAutoPlay(enable: Boolean): Banner {
         autoPlay = enable
         if (enable) {
@@ -156,7 +162,7 @@ class Banner @JvmOverloads constructor(
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
 
         if (widthMode == MeasureSpec.EXACTLY) {
-            val heightSize = (widthSize * 9 / 16f).toInt()
+            val heightSize = (widthSize / aspectRatio).toInt()
             val newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY)
             super.onMeasure(widthMeasureSpec, newHeightMeasureSpec)
         } else {
