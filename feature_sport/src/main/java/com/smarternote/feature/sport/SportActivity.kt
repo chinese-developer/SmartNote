@@ -2,17 +2,14 @@ package com.smarternote.feature.sport
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.DataBindingHolder
 import com.smarternote.core.base.activity.StatusBarBaseActivity
 import com.smarternote.core.ui.banner.Banner
-import com.smarternote.core.ui.banner.IndicatorView
 import com.smarternote.feature.sport.SportActivity.BannerAdapter2.VH
 import com.smarternote.feature.sport.databinding.ItemBannerBinding
 
@@ -74,7 +71,8 @@ class SportActivity : StatusBarBaseActivity() {
 
         override fun getItemCount(): Int = items.size
 
-        @SuppressLint("NotifyDataSetChanged") fun submitList(data: List<String>?) {
+        @SuppressLint("NotifyDataSetChanged")
+        fun submitList(data: List<String>?) {
             items.clear()
             if (!data.isNullOrEmpty()) {
                 items.addAll(data)

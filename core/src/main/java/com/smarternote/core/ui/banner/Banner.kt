@@ -56,6 +56,7 @@ class Banner @JvmOverloads constructor(
             compositePagetransformer.addTransformer(CustomSpeedPageTransformer())
             setPageTransformer(compositePagetransformer)
             registerOnPageChangeCallback(OnPageChangeCallback())
+            adapter = this@Banner.adapter
         }
         addView(viewPager)
 
