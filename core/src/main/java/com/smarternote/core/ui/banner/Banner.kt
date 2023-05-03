@@ -232,12 +232,13 @@ class Banner @JvmOverloads constructor(
     inner class WrapperAdapter : RecyclerView.Adapter<ViewHolder>() {
 
         private lateinit var externalAdapter: RecyclerView.Adapter<ViewHolder>
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             return externalAdapter.onCreateViewHolder(parent, viewType)
         }
 
         override fun getItemCount(): Int {
-            return externalAdapter.itemCount
+            return if (::externalAdapter.isInitialized) externalAdapter.itemCount else 0
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {

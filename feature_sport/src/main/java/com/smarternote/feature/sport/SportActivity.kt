@@ -46,11 +46,11 @@ class SportActivity : StatusBarBaseActivity() {
 
     }
 
-    inner class BannerAdapter2(
+    class BannerAdapter2(
         private val items: MutableList<String> = mutableListOf()
     ) : RecyclerView.Adapter<VH>() {
 
-        inner class VH(
+        class VH(
             parent: ViewGroup,
             val binding: ItemBannerBinding = ItemBannerBinding.inflate(
                 LayoutInflater.from(
