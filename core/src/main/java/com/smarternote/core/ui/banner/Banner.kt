@@ -79,7 +79,9 @@ class Banner @JvmOverloads constructor(
             .setIndicatorSpacing(0f)
             .setIndicatorStyle(IndicatorView.IndicatorStyle.INDICATOR_CIRCLE_RECT)
             .setIndicatorColor(Color.parseColor("#1AFFFFFF"))
-            .setIndicatorSelectorColor(Color.parseColor("#99FFFFFF"))
+            .setIndicatorSelectorColor(Color.parseColor("#99FFFFFF")).apply {
+                this@Banner.addView(getView(), layoutParams)
+            }
     }
 
     private fun getAutoPlayRunnable() = object : Runnable {
@@ -113,7 +115,11 @@ class Banner @JvmOverloads constructor(
     }
 
     fun setIndicator(indicator: Indicator?): Banner {
+        removeView(this.indicator?.getView())
         this.indicator = indicator
+        if (indicator != null) {
+            addView(indicator.getView(), indicator.getLayoutParams())
+        }
         return this
     }
 
