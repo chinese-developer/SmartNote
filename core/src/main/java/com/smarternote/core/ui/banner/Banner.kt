@@ -50,7 +50,7 @@ class Banner @JvmOverloads constructor(
         buildDefaultIndicator()
         adapter = WrapperAdapter()
         viewPager = ViewPager2(context).apply {
-            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             offscreenPageLimit = 1
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             compositePagetransformer = CompositePageTransformer()
