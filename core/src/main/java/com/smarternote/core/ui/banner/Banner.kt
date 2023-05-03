@@ -4,17 +4,22 @@ package com.smarternote.core.ui.banner
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Rect
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import com.smarternote.core.utils.slowScroll
 import kotlin.math.abs
 
 
@@ -34,7 +39,7 @@ class Banner @JvmOverloads constructor(
     private var autoPlay = true
 
     var currentPage = 0
-    private var flingFactor = 0.5f
+    private var pageSpeedFlingFactor = 0.5f
     private var aspectRatio = 16f / 9f
     private var autoTurningTime = 4000L
     private var indicator: Indicator? = null
@@ -58,9 +63,9 @@ class Banner @JvmOverloads constructor(
             compositePagetransformer = CompositePageTransformer()
             setPageTransformer(compositePagetransformer)
             registerOnPageChangeCallback(OnPageChangeCallback())
-            slowScroll()
             adapter = this@Banner.adapter
         }
+        slowFlingRecyclerView(viewPager)
         addView(viewPager)
 
 //        viewPager.setPageTransformer { page, position ->
@@ -111,8 +116,8 @@ class Banner @JvmOverloads constructor(
         return this
     }
 
-    fun setSpeedFactor(autoTurningTime: Long): Banner {
-        this.autoTurningTime = autoTurningTime
+    fun setPageSpeedFlingFactor(pageSpeedFlingFactor: Float): Banner {
+        this.pageSpeedFlingFactor = pageSpeedFlingFactor
         return this
     }
 
@@ -282,4 +287,98 @@ class Banner @JvmOverloads constructor(
             this.externalAdapter = adapter as RecyclerView.Adapter<ViewHolder>
         }
     }
+
+    inner class SlowFlingLayoutManager(
+        context: Context,
+        private val layoutManager: LinearLayoutManager
+    ) : LinearLayoutManager(context, layoutManager.orientation, false) {
+
+        override fun performAccessibilityAction(
+            recycler: RecyclerView.Recycler,
+            state: RecyclerView.State,
+            action: Int,
+            args: Bundle?
+        ): Boolean {
+            return layoutManager.performAccessibilityAction(recycler, state, action, args)
+        }
+
+        override fun onInitializeAccessibilityNodeInfo(
+            recycler: RecyclerView.Recycler,
+            state: RecyclerView.State,
+            info: AccessibilityNodeInfoCompat
+        ) {
+            layoutManager.onInitializeAccessibilityNodeInfo(recycler, state, info)
+        }
+
+        override fun requestChildRectangleOnScreen(
+            parent: RecyclerView,
+            child: View,
+            rect: Rect,
+            immediate: Boolean,
+            focusedChildVisible: Boolean
+        ): Boolean {
+            return layoutManager.requestChildRectangleOnScreen(parent, child, rect, immediate, focusedChildVisible)
+        }
+
+        override fun smoothScrollToPosition(recyclerView: RecyclerView, state: RecyclerView.State, position: Int) {
+            val linearSmoothScroller = object : LinearSmoothScroller(recyclerView.context) {
+                override fun calculateTimeForDeceleration(dx: Int): Int {
+                    return (pageSpeedFlingFactor * (1 - 0.3356)).toInt()
+                }
+            }
+            linearSmoothScroller.targetPosition = position
+            layoutManager.startSmoothScroll(linearSmoothScroller)
+        }
+
+        override fun calculateExtraLayoutSpace(state: RecyclerView.State, extraLayoutSpace: IntArray) {
+            val pageLimit = viewPager.offscreenPageLimit
+            if (pageLimit == ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT) {
+                super.calculateExtraLayoutSpace(state, extraLayoutSpace)
+                return
+            }
+            val offscreenSpace = getPageSize() * pageLimit
+            extraLayoutSpace[0] = offscreenSpace
+            extraLayoutSpace[1] = offscreenSpace
+        }
+
+        private fun getPageSize(): Int {
+            val rv = viewPager.getChildAt(0) as RecyclerView
+            return if (orientation == RecyclerView.HORIZONTAL) {
+                rv.width - rv.paddingLeft - rv.paddingRight
+            } else {
+                rv.height - rv.paddingTop - rv.paddingBottom
+            }
+        }
+    }
+
+    private fun slowFlingRecyclerView(viewPager2: ViewPager2) {
+        try {
+            val recyclerView = viewPager2.getChildAt(0) as RecyclerView
+            recyclerView.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            val originalLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+            val proxyLayoutManager = SlowFlingLayoutManager(viewPager2.context, originalLayoutManager)
+            recyclerView.layoutManager = proxyLayoutManager
+
+            listOf("mLayoutManager", "mScrollEventAdapter", "mPageTransformerAdapter").forEach { fieldName ->
+                ViewPager2::class.java.getDeclaredField(fieldName).apply {
+                    isAccessible = true
+                    val fieldValue = get(viewPager2)
+                    fieldValue?.javaClass?.getDeclaredField("mLayoutManager")?.apply {
+                        isAccessible = true
+                        set(fieldValue, proxyLayoutManager)
+                    }
+                }
+            }
+
+            RecyclerView.LayoutManager::class.java.getDeclaredField("mRecyclerView").apply {
+                isAccessible = true
+                set(originalLayoutManager, recyclerView)
+            }
+        } catch (e: NoSuchFieldException) {
+            e.printStackTrace()
+        } catch (e: IllegalAccessException) {
+            e.printStackTrace()
+        }
+    }
+
 }
