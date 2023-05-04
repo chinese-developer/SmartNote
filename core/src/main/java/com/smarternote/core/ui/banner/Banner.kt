@@ -91,9 +91,9 @@ class Banner @JvmOverloads constructor(
         override fun run() {
             if (isAutoPlay()) {
                 currentPageSelectedPosition++
-                if (currentPageSelectedPosition == realItemCount + 3) {
-                    viewPager.setCurrentItem(2, false)
-                    currentPageSelectedPosition = 2
+                if (currentPageSelectedPosition == realItemCount + 2) {
+                    viewPager.setCurrentItem(1, false)
+                    currentPageSelectedPosition = 1
                 } else {
                     viewPager.setCurrentItem(currentPageSelectedPosition, true)
                 }
@@ -297,12 +297,12 @@ class Banner @JvmOverloads constructor(
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
             if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                if (currentPageSelectedPosition == realItemCount + 2) {
-                    viewPager.setCurrentItem(2, false)
-                    currentPageSelectedPosition = 2
-                } else if (currentPageSelectedPosition == 1) {
-                    viewPager.setCurrentItem(realItemCount + 1, false)
-                    currentPageSelectedPosition = realItemCount + 1
+               state_ if (currentPageSelectedPosition == realItemCount + 1) {
+                    viewPager.setCurrentItem(1, false)
+                    currentPageSelectedPosition = 1
+                } else if (currentPageSelectedPosition == 0) {
+                    viewPager.setCurrentItem(realItemCount, false)
+                    currentPageSelectedPosition = realItemCount
                 }
             }
         }
