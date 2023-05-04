@@ -109,9 +109,8 @@ class Banner @JvmOverloads constructor(
         viewPager.adapter?.notifyDataSetChanged() ?: kotlin.run {
             viewPager.adapter = adapter
         }
-//        currentPageSelectedPosition = startPosition
+        currentPageSelectedPosition = startPosition + 2
         viewPager.isUserInputEnabled = realItemCount > 1
-        currentPageSelectedPosition = startPosition
         if (realItemCount > 1) {
             val selectedPosition = realItemCount * draggingExtraPageCount + currentPageSelectedPosition % realItemCount
             viewPager.setCurrentItem(selectedPosition, false)
