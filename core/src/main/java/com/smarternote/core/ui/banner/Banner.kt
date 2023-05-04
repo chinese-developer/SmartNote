@@ -91,7 +91,7 @@ class Banner @JvmOverloads constructor(
         override fun run() {
             if (isAutoPlay()) {
                 currentPageSelectedPosition++
-                if (currentPageSelectedPosition == realItemCount + 2) {
+                if (currentPageSelectedPosition == realItemCount + 1) {
                     viewPager.setCurrentItem(1, false)
                     currentPageSelectedPosition = 1
                 } else {
@@ -285,19 +285,22 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun onPageSelected(position: Int) {
-            val onVirtualPage = currentPageSelectedPosition == -1 || draggingExtraPageCount - currentPageSelectedPosition <= 0
             currentPageSelectedPosition = position
-            if (onVirtualPage) return
-            val realPageSelectedPosition = getRealPosition(position)
-            onPageChangeCallback?.onPageSelected(realPageSelectedPosition)
-            indicator?.onPageSelected(realPageSelectedPosition)
+            currentPageSelectedPosition = position
+            val realPosition = when (position) {
+                0 -> realItemCount - 1
+                realItemCount + 1 -> 0
+                else -> position - 1
+            }
+            onPageChangeCallback?.onPageSelected(realPosition)
+            indicator?.onPageSelected(realPosition)
         }
 
         override fun onPageScrollStateChanged(state: Int) {
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
             if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-               state_ if (currentPageSelectedPosition == realItemCount + 1) {
+                if (currentPageSelectedPosition == realItemCount + 1) {
                     viewPager.setCurrentItem(1, false)
                     currentPageSelectedPosition = 1
                 } else if (currentPageSelectedPosition == 0) {
