@@ -67,7 +67,6 @@ class Banner @JvmOverloads constructor(
             compositePagetransformer = CompositePageTransformer()
             setPageTransformer(compositePagetransformer)
             registerOnPageChangeCallback(OnPageChangeCallback())
-            adapter = this@Banner.adapter
         }
         slowFlingRecyclerView(viewPager)
         addView(viewPager)
