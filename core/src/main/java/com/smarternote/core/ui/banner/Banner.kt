@@ -54,7 +54,7 @@ class Banner @JvmOverloads constructor(
     }
 
     init {
-//        buildDefaultIndicator()
+        buildDefaultIndicator()
         adapter = WrapperAdapter()
         viewPager = ViewPager2(context).apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
@@ -93,15 +93,14 @@ class Banner @JvmOverloads constructor(
 
     private fun getAutoPlayRunnable() = object : Runnable {
         override fun run() {
-            if (adapter.itemCount > 0) {
-                viewPager.currentItem = (viewPager.currentItem + 1) % adapter.itemCount
-            }
+            currentPage ++
+            viewPager.currentItem = currentPage
             handler.postDelayed(this, autoTurningTime)
         }
     }
 
     fun build() {
-//        indicator?.initIndicatorCount(adapter.itemCount)
+        indicator?.initIndicatorCount(adapter.itemCount)
         startPolling()
     }
 
@@ -244,18 +243,18 @@ class Banner @JvmOverloads constructor(
     inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             onPageChangeCallback?.onPageScrolled(position, positionOffset, positionOffsetPixels)
-//            indicator?.onPageScrolled(position, positionOffset, positionOffsetPixels)
+            indicator?.onPageScrolled(position, positionOffset, positionOffsetPixels)
         }
 
         override fun onPageSelected(position: Int) {
             currentPage = position
             onPageChangeCallback?.onPageSelected(position)
-//            indicator?.onPageSelected(position)
+            indicator?.onPageSelected(position)
         }
 
         override fun onPageScrollStateChanged(state: Int) {
             onPageChangeCallback?.onPageScrollStateChanged(state)
-//            indicator?.onPageScrollStateChanged(state)
+            indicator?.onPageScrollStateChanged(state)
             if (state == ViewPager2.SCROLL_STATE_IDLE) {
                 val itemCount = adapter.itemCount
                 // 在滚动状态变为SCROLL_STATE_IDLE时，可以确保在最后一张图片后返回第一张图片，反之亦然。
@@ -296,6 +295,10 @@ class Banner @JvmOverloads constructor(
         private val layoutManager: LinearLayoutManager
     ) : LinearLayoutManager(context, layoutManager.orientation, false) {
 
+        /**
+         * `performAccessibilityAction`，`onInitializeAccessibilityNodeInfo`，`requestChildRectangleOnScreen`
+         * 这三个方法的作用都是将 RecyclerView 的可访问性和可视化状态委托给外部传递的 LinearLayoutManager。
+         */
         override fun performAccessibilityAction(
             recycler: RecyclerView.Recycler,
             state: RecyclerView.State,
@@ -326,6 +329,7 @@ class Banner @JvmOverloads constructor(
         override fun smoothScrollToPosition(recyclerView: RecyclerView, state: RecyclerView.State, position: Int) {
             val linearSmoothScroller = object : LinearSmoothScroller(recyclerView.context) {
                 override fun calculateTimeForDeceleration(dx: Int): Int {
+                    // 计算惯性滚动的时间。
                     return (pageSpeedFlingFactor * (1 - 0.3356)).toInt()
                 }
             }
@@ -334,6 +338,7 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun calculateExtraLayoutSpace(state: RecyclerView.State, extraLayoutSpace: IntArray) {
+            // 计算额外的布局空间。
             val pageLimit = viewPager.offscreenPageLimit
             if (pageLimit == ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT) {
                 super.calculateExtraLayoutSpace(state, extraLayoutSpace)
@@ -345,6 +350,7 @@ class Banner @JvmOverloads constructor(
         }
 
         private fun getPageSize(): Int {
+            // 获取每一页的大小。
             val rv = viewPager.getChildAt(0) as RecyclerView
             return if (orientation == RecyclerView.HORIZONTAL) {
                 rv.width - rv.paddingLeft - rv.paddingRight
@@ -354,9 +360,13 @@ class Banner @JvmOverloads constructor(
         }
     }
 
+    /**
+     * 用于设置 RecyclerView 的滚动行为以解决过度滚动的问题。
+     */
     private fun slowFlingRecyclerView(viewPager2: ViewPager2) {
         try {
             val recyclerView = viewPager2.getChildAt(0) as RecyclerView
+            // 禁用RecyclerView的过度滚动效果。
             recyclerView.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
             val originalLayoutManager = recyclerView.layoutManager as LinearLayoutManager
             val proxyLayoutManager = SlowFlingLayoutManager(viewPager2.context, originalLayoutManager)
@@ -364,10 +374,13 @@ class Banner @JvmOverloads constructor(
 
             listOf("mLayoutManager", "mScrollEventAdapter", "mPageTransformerAdapter").forEach { fieldName ->
                 ViewPager2::class.java.getDeclaredField(fieldName).apply {
+                    // 设置私有字段的可访问性。
                     isAccessible = true
                     val fieldValue = get(viewPager2)
+                    // 通过反射获取 ViewPager2 的私有字段。
                     fieldValue?.javaClass?.getDeclaredField("mLayoutManager")?.apply {
                         isAccessible = true
+                        // 将自定义的 RecyclerView 布局管理器设置为 mLayoutManager 字段的值。
                         set(fieldValue, proxyLayoutManager)
                     }
                 }
