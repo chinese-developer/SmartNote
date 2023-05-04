@@ -55,7 +55,7 @@ class Banner @JvmOverloads constructor(
     private var autoPlay = false
 
     private var realItemCount = 0
-    private var atLeastItemCount = 0 // 模拟无限轮播，当手指滑动从第一页可以回退到最后一页，最后一页数据时可以滑动到第一页
+    private var pollingItemCount = 0 // 模拟无限轮播，当手指滑动从第一页可以回退到最后一页，最后一页数据时可以滑动到第一页
 
     init {
         adapter = WrapperAdapter()
@@ -91,7 +91,9 @@ class Banner @JvmOverloads constructor(
         override fun run() {
             if (isAutoPlay()) {
                 currentPageSelectedPosition++
-                if (currentPageSelectedPosition >= atLeastItemCount) {
+                if (currentPageSelectedPosition >= pollingItemCount) {
+                    // 进入这里，实际上当前视图已经正在显示第0页数据，但是 viewPager 的 currentItem 的 position 是错误的。
+                    // 我们将 viewPager 设置正确的 currentItem 并 post 触发 delay 逻辑
                     viewPager.setCurrentItem(0, false)
                     handler.post(this)
                 } else {
@@ -197,10 +199,10 @@ class Banner @JvmOverloads constructor(
         val externalAdapter = adapter.getExternalAdapter()
         if (externalAdapter == null || externalAdapter.itemCount == 0) {
             realItemCount = 0
-            atLeastItemCount = 0
+            pollingItemCount = 0
         } else {
             realItemCount = externalAdapter.itemCount
-            atLeastItemCount = realItemCount + 2
+            pollingItemCount = realItemCount + 1
         }
     }
 
@@ -277,6 +279,10 @@ class Banner @JvmOverloads constructor(
     }
 
     inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
+
+        private var needAdjust = false
+        private var targetPosition = -1
+
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             val realPageSelectedPosition = getRealPageSelectedPosition(position)
             onPageChangeCallback?.onPageScrolled(realPageSelectedPosition, positionOffset, positionOffsetPixels)
@@ -284,9 +290,9 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun onPageSelected(position: Int) {
-            val flingLastItem = realItemCount - currentPageSelectedPosition == 0
+            val onVirtualPage = realItemCount - currentPageSelectedPosition == 0
             currentPageSelectedPosition = position
-            if (flingLastItem) return
+            if (onVirtualPage) return
             val realPageSelectedPosition = getRealPageSelectedPosition(position)
             onPageChangeCallback?.onPageSelected(realPageSelectedPosition)
             indicator?.onPageSelected(realPageSelectedPosition)
@@ -297,10 +303,16 @@ class Banner @JvmOverloads constructor(
             indicator?.onPageScrollStateChanged(state)
             if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
                 if (currentPageSelectedPosition == 1) {
-                    viewPager.setCurrentItem(realItemCount + currentPageSelectedPosition, false)
+                    targetPosition = realItemCount + currentPageSelectedPosition
                 } else if (currentPageSelectedPosition == 0) {
-                    viewPager.setCurrentItem(realItemCount - 1, false)
+                    targetPosition = realItemCount - 1
+                } else {
+                    targetPosition = -1
                 }
+                needAdjust = targetPosition != -1
+            } else if (state == ViewPager2.SCROLL_STATE_IDLE && needAdjust) {
+                viewPager.setCurrentItem(targetPosition, false)
+                needAdjust = false
             }
         }
     }
@@ -318,7 +330,7 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun getItemCount(): Int {
-            return if (realItemCount > 1) atLeastItemCount else realItemCount
+            return if (realItemCount > 1) pollingItemCount else realItemCount
         }
 
         override fun getItemViewType(position: Int): Int {
