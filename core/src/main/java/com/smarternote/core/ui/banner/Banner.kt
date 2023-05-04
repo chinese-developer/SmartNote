@@ -55,7 +55,7 @@ class Banner @JvmOverloads constructor(
     private var autoPlay = false
 
     private var realItemCount = 0
-    private var atLeastItemCount = 0
+    private var atLeastItemCount = 1 // 模拟无限轮播，当手指滑动从第一页可以回退到最后一页，最后一页数据时可以滑动到第一页
 
     init {
         adapter = WrapperAdapter()
@@ -200,7 +200,7 @@ class Banner @JvmOverloads constructor(
             atLeastItemCount = 0
         } else {
             realItemCount = externalAdapter.itemCount
-            atLeastItemCount = realItemCount + 1
+            atLeastItemCount += realItemCount
         }
     }
 
@@ -298,8 +298,8 @@ class Banner @JvmOverloads constructor(
             if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
                 if (currentPageSelectedPosition == atLeastItemCount - 1) {
                     viewPager.setCurrentItem(0, false)
-                } else if (currentPageSelectedPosition < 0) {
-                    viewPager.setCurrentItem(realItemCount + currentPageSelectedPosition, false)
+                } else if (currentPageSelectedPosition <= 0) {
+                    viewPager.setCurrentItem(atLeastItemCount - 1, false)
                 }
             }
         }
