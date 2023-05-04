@@ -91,8 +91,13 @@ class Banner @JvmOverloads constructor(
         override fun run() {
             if (isAutoPlay()) {
                 currentPageSelectedPosition++
-                viewPager.setCurrentItem(currentPageSelectedPosition, true)
-                handler.postDelayed(this, turningNextPageDuration)
+                if (currentPageSelectedPosition >= realItemCount) {
+                    viewPager.setCurrentItem(0, false)
+                    handler.post(this)
+                } else {
+                    viewPager.setCurrentItem(currentPageSelectedPosition, true)
+                    handler.postDelayed(this, turningNextPageDuration)
+                }
             }
         }
     }
@@ -194,7 +199,7 @@ class Banner @JvmOverloads constructor(
             realItemCount = 0
             atLeastItemCount = 0
         } else {
-            realItemCount = adapter.itemCount
+            realItemCount = externalAdapter.itemCount
             atLeastItemCount = realItemCount + 2
         }
     }
