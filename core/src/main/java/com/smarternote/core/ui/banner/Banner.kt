@@ -55,7 +55,7 @@ class Banner @JvmOverloads constructor(
     private var autoPlay = false
 
     private var realItemCount = 0
-    private var pollingItemCount = 0 // 模拟无限轮播，当手指滑动从第一页可以回退到最后一页，最后一页数据时可以滑动到第一页
+    private var draggingExtraPageCount = 0 // 模拟无限轮播，当手指滑动从第一页可以回退到最后一页，最后一页数据时可以滑动到第一页
 
     init {
         adapter = WrapperAdapter()
@@ -91,7 +91,7 @@ class Banner @JvmOverloads constructor(
         override fun run() {
             if (isAutoPlay()) {
                 currentPageSelectedPosition++
-                if (currentPageSelectedPosition >= pollingItemCount) {
+                if (currentPageSelectedPosition == realItemCount + 3) {
                     // 进入这里，实际上当前视图显示的已经是第0页数据，但是 viewPager 的 currentItem 的 position 是错误的。
                     // 我们将 viewPager 设置正确的 currentItem 并 post 触发 delay 逻辑
                     viewPager.setCurrentItem(0, false)
@@ -111,7 +111,7 @@ class Banner @JvmOverloads constructor(
         viewPager.adapter?.notifyDataSetChanged() ?: kotlin.run {
             viewPager.adapter = adapter
         }
-        currentPageSelectedPosition = startPosition
+        currentPageSelectedPosition = startPosition + 2
         viewPager.isUserInputEnabled = realItemCount > 1
         viewPager.setCurrentItem(currentPageSelectedPosition, false)
         indicator?.initIndicatorCount(realItemCount)
@@ -199,17 +199,17 @@ class Banner @JvmOverloads constructor(
         val externalAdapter = adapter.getExternalAdapter()
         if (externalAdapter == null || externalAdapter.itemCount == 0) {
             realItemCount = 0
-            pollingItemCount = 0
+            draggingExtraPageCount = 0
         } else {
             realItemCount = externalAdapter.itemCount
-            pollingItemCount = realItemCount + 1
+            draggingExtraPageCount = realItemCount + 2 // + 2 保证第0页和最后一页 向左右滑动有数据
         }
     }
 
     private fun getRealPageSelectedPosition(position: Int): Int {
         var realPosition = 0
         if (realItemCount != 0) {
-            realPosition = position % realItemCount
+            realPosition = (position - 2) % realItemCount
         }
         if (realPosition < 0) {
             realPosition += realItemCount
@@ -287,7 +287,7 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun onPageSelected(position: Int) {
-            val onVirtualPage = realItemCount - currentPageSelectedPosition == 0
+            val onVirtualPage = currentPageSelectedPosition == -1 || draggingExtraPageCount - currentPageSelectedPosition <= 0
             currentPageSelectedPosition = position
             if (onVirtualPage) return
             val realPageSelectedPosition = getRealPageSelectedPosition(position)
@@ -298,10 +298,8 @@ class Banner @JvmOverloads constructor(
         override fun onPageScrollStateChanged(state: Int) {
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
-            if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                if (currentPageSelectedPosition == 0) {
-                    viewPager.setCurrentItem(realItemCount - 1, false)
-                } else if (currentPageSelectedPosition == realItemCount) {
+            if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+             if (currentPageSelectedPosition == realItemCount) {
                     viewPager.setCurrentItem(0, false)
                 }
             }
@@ -321,7 +319,7 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun getItemCount(): Int {
-            return if (realItemCount > 1) pollingItemCount else realItemCount
+            return if (realItemCount > 1) draggingExtraPageCount else realItemCount
         }
 
         override fun getItemViewType(position: Int): Int {
@@ -329,7 +327,8 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            return externalAdapter.onBindViewHolder(holder, getRealPageSelectedPosition(position))
+            val realPageSelectedPosition = getRealPageSelectedPosition(position)
+            return externalAdapter.onBindViewHolder(holder, realPageSelectedPosition)
         }
 
         fun register(adapter: RecyclerView.Adapter<out ViewHolder>) {

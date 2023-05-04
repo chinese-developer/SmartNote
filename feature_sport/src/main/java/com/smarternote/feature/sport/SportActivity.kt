@@ -3,6 +3,7 @@ package com.smarternote.feature.sport
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -66,6 +67,7 @@ class SportActivity : StatusBarBaseActivity() {
 
         override fun onBindViewHolder(holder: VH, position: Int) {
             val item = items[position]
+            Log.d("ACTIVITY===>", "position=$position")
             holder.binding.imageUrl = item
              holder.binding.executePendingBindings()
         }
