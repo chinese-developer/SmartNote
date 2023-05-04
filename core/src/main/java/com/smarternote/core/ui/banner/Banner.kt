@@ -20,8 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import com.smarternote.core.ui.viewpager.transformer.AntiClockSpinTransformation
-import com.smarternote.core.ui.viewpager.transformer.CubeInScalingTransformation
+import com.smarternote.core.ui.viewpager.transformer.ParallaxTransformation
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -66,20 +65,12 @@ class Banner @JvmOverloads constructor(
             offscreenPageLimit = 1
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             compositePagetransformer = CompositePageTransformer()
-            compositePagetransformer.addTransformer(CubeInScalingTransformation())
+            compositePagetransformer.addTransformer(ParallaxTransformation())
             setPageTransformer(compositePagetransformer)
             registerOnPageChangeCallback(OnPageChangeCallback())
         }
         slowFlingRecyclerView(viewPager)
         addView(viewPager)
-
-//        viewPager.setPageTransformer { page, position ->
-//            val absPos = abs(position)
-//            page.scaleY = (1 - absPos) * 0.15f + 0.85f
-//            page.alpha = 1 - absPos
-//            page.translationX = -page.width * position
-//            page.translationY = 30 * absPos
-//        }
     }
 
     private fun buildDefaultIndicator() {
@@ -100,7 +91,8 @@ class Banner @JvmOverloads constructor(
         override fun run() {
             if (isAutoPlay()) {
                 currentPageSelectedPosition++
-                viewPager.setCurrentItem(if (currentPageSelectedPosition >= realItemCount) 0 else currentPageSelectedPosition, true)
+                val lastPage = currentPageSelectedPosition >= realItemCount
+                viewPager.setCurrentItem(if (lastPage) 0 else currentPageSelectedPosition, !lastPage)
                 handler.postDelayed(this, turningNextPageDuration)
             }
         }
@@ -171,7 +163,7 @@ class Banner @JvmOverloads constructor(
 
     fun getCurrentPosition(): Int {
         val position = getRealPageSelectedPosition(currentPageSelectedPosition)
-        return max(position , 0)
+        return max(position, 0)
     }
 
     override fun onAttachedToWindow() {
@@ -199,7 +191,7 @@ class Banner @JvmOverloads constructor(
 
     private fun resetPagerItemCount() {
         val externalAdapter = adapter.getExternalAdapter()
-        realItemCount = if (externalAdapter == null || externalAdapter.itemCount == 0) 0 else  adapter.itemCount
+        realItemCount = if (externalAdapter == null || externalAdapter.itemCount == 0) 0 else adapter.itemCount
     }
 
     private fun getRealPageSelectedPosition(position: Int): Int {
@@ -304,7 +296,7 @@ class Banner @JvmOverloads constructor(
     inner class WrapperAdapter : RecyclerView.Adapter<ViewHolder>() {
 
         init {
-          setHasStableIds(true)
+            setHasStableIds(true)
         }
 
         private lateinit var externalAdapter: RecyclerView.Adapter<ViewHolder>

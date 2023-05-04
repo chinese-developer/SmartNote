@@ -4,7 +4,7 @@ import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 
 
-class ParallaxTransformer : ViewPager2.PageTransformer {
+class ParallaxTransformation : ViewPager2.PageTransformer {
 
     override fun transformPage(page: View, position: Float) {
         val width = page.width
