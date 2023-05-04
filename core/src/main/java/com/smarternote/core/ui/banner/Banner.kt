@@ -442,13 +442,26 @@ class Banner @JvmOverloads constructor(
     private fun slowFlingRecyclerView(viewPager2: ViewPager2) {
         try {
             val recyclerView = viewPager2.getChildAt(0) as RecyclerView
-            // 禁用RecyclerView的过度滚动效果。
+            // 禁用 RecyclerView 的过度滚动效果。
             recyclerView.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
             val originalLayoutManager = recyclerView.layoutManager as LinearLayoutManager
             val proxyLayoutManager = SlowFlingLayoutManager(viewPager2.context, originalLayoutManager)
+            // 使用代理的 SlowFlingLayoutManager，这时候 originalLayoutManager 上的 mRecyclerView 会被置空。
             recyclerView.layoutManager = proxyLayoutManager
 
-            listOf("mLayoutManager", "mScrollEventAdapter", "mPageTransformerAdapter").forEach { fieldName ->
+            // 由于设置了代理 SlowFlingLayoutManager，但是内部方法调用上还是使用的 originalLayoutManager 实现的方法
+            // 为了避免空指针，这里将 originalLayoutManager 塞回去
+            RecyclerView.LayoutManager::class.java.getDeclaredField("mRecyclerView").apply {
+                isAccessible = true
+                set(originalLayoutManager, recyclerView)
+            }
+
+            ViewPager2::class.java.getDeclaredField("mLayoutManager").apply {
+                isAccessible = true
+                set(viewPager2, proxyLayoutManager)
+            }
+
+            listOf("mScrollEventAdapter", "mPageTransformerAdapter").forEach { fieldName ->
                 ViewPager2::class.java.getDeclaredField(fieldName).apply {
                     // 设置私有字段的可访问性。
                     isAccessible = true
@@ -460,11 +473,6 @@ class Banner @JvmOverloads constructor(
                         set(fieldValue, proxyLayoutManager)
                     }
                 }
-            }
-
-            RecyclerView.LayoutManager::class.java.getDeclaredField("mRecyclerView").apply {
-                isAccessible = true
-                set(originalLayoutManager, recyclerView)
             }
         } catch (e: NoSuchFieldException) {
             e.printStackTrace()
