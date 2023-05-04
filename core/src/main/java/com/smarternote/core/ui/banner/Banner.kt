@@ -280,9 +280,6 @@ class Banner @JvmOverloads constructor(
 
     inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
 
-        private var needAdjust = false
-        private var targetPosition = -1
-
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             val realPageSelectedPosition = getRealPageSelectedPosition(position)
             onPageChangeCallback?.onPageScrolled(realPageSelectedPosition, positionOffset, positionOffsetPixels)
@@ -301,22 +298,12 @@ class Banner @JvmOverloads constructor(
         override fun onPageScrollStateChanged(state: Int) {
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
-            if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                targetPosition = when (currentPageSelectedPosition) {
-                  1 -> {
-                      realItemCount + currentPageSelectedPosition
-                  }
-                  0 -> {
-                      realItemCount - 1
-                  }
-                  else -> {
-                      -1
-                  }
+            if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                if (currentPageSelectedPosition == 0) {
+                    viewPager.setCurrentItem(realItemCount - 1, false)
+                } else if (currentPageSelectedPosition == realItemCount) {
+                    viewPager.setCurrentItem(0, false)
                 }
-                needAdjust = targetPosition != -1
-            } else if (state == ViewPager2.SCROLL_STATE_IDLE && needAdjust) {
-                viewPager.setCurrentItem(targetPosition, false)
-                needAdjust = false
             }
         }
     }
