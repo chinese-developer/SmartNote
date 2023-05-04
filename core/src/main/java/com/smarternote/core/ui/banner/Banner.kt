@@ -94,9 +94,8 @@ class Banner @JvmOverloads constructor(
                 if (currentPageSelectedPosition == realItemCount + 1) {
                     viewPager.setCurrentItem(1, false)
                     currentPageSelectedPosition = 1
-                } else {
-                    viewPager.setCurrentItem(currentPageSelectedPosition, true)
                 }
+                viewPager.setCurrentItem(currentPageSelectedPosition, true)
                 handler.postDelayed(this, turningNextPageDuration)
             }
         }
@@ -286,10 +285,15 @@ class Banner @JvmOverloads constructor(
 
         override fun onPageSelected(position: Int) {
             currentPageSelectedPosition = position
-            currentPageSelectedPosition = position
             val realPosition = when (position) {
-                0 -> realItemCount - 1
-                realItemCount + 1 -> 0
+                0 -> {
+                    viewPager.setCurrentItem(realItemCount, false)
+                    realItemCount - 1
+                }
+                realItemCount + 1 -> {
+                    viewPager.setCurrentItem(1, false)
+                    0
+                }
                 else -> position - 1
             }
             onPageChangeCallback?.onPageSelected(realPosition)
