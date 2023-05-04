@@ -30,7 +30,7 @@ class Banner @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    var currentPageSelected = 0
+    var currentPageSelectedPosition = 0
     private var pageSpeedFlingFactor = 0.5f
     private var aspectRatio = 16f / 9f
     private var autoTurningTime = 4000L
@@ -97,12 +97,12 @@ class Banner @JvmOverloads constructor(
 
     private fun getAutoPlayRunnable() = object : Runnable {
         override fun run() {
-            currentPageSelected ++
-            if (currentPageSelected == realItemCount + 1) {
+            currentPageSelectedPosition ++
+            if (currentPageSelectedPosition == realItemCount + 1) {
                 viewPager.setCurrentItem(0, false)
                 handler.post(this)
             } else {
-                viewPager.currentItem = currentPageSelected
+                viewPager.currentItem = currentPageSelectedPosition
                 handler.postDelayed(this, autoTurningTime)
             }
         }
@@ -163,8 +163,8 @@ class Banner @JvmOverloads constructor(
         return this
     }
 
-    fun getCurrentPageSelected(): Int {
-        val position = getRealPageSelectedPosition(currentPageSelected)
+    fun getCurrentPosition(): Int {
+        val position = getRealPageSelectedPosition(currentPageSelectedPosition)
         return max(position , 0)
     }
 
@@ -197,9 +197,9 @@ class Banner @JvmOverloads constructor(
         viewPager.adapter?.notifyDataSetChanged() ?: kotlin.run {
             viewPager.adapter = adapter
         }
-        currentPageSelected = startPosition
+        currentPageSelectedPosition = startPosition
         viewPager.isUserInputEnabled = realItemCount > 1
-        viewPager.setCurrentItem(currentPageSelected, false)
+        viewPager.setCurrentItem(currentPageSelectedPosition, false)
         indicator?.initIndicatorCount(realItemCount)
         if (autoPlay) {
             startPolling()
@@ -291,7 +291,7 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun onPageSelected(position: Int) {
-            currentPageSelected = position
+            currentPageSelectedPosition = position
             val realPageSelectedPosition = getRealPageSelectedPosition(position)
             onPageChangeCallback?.onPageSelected(realPageSelectedPosition)
             indicator?.onPageSelected(realPageSelectedPosition)
@@ -301,10 +301,10 @@ class Banner @JvmOverloads constructor(
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
             if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                if (currentPageSelected == realItemCount) {
+                if (currentPageSelectedPosition == realItemCount) {
                     viewPager.setCurrentItem(0, false)
-                } else if (currentPageSelected < 0) {
-                    viewPager.setCurrentItem(realItemCount + currentPageSelected, false)
+                } else if (currentPageSelectedPosition < 0) {
+                    viewPager.setCurrentItem(realItemCount + currentPageSelectedPosition, false)
                 }
             }
         }
@@ -360,7 +360,7 @@ class Banner @JvmOverloads constructor(
 
         override fun onChanged() {
             resetPagerItemCount()
-            val startPosition = getCurrentPageSelected()
+            val startPosition = getCurrentPosition()
             adjustBeforePolling(startPosition)
         }
     }
