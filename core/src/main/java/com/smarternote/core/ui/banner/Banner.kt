@@ -12,7 +12,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,9 +31,9 @@ class Banner @JvmOverloads constructor(
 ) : RelativeLayout(context, attrs, defStyleAttr) {
 
     var currentPageSelectedPosition = 0
-    private var pageSpeedFlingFactor = 0.5f
+    private var pageFlingDuration = 800
     private var aspectRatio = 16f / 9f
-    private var autoTurningTime = 4000L
+    private var turningNextPageDuration = 4000L
     private var indicator: Indicator? = null
     private var onPageChangeCallback: ViewPager2.OnPageChangeCallback? = null
 
@@ -52,9 +51,8 @@ class Banner @JvmOverloads constructor(
     private val handler = Handler(Looper.getMainLooper())
     private val compositePagetransformer: CompositePageTransformer
 
-    private var isPollingStarted = false
     private var autoPlayRunnable = getAutoPlayRunnable()
-    private var autoPlay = true
+    private var autoPlay = false
 
     private var realItemCount = 0
 
@@ -103,31 +101,37 @@ class Banner @JvmOverloads constructor(
                 handler.post(this)
             } else {
                 viewPager.currentItem = currentPageSelectedPosition
-                handler.postDelayed(this, autoTurningTime)
+                handler.postDelayed(this, turningNextPageDuration)
             }
         }
     }
 
-    fun build() {
+    @JvmOverloads
+    fun build(startPosition: Int = 0) {
+        resetPagerItemCount()
         indicator?.initIndicatorCount(adapter.itemCount)
+        viewPager.adapter?.notifyDataSetChanged() ?: kotlin.run {
+            viewPager.adapter = adapter
+        }
+        currentPageSelectedPosition = startPosition
+        viewPager.isUserInputEnabled = realItemCount > 1
+        viewPager.setCurrentItem(currentPageSelectedPosition, false)
+        indicator?.initIndicatorCount(realItemCount)
         startPolling()
     }
 
-    @JvmOverloads
-    fun setAdapter(adapter: RecyclerView.Adapter<out ViewHolder>, startPosition: Int = 0): Banner {
+    fun setAdapter(adapter: RecyclerView.Adapter<out ViewHolder>): Banner {
         this.adapter.register(adapter)
-        resetPagerItemCount()
-        adjustBeforePolling(startPosition)
         return this
     }
 
-    fun setAutoTurningTime(autoTurningTime: Long): Banner {
-        this.autoTurningTime = autoTurningTime
+    fun setTurningNextPageDuration(turningNextPageDuration: Long): Banner {
+        this.turningNextPageDuration = turningNextPageDuration
         return this
     }
 
-    fun setPageSpeedFlingFactor(pageSpeedFlingFactor: Float): Banner {
-        this.pageSpeedFlingFactor = pageSpeedFlingFactor
+    fun setPageFlingDuration(pageFlingDuration: Int): Banner {
+        this.pageFlingDuration = pageFlingDuration
         return this
     }
 
@@ -172,7 +176,7 @@ class Banner @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (autoPlay) {
+        if (autoPlay && realItemCount > 1) {
             startPolling()
         }
     }
@@ -183,30 +187,15 @@ class Banner @JvmOverloads constructor(
     }
 
     private fun startPolling() {
-        if (isPollingStarted) {
-            return
-        }
-        isPollingStarted = true
-        handler.postDelayed(autoPlayRunnable, autoTurningTime)
+        stopPolling()
+        handler.postDelayed(autoPlayRunnable, turningNextPageDuration)
     }
 
     private fun stopPolling() {
-        isPollingStarted = false
         handler.removeCallbacks(autoPlayRunnable)
     }
 
-    private fun adjustBeforePolling(startPosition: Int) {
-        viewPager.adapter?.notifyDataSetChanged() ?: kotlin.run {
-            viewPager.adapter = adapter
-        }
-        currentPageSelectedPosition = startPosition
-        viewPager.isUserInputEnabled = realItemCount > 1
-        viewPager.setCurrentItem(currentPageSelectedPosition, false)
-        indicator?.initIndicatorCount(realItemCount)
-        if (autoPlay) {
-            startPolling()
-        }
-    }
+    private fun isAutoPlay(): Boolean = autoPlay && realItemCount > 1
 
     private fun resetPagerItemCount() {
         val externalAdapter = adapter.getExternalAdapter()
@@ -238,7 +227,7 @@ class Banner @JvmOverloads constructor(
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        if (autoPlay && viewPager.isUserInputEnabled) {
+        if (isAutoPlay() && viewPager.isUserInputEnabled) {
             when (ev?.action) {
                 MotionEvent.ACTION_DOWN -> stopPolling()
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_OUTSIDE -> startPolling()
@@ -363,7 +352,7 @@ class Banner @JvmOverloads constructor(
         override fun onChanged() {
             resetPagerItemCount()
             val startPosition = getCurrentPosition()
-            adjustBeforePolling(startPosition)
+            build(startPosition)
         }
     }
 
@@ -407,7 +396,7 @@ class Banner @JvmOverloads constructor(
             val linearSmoothScroller = object : LinearSmoothScroller(recyclerView.context) {
                 override fun calculateTimeForDeceleration(dx: Int): Int {
                     // 计算惯性滚动的时间。
-                    return (pageSpeedFlingFactor * (1 - 0.3356)).toInt()
+                    return (pageFlingDuration * (1 - 0.3356)).toInt()
                 }
             }
             linearSmoothScroller.targetPosition = position
