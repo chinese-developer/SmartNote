@@ -277,6 +277,7 @@ class Banner @JvmOverloads constructor(
 
     inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
 
+        private var smoothScrollToFirst = false
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             val realPageSelectedPosition = getRealPosition(position)
             onPageChangeCallback?.onPageScrolled(realPageSelectedPosition, positionOffset, positionOffsetPixels)
@@ -303,15 +304,25 @@ class Banner @JvmOverloads constructor(
         override fun onPageScrollStateChanged(state: Int) {
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
-            if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                if (currentPageSelectedPosition == realItemCount + 1) {
-                    viewPager.setCurrentItem(1, false)
-                    currentPageSelectedPosition = 1
-                } else if (currentPageSelectedPosition == 0) {
+            if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                val currentItem = viewPager.currentItem
+                if (currentItem == 0) {
                     viewPager.setCurrentItem(realItemCount, false)
-                    currentPageSelectedPosition = realItemCount
+                } else if (currentItem == realItemCount + 1) {
+                    viewPager.setCurrentItem(1, false)
                 }
             }
+            if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+                handler.removeCallbacks(autoPlayRunnable)
+                if (viewPager.currentItem == realItemCount && !smoothScrollToFirst) {
+                    viewPager.setCurrentItem(0, false)
+                    smoothScrollToFirst = true
+                }
+            }
+            if (state == ViewPager2.SCROLL_STATE_SETTLING && viewPager.currentItem == realItemCount) {
+                smoothScrollToFirst = false
+            }
+            onPageChangeCallback?.onPageScrollStateChanged(state)
         }
     }
 
