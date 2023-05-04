@@ -194,6 +194,15 @@ class Banner @JvmOverloads constructor(
     private fun isAutoPlay(): Boolean = autoPlay && realItemCount > 1
 
     private fun resetPagerItemCount() {
+//        val externalAdapter = adapter.getExternalAdapter()
+//        if (externalAdapter == null || externalAdapter.itemCount == 0) {
+//            realItemCount = 0
+//            draggingExtraPageCount = 0
+//        } else {
+//            realItemCount = externalAdapter.itemCount
+//            draggingExtraPageCount = realItemCount + 2 // + 2 保证第0页和最后一页 向左右滑动有数据
+//        }
+
         realItemCount = (adapter.getExternalAdapter()?.itemCount ?: 0)
         if (realItemCount > 1) {
             val lastPosition = realItemCount * draggingExtraPageCount
@@ -206,7 +215,7 @@ class Banner @JvmOverloads constructor(
         }
     }
 
-    fun getRealPosition(position: Int): Int {
+    private fun getRealPosition(position: Int): Int {
         var realPosition = position
         if (realItemCount > 0) {
             realPosition = (position - 2) % realItemCount
@@ -215,10 +224,6 @@ class Banner @JvmOverloads constructor(
             }
         }
         return realPosition
-    }
-
-    private fun onPageSelected(position: Int) {
-        currentPageSelectedPosition = getRealPosition(position)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -291,9 +296,12 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun onPageSelected(position: Int) {
-            this@Banner.onPageSelected(position)
-            onPageChangeCallback?.onPageSelected(currentPageSelectedPosition)
-            indicator?.onPageSelected(currentPageSelectedPosition)
+            val onVirtualPage = currentPageSelectedPosition == -1 || draggingExtraPageCount - currentPageSelectedPosition <= 0
+            currentPageSelectedPosition = position
+            if (onVirtualPage) return
+            val realPageSelectedPosition = getRealPosition(position)
+            onPageChangeCallback?.onPageSelected(realPageSelectedPosition)
+            indicator?.onPageSelected(realPageSelectedPosition)
         }
 
         override fun onPageScrollStateChanged(state: Int) {
@@ -324,8 +332,7 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun getItemCount(): Int {
-            realItemCount = externalAdapter.itemCount
-            return if (realItemCount > 1) realItemCount * draggingExtraPageCount else realItemCount
+            return if (realItemCount > 1) draggingExtraPageCount else realItemCount
         }
 
         override fun getItemViewType(position: Int): Int {
