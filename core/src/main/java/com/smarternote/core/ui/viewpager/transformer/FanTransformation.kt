@@ -5,6 +5,9 @@ import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import kotlin.math.abs
 
+/**
+ * 想翻书一样的效果
+ */
 class FanTransformation : ViewPager2.PageTransformer {
 
     override fun transformPage(page: View, position: Float) {

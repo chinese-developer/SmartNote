@@ -5,6 +5,9 @@ import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import kotlin.math.abs
 
+/**
+ * 淡出变换效果
+ */
 class FadeOutTransformation : ViewPager2.PageTransformer {
 
     override fun transformPage(page: View, position: Float) {

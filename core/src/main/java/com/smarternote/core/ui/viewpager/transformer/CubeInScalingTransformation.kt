@@ -4,6 +4,9 @@ import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import kotlin.math.abs
 
+/**
+ * 立方缩放变化效果
+ */
 class CubeInScalingTransformation : ViewPager2.PageTransformer {
 
     override fun transformPage(page: View, position: Float) {
@@ -30,15 +33,10 @@ class CubeInScalingTransformation : ViewPager2.PageTransformer {
 
         }
 
-
-
         if (abs(position) <= 0.5) {
-            page.scaleY = Math.max(.4f, 1 - abs(position))
+            page.scaleY = .4f.coerceAtLeast(1 - abs(position))
         } else if (abs(position) <= 1) {
-            page.scaleY = Math.max(.4f, abs(position))
-
+            page.scaleY = .4f.coerceAtLeast(abs(position))
         }
-
-
     }
 }

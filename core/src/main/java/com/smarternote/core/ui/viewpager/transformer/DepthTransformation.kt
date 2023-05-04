@@ -34,6 +34,5 @@ class DepthTransformation : ViewPager2.PageTransformer {
                 // This page is way off-screen to the right.
                 page.alpha = 0f
         }
-
     }
 }
