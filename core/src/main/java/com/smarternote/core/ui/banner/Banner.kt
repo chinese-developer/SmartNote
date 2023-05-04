@@ -46,7 +46,6 @@ class Banner @JvmOverloads constructor(
 
     }
 
-
     private val viewPager: ViewPager2
     private val adapter: WrapperAdapter
     private val handler = Handler(Looper.getMainLooper())
@@ -56,6 +55,7 @@ class Banner @JvmOverloads constructor(
     private var autoPlay = false
 
     private var realItemCount = 0
+    private var atLeastItemCount = 0
 
     init {
         adapter = WrapperAdapter()
@@ -190,7 +190,13 @@ class Banner @JvmOverloads constructor(
 
     private fun resetPagerItemCount() {
         val externalAdapter = adapter.getExternalAdapter()
-        realItemCount = if (externalAdapter == null || externalAdapter.itemCount == 0) 0 else adapter.itemCount
+        if (externalAdapter == null || externalAdapter.itemCount == 0) {
+            realItemCount = 0
+            atLeastItemCount = 0
+        } else {
+            realItemCount = adapter.itemCount
+            atLeastItemCount = realItemCount + 2
+        }
     }
 
     private fun getRealPageSelectedPosition(position: Int): Int {
@@ -273,7 +279,10 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun onPageSelected(position: Int) {
+            val reset = currentPageSelectedPosition == -1 || currentPageSelectedPosition == atLeastItemCount + 1
+                    || (position != currentPageSelectedPosition && atLeastItemCount - currentPageSelectedPosition == 0)
             currentPageSelectedPosition = position
+            if (reset) return
             val realPageSelectedPosition = getRealPageSelectedPosition(position)
             onPageChangeCallback?.onPageSelected(realPageSelectedPosition)
             indicator?.onPageSelected(realPageSelectedPosition)
@@ -283,7 +292,7 @@ class Banner @JvmOverloads constructor(
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
             if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                if (currentPageSelectedPosition == realItemCount) {
+                if (currentPageSelectedPosition == atLeastItemCount) {
                     viewPager.setCurrentItem(0, false)
                 } else if (currentPageSelectedPosition < 0) {
                     viewPager.setCurrentItem(realItemCount + currentPageSelectedPosition, false)
@@ -305,7 +314,7 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun getItemCount(): Int {
-            return if (::externalAdapter.isInitialized) externalAdapter.itemCount else 0
+            return if (realItemCount > 1) atLeastItemCount else realItemCount
         }
 
         override fun getItemViewType(position: Int): Int {
