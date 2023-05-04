@@ -64,6 +64,7 @@ class Banner @JvmOverloads constructor(
             offscreenPageLimit = 1
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             compositePagetransformer = CompositePageTransformer()
+            compositePagetransformer.addTransformer(LoopingPageTransformer())
             setPageTransformer(compositePagetransformer)
             registerOnPageChangeCallback(OnPageChangeCallback())
         }
@@ -99,7 +100,6 @@ class Banner @JvmOverloads constructor(
                 currentPageSelectedPosition++
                 if (currentPageSelectedPosition >= realItemCount) {
                     viewPager.setCurrentItem(0, false)
-                    currentPageSelectedPosition = 0
                     handler.postDelayed(this, turningNextPageDuration)
                 } else {
                     viewPager.setCurrentItem(currentPageSelectedPosition, true)
@@ -300,6 +300,21 @@ class Banner @JvmOverloads constructor(
                 } else if (currentPageSelectedPosition < 0) {
                     viewPager.setCurrentItem(realItemCount + currentPageSelectedPosition, false)
                 }
+            }
+        }
+    }
+
+    class LoopingPageTransformer : ViewPager2.PageTransformer {
+        override fun transformPage(page: View, position: Float) {
+            val absPosition = Math.abs(position)
+            if (absPosition >= 1) {
+                page.alpha = 0f
+            } else {
+                page.alpha = 1 - absPosition
+                page.translationX = -page.width * position
+                val scale = (1 - absPosition) * 0.1f + 0.9f
+                page.scaleX = scale
+                page.scaleY = scale
             }
         }
     }
