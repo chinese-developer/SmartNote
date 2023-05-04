@@ -1,14 +1,14 @@
 package com.smarternote.core.ui.layoutmanager
 
 import android.content.Context
-import android.util.DisplayMetrics
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 
-class SlowLinearLayoutManager(context: Context) : LinearLayoutManager(context) {
-
-    private val slowScrollSpeed = 0.5f
+class SlowLinearLayoutManager(
+    context: Context,
+    val slowScrollSpeed: Int = 800
+) : LinearLayoutManager(context) {
 
     override fun smoothScrollToPosition(
         recyclerView: RecyclerView,
@@ -16,8 +16,8 @@ class SlowLinearLayoutManager(context: Context) : LinearLayoutManager(context) {
         position: Int
     ) {
         val smoothScroller = object : LinearSmoothScroller(recyclerView.context) {
-            override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
-                return slowScrollSpeed / displayMetrics.densityDpi
+            override fun calculateTimeForDeceleration(dx: Int): Int {
+                return (slowScrollSpeed * (1 - 0.3356)).toInt()
             }
         }
         smoothScroller.targetPosition = position

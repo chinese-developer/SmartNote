@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.smarternote.core.ui.viewpager.transformer.AntiClockSpinTransformation
+import com.smarternote.core.ui.viewpager.transformer.CubeInScalingTransformation
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -65,7 +66,7 @@ class Banner @JvmOverloads constructor(
             offscreenPageLimit = 1
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             compositePagetransformer = CompositePageTransformer()
-            compositePagetransformer.addTransformer(AntiClockSpinTransformation())
+            compositePagetransformer.addTransformer(CubeInScalingTransformation())
             setPageTransformer(compositePagetransformer)
             registerOnPageChangeCallback(OnPageChangeCallback())
         }
