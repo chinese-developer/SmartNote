@@ -113,9 +113,11 @@ class Banner @JvmOverloads constructor(
         startPolling()
     }
 
-    fun setAdapter(adapter: RecyclerView.Adapter<out ViewHolder>): Banner {
+    @JvmOverloads
+    fun setAdapter(adapter: RecyclerView.Adapter<out ViewHolder>, startPosition: Int = 0): Banner {
         this.adapter.register(adapter)
-        this.adapter.notifyDataSetChanged()
+        resetPagerItemCount()
+        adjustBeforePolling(startPosition)
         return this
     }
 
