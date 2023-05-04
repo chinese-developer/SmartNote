@@ -54,7 +54,7 @@ class Banner @JvmOverloads constructor(
     }
 
     init {
-        buildDefaultIndicator()
+//        buildDefaultIndicator()
         adapter = WrapperAdapter()
         viewPager = ViewPager2(context).apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
@@ -101,7 +101,7 @@ class Banner @JvmOverloads constructor(
     }
 
     fun build() {
-        indicator?.initIndicatorCount(adapter.itemCount)
+//        indicator?.initIndicatorCount(adapter.itemCount)
         startPolling()
     }
 
@@ -244,18 +244,18 @@ class Banner @JvmOverloads constructor(
     inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             onPageChangeCallback?.onPageScrolled(position, positionOffset, positionOffsetPixels)
-            indicator?.onPageScrolled(position, positionOffset, positionOffsetPixels)
+//            indicator?.onPageScrolled(position, positionOffset, positionOffsetPixels)
         }
 
         override fun onPageSelected(position: Int) {
             currentPage = position
             onPageChangeCallback?.onPageSelected(position)
-            indicator?.onPageSelected(position)
+//            indicator?.onPageSelected(position)
         }
 
         override fun onPageScrollStateChanged(state: Int) {
             onPageChangeCallback?.onPageScrollStateChanged(state)
-            indicator?.onPageScrollStateChanged(state)
+//            indicator?.onPageScrollStateChanged(state)
             if (state == ViewPager2.SCROLL_STATE_IDLE) {
                 val itemCount = adapter.itemCount
                 // 在滚动状态变为SCROLL_STATE_IDLE时，可以确保在最后一张图片后返回第一张图片，反之亦然。
