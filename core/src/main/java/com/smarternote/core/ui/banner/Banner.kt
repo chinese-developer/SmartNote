@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
+import com.smarternote.core.ui.pagetransformer.PaperDestroyTransformer
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -64,7 +65,7 @@ class Banner @JvmOverloads constructor(
             offscreenPageLimit = 1
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             compositePagetransformer = CompositePageTransformer()
-            compositePagetransformer.addTransformer(LoopingPageTransformer())
+            compositePagetransformer.addTransformer(PaperDestroyTransformer())
             setPageTransformer(compositePagetransformer)
             registerOnPageChangeCallback(OnPageChangeCallback())
         }
@@ -98,13 +99,8 @@ class Banner @JvmOverloads constructor(
         override fun run() {
             if (isAutoPlay()) {
                 currentPageSelectedPosition++
-                if (currentPageSelectedPosition >= realItemCount) {
-                    viewPager.setCurrentItem(0, false)
-                    handler.postDelayed(this, turningNextPageDuration)
-                } else {
-                    viewPager.setCurrentItem(currentPageSelectedPosition, true)
-                    handler.postDelayed(this, turningNextPageDuration)
-                }
+                viewPager.setCurrentItem(if (currentPageSelectedPosition >= realItemCount) 0 else currentPageSelectedPosition, true)
+                handler.postDelayed(this, turningNextPageDuration)
             }
         }
     }
@@ -300,21 +296,6 @@ class Banner @JvmOverloads constructor(
                 } else if (currentPageSelectedPosition < 0) {
                     viewPager.setCurrentItem(realItemCount + currentPageSelectedPosition, false)
                 }
-            }
-        }
-    }
-
-    class LoopingPageTransformer : ViewPager2.PageTransformer {
-        override fun transformPage(page: View, position: Float) {
-            val absPosition = Math.abs(position)
-            if (absPosition >= 1) {
-                page.alpha = 0f
-            } else {
-                page.alpha = 1 - absPosition
-                page.translationX = -page.width * position
-                val scale = (1 - absPosition) * 0.1f + 0.9f
-                page.scaleX = scale
-                page.scaleY = scale
             }
         }
     }
