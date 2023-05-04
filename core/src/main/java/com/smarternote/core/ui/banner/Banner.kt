@@ -94,7 +94,7 @@ class Banner @JvmOverloads constructor(
     private fun getAutoPlayRunnable() = object : Runnable {
         override fun run() {
             if (adapter.itemCount > 0) {
-                viewPager.currentItem = viewPager.currentItem + 1
+                viewPager.currentItem = (viewPager.currentItem + 1) % adapter.itemCount
             }
             handler.postDelayed(this, autoTurningTime)
         }
@@ -258,10 +258,13 @@ class Banner @JvmOverloads constructor(
             indicator?.onPageScrollStateChanged(state)
             if (state == ViewPager2.SCROLL_STATE_IDLE) {
                 val itemCount = adapter.itemCount
-                if (currentPage == 0) {
-                    viewPager.setCurrentItem(itemCount - 1, false)
-                } else if (currentPage == itemCount - 1) {
-                    viewPager.setCurrentItem(0, false)
+                // 在滚动状态变为SCROLL_STATE_IDLE时，可以确保在最后一张图片后返回第一张图片，反之亦然。
+                if (itemCount > 1) {
+                    if (currentPage == 0) {
+                        viewPager.setCurrentItem(itemCount - 2, false)
+                    } else if (currentPage == itemCount - 1) {
+                        viewPager.setCurrentItem(1, false)
+                    }
                 }
             }
         }

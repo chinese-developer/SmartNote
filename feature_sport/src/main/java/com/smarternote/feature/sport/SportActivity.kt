@@ -66,7 +66,7 @@ class SportActivity : StatusBarBaseActivity() {
         override fun onBindViewHolder(holder: VH, position: Int) {
             val item = items[position]
             holder.binding.imageUrl = item
-            // holder.binding.executePendingBindings()
+             holder.binding.executePendingBindings()
         }
 
         override fun getItemCount(): Int = items.size
