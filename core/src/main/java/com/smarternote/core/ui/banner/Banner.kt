@@ -297,7 +297,7 @@ class Banner @JvmOverloads constructor(
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
             if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                if (currentPageSelectedPosition == atLeastItemCount) {
+                if (currentPageSelectedPosition == atLeastItemCount - 1) {
                     viewPager.setCurrentItem(0, false)
                 } else if (currentPageSelectedPosition < 0) {
                     viewPager.setCurrentItem(realItemCount + currentPageSelectedPosition, false)
