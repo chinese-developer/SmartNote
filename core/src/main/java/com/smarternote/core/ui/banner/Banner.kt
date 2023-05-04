@@ -58,7 +58,6 @@ class Banner @JvmOverloads constructor(
     private var realItemCount = 0
 
     init {
-        buildDefaultIndicator()
         adapter = WrapperAdapter()
         viewPager = ViewPager2(context).apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
@@ -71,6 +70,7 @@ class Banner @JvmOverloads constructor(
         }
         slowFlingRecyclerView(viewPager)
         addView(viewPager)
+        buildDefaultIndicator()
     }
 
     private fun buildDefaultIndicator() {
@@ -91,8 +91,7 @@ class Banner @JvmOverloads constructor(
         override fun run() {
             if (isAutoPlay()) {
                 currentPageSelectedPosition++
-                val lastPage = currentPageSelectedPosition >= realItemCount
-                viewPager.setCurrentItem(if (lastPage) 0 else currentPageSelectedPosition, !lastPage)
+                viewPager.setCurrentItem(currentPageSelectedPosition, true)
                 handler.postDelayed(this, turningNextPageDuration)
             }
         }
