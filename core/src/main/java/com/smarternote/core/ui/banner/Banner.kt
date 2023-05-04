@@ -92,14 +92,12 @@ class Banner @JvmOverloads constructor(
             if (isAutoPlay()) {
                 currentPageSelectedPosition++
                 if (currentPageSelectedPosition == realItemCount + 3) {
-                    // 进入这里，实际上当前视图显示的已经是第0页数据，但是 viewPager 的 currentItem 的 position 是错误的。
-                    // 我们将 viewPager 设置正确的 currentItem 并 post 触发 delay 逻辑
-                    viewPager.setCurrentItem(0, false)
-                    handler.post(this)
+                    viewPager.setCurrentItem(2, false)
+                    currentPageSelectedPosition = 2
                 } else {
                     viewPager.setCurrentItem(currentPageSelectedPosition, true)
-                    handler.postDelayed(this, turningNextPageDuration)
                 }
+                handler.postDelayed(this, turningNextPageDuration)
             }
         }
     }
@@ -168,7 +166,7 @@ class Banner @JvmOverloads constructor(
     }
 
     fun getCurrentPosition(): Int {
-        val position = getRealPageSelectedPosition(currentPageSelectedPosition)
+        val position = getRealPosition(currentPageSelectedPosition)
         return max(position, 0)
     }
 
@@ -206,13 +204,13 @@ class Banner @JvmOverloads constructor(
         }
     }
 
-    private fun getRealPageSelectedPosition(position: Int): Int {
-        var realPosition = 0
-        if (realItemCount != 0) {
+    private fun getRealPosition(position: Int): Int {
+        var realPosition = position
+        if (realItemCount > 0) {
             realPosition = (position - 2) % realItemCount
-        }
-        if (realPosition < 0) {
-            realPosition += realItemCount
+            if (realPosition < 0) {
+                realPosition += realItemCount
+            }
         }
         return realPosition
     }
@@ -281,7 +279,7 @@ class Banner @JvmOverloads constructor(
     inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
 
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-            val realPageSelectedPosition = getRealPageSelectedPosition(position)
+            val realPageSelectedPosition = getRealPosition(position)
             onPageChangeCallback?.onPageScrolled(realPageSelectedPosition, positionOffset, positionOffsetPixels)
             indicator?.onPageScrolled(realPageSelectedPosition, positionOffset, positionOffsetPixels)
         }
@@ -290,7 +288,7 @@ class Banner @JvmOverloads constructor(
             val onVirtualPage = currentPageSelectedPosition == -1 || draggingExtraPageCount - currentPageSelectedPosition <= 0
             currentPageSelectedPosition = position
             if (onVirtualPage) return
-            val realPageSelectedPosition = getRealPageSelectedPosition(position)
+            val realPageSelectedPosition = getRealPosition(position)
             onPageChangeCallback?.onPageSelected(realPageSelectedPosition)
             indicator?.onPageSelected(realPageSelectedPosition)
         }
@@ -299,8 +297,12 @@ class Banner @JvmOverloads constructor(
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
             if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-             if (currentPageSelectedPosition == realItemCount) {
-                    viewPager.setCurrentItem(0, false)
+                if (currentPageSelectedPosition == realItemCount + 2) {
+                    viewPager.setCurrentItem(2, false)
+                    currentPageSelectedPosition = 2
+                } else if (currentPageSelectedPosition == 1) {
+                    viewPager.setCurrentItem(realItemCount + 1, false)
+                    currentPageSelectedPosition = realItemCount + 1
                 }
             }
         }
@@ -323,11 +325,11 @@ class Banner @JvmOverloads constructor(
         }
 
         override fun getItemViewType(position: Int): Int {
-            return if (::externalAdapter.isInitialized) externalAdapter.getItemViewType(getRealPageSelectedPosition(position)) else -1
+            return if (::externalAdapter.isInitialized) externalAdapter.getItemViewType(getRealPosition(position)) else -1
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val realPageSelectedPosition = getRealPageSelectedPosition(position)
+            val realPageSelectedPosition = getRealPosition(position)
             return externalAdapter.onBindViewHolder(holder, realPageSelectedPosition)
         }
 
