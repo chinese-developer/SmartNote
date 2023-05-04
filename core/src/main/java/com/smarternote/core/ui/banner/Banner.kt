@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import kotlin.math.abs
+import kotlin.math.max
 
 
 class Banner @JvmOverloads constructor(
@@ -29,16 +30,7 @@ class Banner @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val viewPager: ViewPager2
-    private val adapter: WrapperAdapter
-    private val handler = Handler(Looper.getMainLooper())
-    private val compositePagetransformer: CompositePageTransformer
-
-    private var isPollingStarted = false
-    private var autoPlayRunnable = getAutoPlayRunnable()
-    private var autoPlay = true
-
-    var currentPage = 0
+    var currentPageSelected = 0
     private var pageSpeedFlingFactor = 0.5f
     private var aspectRatio = 16f / 9f
     private var autoTurningTime = 4000L
@@ -52,6 +44,18 @@ class Banner @JvmOverloads constructor(
         private const val SCALED_TOUCH_SLOP = 8
 
     }
+
+
+    private val viewPager: ViewPager2
+    private val adapter: WrapperAdapter
+    private val handler = Handler(Looper.getMainLooper())
+    private val compositePagetransformer: CompositePageTransformer
+
+    private var isPollingStarted = false
+    private var autoPlayRunnable = getAutoPlayRunnable()
+    private var autoPlay = true
+
+    private var realItemCount = 0
 
     init {
         buildDefaultIndicator()
@@ -93,9 +97,14 @@ class Banner @JvmOverloads constructor(
 
     private fun getAutoPlayRunnable() = object : Runnable {
         override fun run() {
-            currentPage ++
-            viewPager.currentItem = currentPage
-            handler.postDelayed(this, autoTurningTime)
+            currentPageSelected ++
+            if (currentPageSelected == realItemCount + 1) {
+                viewPager.setCurrentItem(0, false)
+                handler.post(this)
+            } else {
+                viewPager.currentItem = currentPageSelected
+                handler.postDelayed(this, autoTurningTime)
+            }
         }
     }
 
@@ -154,6 +163,11 @@ class Banner @JvmOverloads constructor(
         return this
     }
 
+    fun getCurrentPageSelected(): Int {
+        val position = getRealPageSelectedPosition(currentPageSelected)
+        return max(position , 0)
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (autoPlay) {
@@ -177,6 +191,35 @@ class Banner @JvmOverloads constructor(
     private fun stopPolling() {
         isPollingStarted = false
         handler.removeCallbacks(autoPlayRunnable)
+    }
+
+    private fun adjustBeforePolling(startPosition: Int) {
+        viewPager.adapter?.notifyDataSetChanged() ?: kotlin.run {
+            viewPager.adapter = adapter
+        }
+        currentPageSelected = startPosition
+        viewPager.isUserInputEnabled = realItemCount > 1
+        viewPager.setCurrentItem(currentPageSelected, false)
+        indicator?.initIndicatorCount(realItemCount)
+        if (autoPlay) {
+            startPolling()
+        }
+    }
+
+    private fun resetPagerItemCount() {
+        val externalAdapter = adapter.getExternalAdapter()
+        realItemCount = if (externalAdapter == null || externalAdapter.itemCount == 0) 0 else  adapter.itemCount
+    }
+
+    private fun getRealPageSelectedPosition(position: Int): Int {
+        var realPosition = 0
+        if (realItemCount != 0) {
+            realPosition = position % realItemCount
+        }
+        if (realPosition < 0) {
+            realPosition += realItemCount
+        }
+        return realPosition
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -242,28 +285,26 @@ class Banner @JvmOverloads constructor(
 
     inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-            onPageChangeCallback?.onPageScrolled(position, positionOffset, positionOffsetPixels)
-            indicator?.onPageScrolled(position, positionOffset, positionOffsetPixels)
+            val realPageSelectedPosition = getRealPageSelectedPosition(position)
+            onPageChangeCallback?.onPageScrolled(realPageSelectedPosition, positionOffset, positionOffsetPixels)
+            indicator?.onPageScrolled(realPageSelectedPosition, positionOffset, positionOffsetPixels)
         }
 
         override fun onPageSelected(position: Int) {
-            currentPage = position
-            onPageChangeCallback?.onPageSelected(position)
-            indicator?.onPageSelected(position)
+            currentPageSelected = position
+            val realPageSelectedPosition = getRealPageSelectedPosition(position)
+            onPageChangeCallback?.onPageSelected(realPageSelectedPosition)
+            indicator?.onPageSelected(realPageSelectedPosition)
         }
 
         override fun onPageScrollStateChanged(state: Int) {
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
-            if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                val itemCount = adapter.itemCount
-                // 在滚动状态变为SCROLL_STATE_IDLE时，可以确保在最后一张图片后返回第一张图片，反之亦然。
-                if (itemCount > 1) {
-                    if (currentPage == 0) {
-                        viewPager.setCurrentItem(itemCount - 2, false)
-                    } else if (currentPage == itemCount - 1) {
-                        viewPager.setCurrentItem(1, false)
-                    }
+            if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+                if (currentPageSelected == realItemCount) {
+                    viewPager.setCurrentItem(0, false)
+                } else if (currentPageSelected < 0) {
+                    viewPager.setCurrentItem(realItemCount + currentPageSelected, false)
                 }
             }
         }
@@ -286,7 +327,41 @@ class Banner @JvmOverloads constructor(
         }
 
         fun register(adapter: RecyclerView.Adapter<out ViewHolder>) {
-            this.externalAdapter = adapter as RecyclerView.Adapter<ViewHolder>
+            if (getExternalAdapter() != null) {
+                externalAdapter.unregisterAdapterDataObserver(adapterDataObserver)
+            }
+            externalAdapter = adapter as RecyclerView.Adapter<ViewHolder>
+            externalAdapter.registerAdapterDataObserver(adapterDataObserver)
+        }
+
+        fun getExternalAdapter(): RecyclerView.Adapter<ViewHolder>? = if (::externalAdapter.isInitialized) externalAdapter else null
+    }
+
+    val adapterDataObserver = object : RecyclerView.AdapterDataObserver() {
+        override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+            onChanged()
+        }
+
+        override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
+            onChanged()
+        }
+
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            onChanged()
+        }
+
+        override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+            onChanged()
+        }
+
+        override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+            onChanged()
+        }
+
+        override fun onChanged() {
+            resetPagerItemCount()
+            val startPosition = getCurrentPageSelected()
+            adjustBeforePolling(startPosition)
         }
     }
 
