@@ -109,11 +109,18 @@ class Banner @JvmOverloads constructor(
         viewPager.adapter?.notifyDataSetChanged() ?: kotlin.run {
             viewPager.adapter = adapter
         }
-        currentPageSelectedPosition = startPosition + 2
+//        currentPageSelectedPosition = startPosition
         viewPager.isUserInputEnabled = realItemCount > 1
-        viewPager.setCurrentItem(currentPageSelectedPosition, false)
+        currentPageSelectedPosition = startPosition
+        if (realItemCount > 1) {
+            val selectedPosition = realItemCount * draggingExtraPageCount + currentPageSelectedPosition % realItemCount
+            viewPager.setCurrentItem(selectedPosition, false)
+        }
+//        viewPager.setCurrentItem(currentPageSelectedPosition, false)
         indicator?.initIndicatorCount(realItemCount)
         startPolling()
+
+
     }
 
     fun setAdapter(adapter: RecyclerView.Adapter<out ViewHolder>): Banner {
@@ -194,37 +201,21 @@ class Banner @JvmOverloads constructor(
     private fun isAutoPlay(): Boolean = autoPlay && realItemCount > 1
 
     private fun resetPagerItemCount() {
-//        val externalAdapter = adapter.getExternalAdapter()
-//        if (externalAdapter == null || externalAdapter.itemCount == 0) {
-//            realItemCount = 0
-//            draggingExtraPageCount = 0
-//        } else {
-//            realItemCount = externalAdapter.itemCount
-//            draggingExtraPageCount = realItemCount + 2 // + 2 保证第0页和最后一页 向左右滑动有数据
-//        }
-
-        realItemCount = (adapter.getExternalAdapter()?.itemCount ?: 0)
-        if (realItemCount > 1) {
-            val lastPosition = realItemCount * draggingExtraPageCount
-            if (lastPosition <= getCurrentPosition()) {
-                viewPager.setCurrentItem(realItemCount - 1, false)
-            }
-            if (getCurrentPosition() == 0) {
-                viewPager.setCurrentItem(lastPosition, false)
-            }
+        val externalAdapter = adapter.getExternalAdapter()
+        if (externalAdapter == null || externalAdapter.itemCount == 0) {
+            realItemCount = 0
+            draggingExtraPageCount = 0
+        } else {
+            realItemCount = externalAdapter.itemCount
+            draggingExtraPageCount = realItemCount + 2 // + 2 保证第0页和最后一页 向左右滑动有数据
         }
     }
 
     private fun getRealPosition(position: Int): Int {
-        var realPosition = position
-        if (realItemCount > 0) {
-            realPosition = (position - 2) % realItemCount
-            if (realPosition < 0) {
-                realPosition += realItemCount
-            }
-        }
-        return realPosition
+        val realPosition = position % realItemCount
+        return if (realPosition < 0) realPosition + realItemCount else realPosition
     }
+
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
