@@ -95,13 +95,16 @@ class Banner @JvmOverloads constructor(
 
     private fun getAutoPlayRunnable() = object : Runnable {
         override fun run() {
-            currentPageSelectedPosition ++
-            if (currentPageSelectedPosition == realItemCount + 1) {
-                viewPager.setCurrentItem(0, false)
-                handler.post(this)
-            } else {
-                viewPager.currentItem = currentPageSelectedPosition
-                handler.postDelayed(this, turningNextPageDuration)
+            if (isAutoPlay()) {
+                currentPageSelectedPosition++
+                if (currentPageSelectedPosition >= realItemCount) {
+                    viewPager.setCurrentItem(0, false)
+                    currentPageSelectedPosition = 0
+                    handler.postDelayed(this, turningNextPageDuration)
+                } else {
+                    viewPager.setCurrentItem(currentPageSelectedPosition, true)
+                    handler.postDelayed(this, turningNextPageDuration)
+                }
             }
         }
     }
@@ -303,6 +306,10 @@ class Banner @JvmOverloads constructor(
 
     inner class WrapperAdapter : RecyclerView.Adapter<ViewHolder>() {
 
+        init {
+          setHasStableIds(true)
+        }
+
         private lateinit var externalAdapter: RecyclerView.Adapter<ViewHolder>
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -313,8 +320,12 @@ class Banner @JvmOverloads constructor(
             return if (::externalAdapter.isInitialized) externalAdapter.itemCount else 0
         }
 
+        override fun getItemViewType(position: Int): Int {
+            return if (::externalAdapter.isInitialized) externalAdapter.getItemViewType(getRealPageSelectedPosition(position)) else -1
+        }
+
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            return externalAdapter.onBindViewHolder(holder, position)
+            return externalAdapter.onBindViewHolder(holder, getRealPageSelectedPosition(position))
         }
 
         fun register(adapter: RecyclerView.Adapter<out ViewHolder>) {
@@ -400,7 +411,7 @@ class Banner @JvmOverloads constructor(
                 }
             }
             linearSmoothScroller.targetPosition = position
-            layoutManager.startSmoothScroll(linearSmoothScroller)
+            startSmoothScroll(linearSmoothScroller)
         }
 
         override fun calculateExtraLayoutSpace(state: RecyclerView.State, extraLayoutSpace: IntArray) {

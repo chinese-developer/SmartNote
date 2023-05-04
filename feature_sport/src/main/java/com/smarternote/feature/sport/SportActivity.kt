@@ -16,7 +16,8 @@ import com.smarternote.feature.sport.databinding.ItemBannerBinding
 class SportActivity : StatusBarBaseActivity() {
 
     val imageUrl = "https://lh6.googleusercontent.com/-55osAWw3x0Q/URquUtcFr5I/AAAAAAAAAbs/rWlj1RUKrYI/s1024/A%252520Photographer.jpg"
-    val imageUrlList = arrayListOf(imageUrl, imageUrl, imageUrl, imageUrl)
+    val imageUrl2 = "https://images.techhive.com/images/article/2017/01/google-android-apps-100705848-large.jpg?auto=webp&quality=85,70"
+    val imageUrlList = arrayListOf(imageUrl, imageUrl2, imageUrl, imageUrl2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
