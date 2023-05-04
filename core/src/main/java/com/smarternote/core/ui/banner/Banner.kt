@@ -94,8 +94,9 @@ class Banner @JvmOverloads constructor(
                 if (currentPageSelectedPosition == realItemCount + 1) {
                     viewPager.setCurrentItem(1, false)
                     currentPageSelectedPosition = 1
+                } else {
+                    viewPager.setCurrentItem(currentPageSelectedPosition, true)
                 }
-                viewPager.setCurrentItem(currentPageSelectedPosition, true)
                 handler.postDelayed(this, turningNextPageDuration)
             }
         }
@@ -277,50 +278,33 @@ class Banner @JvmOverloads constructor(
 
     inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
 
-        private var smoothScrollToLast = false
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             val realPageSelectedPosition = getRealPosition(position)
             onPageChangeCallback?.onPageScrolled(realPageSelectedPosition, positionOffset, positionOffsetPixels)
             indicator?.onPageScrolled(realPageSelectedPosition, positionOffset, positionOffsetPixels)
-            if (smoothScrollToLast && positionOffset == 0f && viewPager.currentItem == realItemCount) {
-                viewPager.setCurrentItem(0, false)
-                smoothScrollToLast = false
-            }
         }
 
         override fun onPageSelected(position: Int) {
+            val onVirtualPage = currentPageSelectedPosition == -1 || draggingExtraPageCount - currentPageSelectedPosition <= 0
             currentPageSelectedPosition = position
-            val realPosition = when (position) {
-                0 -> {
-                    viewPager.setCurrentItem(realItemCount, false)
-                    realItemCount - 1
-                }
-                realItemCount + 1 -> {
-                    viewPager.setCurrentItem(1, false)
-                    0
-                }
-                else -> position - 1
-            }
-            onPageChangeCallback?.onPageSelected(realPosition)
-            indicator?.onPageSelected(realPosition)
+            if (onVirtualPage) return
+            val realPageSelectedPosition = getRealPosition(position)
+            onPageChangeCallback?.onPageSelected(realPageSelectedPosition)
+            indicator?.onPageSelected(realPageSelectedPosition)
         }
 
         override fun onPageScrollStateChanged(state: Int) {
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
-            if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                val currentItem = viewPager.currentItem
-                if (currentItem == 0) {
-                    viewPager.setCurrentItem(realItemCount, false)
-                } else if (currentItem == realItemCount + 1) {
+            if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+                if (currentPageSelectedPosition == realItemCount + 1) {
                     viewPager.setCurrentItem(1, false)
+                    currentPageSelectedPosition = 1
+                } else if (currentPageSelectedPosition == 0) {
+                    viewPager.setCurrentItem(realItemCount, false)
+                    currentPageSelectedPosition = realItemCount
                 }
             }
-            if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                handler.removeCallbacks(autoPlayRunnable)
-                smoothScrollToLast = viewPager.currentItem == realItemCount - 1
-            }
-            onPageChangeCallback?.onPageScrollStateChanged(state)
         }
     }
 
