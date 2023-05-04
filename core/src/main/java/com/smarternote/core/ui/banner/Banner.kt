@@ -277,11 +277,15 @@ class Banner @JvmOverloads constructor(
 
     inner class OnPageChangeCallback : ViewPager2.OnPageChangeCallback() {
 
-        private var smoothScrollToFirst = false
+        private var smoothScrollToLast = false
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             val realPageSelectedPosition = getRealPosition(position)
             onPageChangeCallback?.onPageScrolled(realPageSelectedPosition, positionOffset, positionOffsetPixels)
             indicator?.onPageScrolled(realPageSelectedPosition, positionOffset, positionOffsetPixels)
+            if (smoothScrollToLast && positionOffset == 0f && viewPager.currentItem == realItemCount) {
+                viewPager.setCurrentItem(0, false)
+                smoothScrollToLast = false
+            }
         }
 
         override fun onPageSelected(position: Int) {
@@ -314,13 +318,7 @@ class Banner @JvmOverloads constructor(
             }
             if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
                 handler.removeCallbacks(autoPlayRunnable)
-                if (viewPager.currentItem == realItemCount && !smoothScrollToFirst) {
-                    viewPager.setCurrentItem(0, false)
-                    smoothScrollToFirst = true
-                }
-            }
-            if (state == ViewPager2.SCROLL_STATE_SETTLING && viewPager.currentItem == realItemCount) {
-                smoothScrollToFirst = false
+                smoothScrollToLast = viewPager.currentItem == realItemCount - 1
             }
             onPageChangeCallback?.onPageScrollStateChanged(state)
         }
