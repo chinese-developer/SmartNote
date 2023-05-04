@@ -92,7 +92,7 @@ class Banner @JvmOverloads constructor(
             if (isAutoPlay()) {
                 currentPageSelectedPosition++
                 if (currentPageSelectedPosition >= pollingItemCount) {
-                    // 进入这里，实际上当前视图已经正在显示第0页数据，但是 viewPager 的 currentItem 的 position 是错误的。
+                    // 进入这里，实际上当前视图显示的已经是第0页数据，但是 viewPager 的 currentItem 的 position 是错误的。
                     // 我们将 viewPager 设置正确的 currentItem 并 post 触发 delay 逻辑
                     viewPager.setCurrentItem(0, false)
                     handler.post(this)
@@ -302,12 +302,16 @@ class Banner @JvmOverloads constructor(
             onPageChangeCallback?.onPageScrollStateChanged(state)
             indicator?.onPageScrollStateChanged(state)
             if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                if (currentPageSelectedPosition == 1) {
-                    targetPosition = realItemCount + currentPageSelectedPosition
-                } else if (currentPageSelectedPosition == 0) {
-                    targetPosition = realItemCount - 1
-                } else {
-                    targetPosition = -1
+                targetPosition = when (currentPageSelectedPosition) {
+                  1 -> {
+                      realItemCount + currentPageSelectedPosition
+                  }
+                  0 -> {
+                      realItemCount - 1
+                  }
+                  else -> {
+                      -1
+                  }
                 }
                 needAdjust = targetPosition != -1
             } else if (state == ViewPager2.SCROLL_STATE_IDLE && needAdjust) {
