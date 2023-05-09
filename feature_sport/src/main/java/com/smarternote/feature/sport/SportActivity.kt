@@ -3,14 +3,16 @@ package com.smarternote.feature.sport
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.DataBindingHolder
 import com.smarternote.core.base.activity.StatusBarBaseActivity
 import com.smarternote.core.ui.banner.Banner
+import com.smarternote.core.utils.logDebug
+import com.smarternote.core.utils.toast
 import com.smarternote.feature.sport.SportActivity.BannerAdapter2.VH
 import com.smarternote.feature.sport.databinding.ItemBannerBinding
 
@@ -26,19 +28,29 @@ class SportActivity : StatusBarBaseActivity() {
         setContentView(R.layout.activity_sport)
 
         val banner = findViewById<Banner>(R.id.banner)
-        val adapter = BannerAdapter2()
+        val adapter = BannerAdapter()
+        // val adapter = BannerAdapter2()
 
         banner.setAdapter(adapter)
             .setAutoPlay(true)
+            .setLivecyclerOwner(this)
             .build()
 
-        adapter.submitList(imageUrlList)
+        lifecycleScope.launchWhenResumed {
+            adapter.submitList(imageUrlList)
+        }
 
+        adapter.setOnItemClickListener { _, _, position ->
+            toast("position$position")
+        }
     }
 
     class BannerAdapter : BaseQuickAdapter<String, DataBindingHolder<ItemBannerBinding>>() {
         override fun onBindViewHolder(holder: DataBindingHolder<ItemBannerBinding>, position: Int, item: String?) {
             holder.binding.imageUrl = item
+            holder.binding.imageView.setOnClickListener {
+                toast("position$position")
+            }
             holder.binding.executePendingBindings()
         }
 
@@ -67,9 +79,9 @@ class SportActivity : StatusBarBaseActivity() {
 
         override fun onBindViewHolder(holder: VH, position: Int) {
             val item = items[position]
-            Log.d("ACTIVITY===>", "position=$position")
+            logDebug("更新了数据position=$position")
             holder.binding.imageUrl = item
-             holder.binding.executePendingBindings()
+            holder.binding.executePendingBindings()
         }
 
         override fun getItemCount(): Int = items.size
