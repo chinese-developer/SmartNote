@@ -53,7 +53,7 @@ class Banner @JvmOverloads constructor(
     private var isPollingStarted = false
     private var lifecycleOwner: LifecycleOwner? = null
     /**
-     * current page 的范围是 [1-size], 而不是从 0 开始
+     * Current page 的范围是 [1-size], 而不是从 0 开始
      * 这是为了当展示第0页数据时, 可以右滑返回最后一页数据.
      * [realPagePosition] 是从 0 开始真实的数据下标值.
      */

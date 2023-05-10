@@ -105,11 +105,11 @@ android {
         dataBinding = true
     }
     // 这个配置确保了ARouter可以识别每个模块并生成相应的路由表
-//    kapt {
-//        arguments {
-//            arg("AROUTER_MODULE_NAME", project.name)
-//        }
-//    }
+    kapt {
+        arguments {
+            arg("AROUTER_MODULE_NAME", project.name)
+        }
+    }
 }
 
 dependencies {
@@ -121,11 +121,10 @@ dependencies {
 
     // Google Dagger Hilt 的 Android 集成库，用于为 Android 应用程序提供依赖注入支持
     implementation("com.google.dagger:hilt-android:${Dependencies.hilt}")
-//    implementation("androidx.databinding:databinding-runtime:${Dependencies.UI.databinding}")
 
     // kapt 是 Kotlin 注解处理器的缩写。在编译时，kapt 将会处理使用了 Hilt 相关注解的 Kotlin 代码，并生成相应的依赖注入相关的代码。
     kapt("com.google.dagger:hilt-android-compiler:${Dependencies.hilt}")
-//    kapt("com.alibaba:arouter-compiler:${Dependencies.arouter}")
+    kapt("com.alibaba:arouter-compiler:${Dependencies.arouter}")
 }
 
 /**

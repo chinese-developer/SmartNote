@@ -3,6 +3,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("dagger.hilt.android.plugin")
     id("kotlin-android")
     id("kotlin-parcelize")
     id("kotlin-kapt")
@@ -36,11 +37,11 @@ android {
     buildFeatures {
         dataBinding = true
     }
-//    kapt {
-//        arguments {
-//            arg("AROUTER_MODULE_NAME", project.name)
-//        }
-//    }
+    kapt {
+        arguments {
+            arg("AROUTER_MODULE_NAME", project.name)
+        }
+    }
 }
 
 dependencies {
@@ -49,7 +50,7 @@ dependencies {
     api(project(":themes"))
 
     // Kotlin 标准库, 依赖项包含了一些额外的Java 8特定的扩展函数
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Dependencies.Core.kotlin}")
+    api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Dependencies.Core.kotlin}")
     // AndroidX 库中的一个核心库，它提供了许多与 Android UI 相关的类和函数
     api("androidx.appcompat:appcompat:${Dependencies.AndroidX.appcompat}")
     // AndroidX 库中的一个核心库，它提供了许多与 Android 开发相关的扩展函数和属性
@@ -62,7 +63,7 @@ dependencies {
     implementation("androidx.datastore:datastore:${Dependencies.AndroidX.dataStore}")
     // Google 提供的一个 Android UI 库，它提供了一些现代化的、美观的 UI 控件和样式
     api("com.google.android.material:material:${Dependencies.UI.material}")
-    implementation("com.google.code.gson:gson:${Dependencies.gson}")
+    api("com.google.code.gson:gson:${Dependencies.gson}")
     // Android平台上的图片加载库，由Google官方推荐
     api("com.github.bumptech.glide:glide:${Dependencies.UI.glide}")
 
@@ -83,8 +84,12 @@ dependencies {
     implementation("com.jakewharton.timber:timber:${Dependencies.timber}")
 
     // ARouter 跨组件通信的路由框架
-//    implementation("com.alibaba:arouter-api:${Dependencies.arouter}")
-//    kapt("com.alibaba:arouter-compiler:${Dependencies.arouter}")
+    api("com.alibaba:arouter-api:${Dependencies.arouter}")
+    kapt("com.alibaba:arouter-compiler:${Dependencies.arouter}")
+
+    // // Google Dagger Hilt 的 Android 集成库，用于为 Android 应用程序提供依赖注入支持
+    implementation("com.google.dagger:hilt-android:${Dependencies.hilt}")
+    kapt("com.google.dagger:hilt-android-compiler:${Dependencies.hilt}")
 
     // 今日头条屏幕适配方案 https://github.com/JessYanCoding/AndroidAutoSize
     api("com.github.JessYanCoding:AndroidAutoSize:${Dependencies.Github.autoSize}")

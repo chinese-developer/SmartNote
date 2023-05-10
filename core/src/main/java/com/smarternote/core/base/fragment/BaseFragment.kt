@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.alibaba.android.arouter.launcher.ARouter
 import com.smarternote.core.base.delegates.BackHandlerHelper
 import com.smarternote.core.base.delegates.OnBackPressListener
 import com.smarternote.core.config.LogTagsConfig.fragment_lifecycle
@@ -55,6 +56,7 @@ open class BaseFragment : Fragment(), OnBackPressListener, CustomAdapt {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    ARouter.getInstance().inject(this)
     Timber.tag(fragment_lifecycle)
       .i(">>>> <${javaClass.simpleName}> onCreate ${if (savedInstanceState != null) ": [savedInstanceState= $savedInstanceState]" else ""}")
   }

@@ -3,6 +3,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("dagger.hilt.android.plugin")
     id("kotlin-android")
     id("kotlin-parcelize")
     id("kotlin-kapt")
@@ -35,19 +36,20 @@ android {
     buildFeatures {
         dataBinding = true
     }
-//    kapt {
-//        arguments {
-//            arg("AROUTER_MODULE_NAME", project.name)
-//        }
-//    }
+    kapt {
+        arguments {
+            arg("AROUTER_MODULE_NAME", project.name)
+        }
+    }
 }
 
 dependencies {
     api(project(":core"))
 
-    // ARouter 跨组件通信的路由框架
-//    implementation("com.alibaba:arouter-api:${Dependencies.arouter}")
-//    kapt("com.alibaba:arouter-compiler:${Dependencies.arouter}")
+    kapt("com.alibaba:arouter-compiler:${Dependencies.arouter}")
+    implementation("com.google.dagger:hilt-android:${Dependencies.hilt}")
+    kapt("com.google.dagger:hilt-android-compiler:${Dependencies.hilt}")
 
+    // BRVAH
     implementation("io.github.cymchad:BaseRecyclerViewAdapterHelper:4.0.0-beta06")
 }

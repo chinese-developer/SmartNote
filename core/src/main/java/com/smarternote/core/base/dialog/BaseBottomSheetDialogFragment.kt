@@ -7,12 +7,18 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager.LayoutParams
+import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
   protected lateinit var dialog: BottomSheetDialog
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    ARouter.getInstance().inject(this)
+  }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     dialog = BottomSheetDialog(requireContext(), com.smarternote.themes.R.style.My_Widget_Dialog_Material3)

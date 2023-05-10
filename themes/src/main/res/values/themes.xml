@@ -24,7 +24,7 @@
     <style name="My.TextAppearance" parent="TextAppearance.AppCompat" />
 
     <!-- Base application theme. -->
-    <style name="Theme.SmartNote" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.SmartNote" parent="Theme.Material3.Light.NoActionBar">
         <!-- 应用程序的主色调 -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <!-- 主色调的变种颜色 -->
@@ -37,8 +37,7 @@
         <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
         <!-- 次色调上的文本颜色 -->
         <item name="colorOnSecondary">@android:color/black</item>
-        <!-- 状态栏的颜色 -->
-        <item name="android:statusBarColor">@color/statusBarColor</item>
+        <!--<item name="android:statusBarColor">@color/statusBarColor</item>-->
 
         <!-- Customize your theme here. -->
         <!-- 使用?attr语法从当前主题中引用颜色值。这样，当切换主题时，这些属性将自动更新为新主题中的颜色值。 -->

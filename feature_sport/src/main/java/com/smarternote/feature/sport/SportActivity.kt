@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.DataBindingHolder
 import com.smarternote.core.base.activity.StatusBarBaseActivity
+import com.smarternote.core.config.RouterPath
 import com.smarternote.core.ui.banner.Banner
 import com.smarternote.core.utils.logDebug
 import com.smarternote.core.utils.toast
@@ -40,9 +42,7 @@ class SportActivity : StatusBarBaseActivity() {
             adapter.submitList(imageUrlList)
         }
 
-        adapter.setOnItemClickListener { _, _, position ->
-            toast("position$position")
-        }
+        adapter.animationEnable = true
     }
 
     class BannerAdapter : BaseQuickAdapter<String, DataBindingHolder<ItemBannerBinding>>() {
@@ -50,6 +50,9 @@ class SportActivity : StatusBarBaseActivity() {
             holder.binding.imageUrl = item
             holder.binding.imageView.setOnClickListener {
                 toast("position$position")
+                ARouter.getInstance()
+                    .build(RouterPath.Test.Matches)
+                    .navigation()
             }
             holder.binding.executePendingBindings()
         }
