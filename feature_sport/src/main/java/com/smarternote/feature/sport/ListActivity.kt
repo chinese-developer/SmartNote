@@ -32,11 +32,13 @@ class ListActivity : BaseActivity() {
             finish()
         }
 
-        binding.list.adapter = ListAdapter().apply {
+        val adapter = ListAdapter().apply {
             animationEnable = true
             setItemAnimation(BaseQuickAdapter.AnimationType.AlphaIn)
-            submitList(DataCreator.titles)
         }
+
+        binding.list.adapter = adapter
+        adapter.submitList(DataCreator.titles)
 
     }
 
@@ -64,7 +66,7 @@ class ListActivity : BaseActivity() {
                 logDebug("ViewHolder onScroll")
                 // 如果当前滑动的 RecyclerView 不是源 RecyclerView，则同步横向滑动
                 if (binding.horizontalRecyclerView != source) {
-                    binding.horizontalRecyclerView.scrollBy(dx, 0)
+                    binding.horizontalRecyclerView.smoothScrollBy(dx, 0)
                 }
             }
         }

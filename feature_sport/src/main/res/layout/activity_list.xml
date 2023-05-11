@@ -23,6 +23,7 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_list"
             android:scrollbars="none"/>
