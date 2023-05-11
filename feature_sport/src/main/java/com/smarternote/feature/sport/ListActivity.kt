@@ -14,6 +14,7 @@ import com.smarternote.core.config.RouterPath
 import com.smarternote.core.utils.logDebug
 import com.smarternote.feature.sport.databinding.ActivityListBinding
 import com.smarternote.feature.sport.databinding.ItemHorizontalBinding
+import com.smarternote.feature.sport.databinding.ItemListBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @Route(path = RouterPath.Test.Matches)
@@ -45,34 +46,32 @@ class ListActivity : BaseActivity() {
 
         inner class VH(
             parent: ViewGroup,
-            binding: ItemHorizontalBinding = ItemHorizontalBinding.inflate(
+            val binding: ItemListBinding = ItemListBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
         ) : RecyclerView.ViewHolder(binding.root), HorizontalScrollObserver {
 
-            val horizontalRecyclerView: RecyclerView = itemView.findViewById(R.id.horizontal_recycler_view)
             private val horizontalAdapter = HorizontalAdapter()
 
             fun bind(item: List<String>?) {
                 horizontalAdapter.submitList(item)
-                horizontalRecyclerView.adapter = horizontalAdapter
+                binding.horizontalRecyclerView.adapter = horizontalAdapter
             }
 
             override fun onScroll(source: RecyclerView, dx: Int) {
                 logDebug("ViewHolder onScroll")
                 // 如果当前滑动的 RecyclerView 不是源 RecyclerView，则同步横向滑动
-                if (horizontalRecyclerView != source) {
-                    horizontalRecyclerView.scrollBy(dx, 0)
+                if (binding.horizontalRecyclerView != source) {
+                    binding.horizontalRecyclerView.scrollBy(dx, 0)
                 }
             }
         }
 
         override fun onBindViewHolder(holder: VH, position: Int, item: Title?) {
             holder.bind(item?.childs)
-
-            holder.horizontalRecyclerView.addOnScrollListener(horizontalScrollListener)
+            holder.binding.horizontalRecyclerView.addOnScrollListener(horizontalScrollListener)
             horizontalScrollListener.addObserver(holder)
         }
 
