@@ -7,7 +7,11 @@ object DataCreator {
 
     val titles = mutableListOf<Title>().apply {
       repeat(10) {
-          add(Title(id = "$it", name = "Number $it"))
+          val childs = mutableListOf<String>()
+          repeat(4) { position ->
+              childs.add("child[$position]")
+          }
+          add(Title(id = "$it", name = "Number $it", childs = childs))
       }
     }
 
@@ -16,5 +20,6 @@ object DataCreator {
 @JsonClass(generateAdapter=true)
 data class Title(
     val id: String,
-    val name: String
+    val name: String,
+    val childs: List<String>
 ): Serializable
