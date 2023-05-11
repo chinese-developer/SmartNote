@@ -2,16 +2,19 @@ package com.smarternote.feature.sport
 
 import androidx.recyclerview.widget.RecyclerView
 
-class SyncScrollListener(private val onScroll: (dx: Int) -> Unit) : RecyclerView.OnScrollListener() {
-    private var isSyncScrolling = false
+interface SyncScrollListener {
+    fun onScrolled(dx: Int)
+}
+
+
+class SyncScrollListenerImpl(
+    private val syncScrollListener: SyncScrollListener,
+    private val onScroll: (dx: Int) -> Unit
+) : RecyclerView.OnScrollListener() {
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-        if (isSyncScrolling) {
-            return
-        }
-
-        isSyncScrolling = true
+        super.onScrolled(recyclerView, dx, dy)
         onScroll(dx)
-        isSyncScrolling = false
+        syncScrollListener.onScrolled(dx)
     }
 }

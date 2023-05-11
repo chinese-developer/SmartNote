@@ -1,5 +1,7 @@
+@file:Suppress("NotifyDataSetChanged")
 package com.smarternote.feature.sport
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -41,19 +43,7 @@ class ListActivity : BaseActivity() {
 
     }
 
-    class ListAdapter : BaseQuickAdapter<Title, ListAdapter.VH>() {
-
-        private val viewHolders = mutableSetOf<VH>()
-
-        private val onScroll: (dx: Int) -> Unit = { dx ->
-            viewHolders.forEach { viewHolder ->
-                if (viewHolder.binding.horizontalRecyclerView.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
-                    viewHolder.binding.horizontalRecyclerView.scrollBy(dx, 0)
-                }
-            }
-        }
-
-        private val syncScrollListener = SyncScrollListener(onScroll)
+    class ListAdapter : BaseQuickAdapter<Title, ListAdapter.VH>(), SyncScrollListener {
 
         inner class VH(
             parent: ViewGroup,
@@ -64,11 +54,19 @@ class ListActivity : BaseActivity() {
             )
         ) : RecyclerView.ViewHolder(binding.root) {
 
+            private val onScroll: (dx: Int) -> Unit = { dx ->
+                if (binding.horizontalRecyclerView.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
+                    binding.horizontalRecyclerView.scrollBy(dx, 0)
+                }
+            }
+
+            private val syncScrollListener = SyncScrollListenerImpl(this@ListAdapter, onScroll)
+
             private val horizontalAdapter = HorizontalAdapter()
 
             fun bind(item: List<String>?) {
                 horizontalAdapter.submitList(item)
-                binding.horizontalRecyclerView.layoutManager = SyncScrollLinearLayoutManager(binding.horizontalRecyclerView.context, onScroll)
+//                binding.horizontalRecyclerView.layoutManager = SyncScrollLinearLayoutManager(binding.horizontalRecyclerView.context)
                 binding.horizontalRecyclerView.adapter = horizontalAdapter
                 binding.horizontalRecyclerView.addOnScrollListener(syncScrollListener)
             }
@@ -77,23 +75,10 @@ class ListActivity : BaseActivity() {
 
         override fun onBindViewHolder(holder: VH, position: Int, item: Title?) {
             holder.bind(item?.childs)
-            viewHolders.add(holder)
         }
 
         override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
             return VH(parent)
-        }
-
-        override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-            super.onDetachedFromRecyclerView(recyclerView)
-            viewHolders.clear()
-        }
-
-        override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-            super.onViewDetachedFromWindow(holder)
-            holder as VH
-            holder.binding.horizontalRecyclerView.removeOnScrollListener(syncScrollListener)
-            viewHolders.remove(holder)
         }
 
         inner class HorizontalAdapter : BaseQuickAdapter<String, DataBindingHolder<ItemHorizontalBinding>>() {
@@ -106,6 +91,10 @@ class ListActivity : BaseActivity() {
                 return DataBindingHolder(R.layout.item_horizontal, parent)
             }
 
+        }
+
+        override fun onScrolled(dx: Int) {
+            notifyDataSetChanged()
         }
     }
 }
