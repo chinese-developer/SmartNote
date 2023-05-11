@@ -46,6 +46,7 @@ class ListActivity : BaseActivity() {
     class ListAdapter : BaseQuickAdapter<Title, ListAdapter.VH>(), HorizontalScrollObserver {
 
         private val horizontalScrollListener = HorizontalScrollListener()
+        private val viewHolders = mutableSetOf<VH>()
 
         inner class VH(
             parent: ViewGroup,
@@ -69,7 +70,10 @@ class ListActivity : BaseActivity() {
                 if (binding.horizontalRecyclerView != source) {
                     val scroller = CustomLinearSmoothScroller(binding.horizontalRecyclerView.context)
                     scroller.targetPosition = binding.horizontalRecyclerView.computeHorizontalScrollOffset() + dx
-                    binding.horizontalRecyclerView.layoutManager?.startSmoothScroll(scroller)
+
+                    viewHolders.forEach { viewHolder ->
+                        viewHolder.binding.horizontalRecyclerView.layoutManager?.startSmoothScroll(scroller)
+                    }
                 }
             }
         }
@@ -78,6 +82,7 @@ class ListActivity : BaseActivity() {
             holder.bind(item?.childs)
             holder.binding.horizontalRecyclerView.addOnScrollListener(horizontalScrollListener)
             horizontalScrollListener.addObserver(holder)
+            viewHolders.add(holder)
         }
 
         override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
@@ -87,6 +92,7 @@ class ListActivity : BaseActivity() {
         override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
             super.onDetachedFromRecyclerView(recyclerView)
             horizontalScrollListener.observers.clear()
+            viewHolders.clear()
         }
 
         override fun onScroll(source: RecyclerView, dx: Int) {
