@@ -53,6 +53,8 @@ class ListActivity : BaseActivity() {
             }
         }
 
+        private val syncScrollListener = SyncScrollListener(onScroll)
+
         inner class VH(
             parent: ViewGroup,
             val binding: ItemListBinding = ItemListBinding.inflate(
@@ -68,6 +70,7 @@ class ListActivity : BaseActivity() {
                 horizontalAdapter.submitList(item)
                 binding.horizontalRecyclerView.layoutManager = SyncScrollLinearLayoutManager(binding.horizontalRecyclerView.context, onScroll)
                 binding.horizontalRecyclerView.adapter = horizontalAdapter
+                binding.horizontalRecyclerView.addOnScrollListener(syncScrollListener)
             }
 
         }
@@ -84,6 +87,13 @@ class ListActivity : BaseActivity() {
         override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
             super.onDetachedFromRecyclerView(recyclerView)
             viewHolders.clear()
+        }
+
+        override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+            super.onViewDetachedFromWindow(holder)
+            holder as VH
+            holder.binding.horizontalRecyclerView.removeOnScrollListener(syncScrollListener)
+            viewHolders.remove(holder)
         }
 
         inner class HorizontalAdapter : BaseQuickAdapter<String, DataBindingHolder<ItemHorizontalBinding>>() {
