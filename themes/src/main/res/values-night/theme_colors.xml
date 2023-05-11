@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="appColorPrimary">#FF6200EE</color>
+    <color name="appColorPrimaryVariant">#FF3700B3</color>
+    <color name="appColorOnPrimary">#FFFFFFFF</color>
+
+    <color name="appColorSecondary">#FF03DAC5</color>
+    <color name="appColorSecondaryVariant">#FF018786</color>
+    <color name="appColorOnSecondary">#FF000000</color>
+
+    <color name="appBackgroundColorPrimary">#F2F2F2</color>
+    <color name="appToolbarBackgroundColorPrimary">#000000</color>
+
+</resources>

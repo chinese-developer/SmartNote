@@ -26,17 +26,19 @@
     <!-- Base application theme. -->
     <style name="Theme.SmartNote" parent="Theme.Material3.Light.NoActionBar">
         <!-- 应用程序的主色调 -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/appColorPrimary</item>
         <!-- 主色调的变种颜色 -->
-        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorPrimaryVariant">@color/appColorPrimaryVariant</item>
         <!-- 主色调上的文本颜色 -->
-        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorOnPrimary">@color/appColorOnPrimary</item>
         <!-- 应用程序的次色调 -->
-        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondary">@color/appColorSecondary</item>
         <!-- 次色调的变种颜色 -->
-        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorSecondaryVariant">@color/appColorSecondaryVariant</item>
         <!-- 次色调上的文本颜色 -->
         <item name="colorOnSecondary">@android:color/black</item>
+        <!-- 背景默认颜色 -->
+        <item name="android:colorBackground">@color/appBackgroundColorPrimary</item>
         <!--<item name="android:statusBarColor">@color/statusBarColor</item>-->
 
         <!-- Customize your theme here. -->
@@ -47,6 +49,7 @@
         <item name="myApp_textColor_tertiary">@color/text_color_tertiary</item>
         <item name="myApp_textColor_quaternary">@color/text_color_quaternary</item>
         <item name="myApp_backgroundColor_primary">@color/background_color_primary</item>
+        <item name="myApp_backgroundColor_secondary">@color/background_color_secondary</item>
         <item name="myApp_statusBarColor_primary">@color/statusBarColor</item>
     </style>
 

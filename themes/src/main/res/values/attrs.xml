@@ -9,6 +9,7 @@
         <attr name="myApp_textColor_tertiary" format="color|reference" />
         <attr name="myApp_textColor_quaternary" format="color|reference" />
         <attr name="myApp_backgroundColor_primary" format="color|reference" />
+        <attr name="myApp_backgroundColor_secondary" format="color|reference" />
         <attr name="myApp_statusBarColor_primary" format="color|reference" />
     </declare-styleable>
 

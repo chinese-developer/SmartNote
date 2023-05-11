@@ -71,8 +71,8 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:${Dependencies.retrofit}")
     implementation("com.squareup.retrofit2:converter-moshi:${Dependencies.retrofit}")
     implementation("com.squareup.okhttp3:logging-interceptor:${Dependencies.loggingInterceptor}")
-    implementation("com.squareup.moshi:moshi:${Dependencies.moshi}")
-    implementation("com.squareup.moshi:moshi-kotlin:${Dependencies.moshi}")
+    api("com.squareup.moshi:moshi:${Dependencies.moshi}")
+    api("com.squareup.moshi:moshi-kotlin:${Dependencies.moshi}")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshi}")
 
     // 开源的动画库，它使得开发者能够以一种简单的方式在移动应用中添加高质量的动画效果

@@ -26,7 +26,7 @@ class MyToolbar @JvmOverloads constructor(
         }
 
     init {
-        setBackgroundColor(ContextCompat.getColor(context, com.smarternote.themes.R.color.colorPrimary))
+        setBackgroundColor(ContextCompat.getColor(context, com.smarternote.themes.R.color.appToolbarBackgroundColorPrimary))
         elevation = context.dpF(10)
     }
 

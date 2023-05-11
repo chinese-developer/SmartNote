@@ -47,6 +47,7 @@ dependencies {
     api(project(":core"))
 
     kapt("com.alibaba:arouter-compiler:${Dependencies.arouter}")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:${Dependencies.moshi}")
     implementation("com.google.dagger:hilt-android:${Dependencies.hilt}")
     kapt("com.google.dagger:hilt-android-compiler:${Dependencies.hilt}")
 

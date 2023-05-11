@@ -1,4 +1,4 @@
-package com.smarternote.core.ui.layoutmanager
+package com.smarternote.core.ui.recyclerview.layoutmanager
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
