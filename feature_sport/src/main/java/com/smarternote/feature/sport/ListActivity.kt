@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -66,7 +67,9 @@ class ListActivity : BaseActivity() {
                 logDebug("ViewHolder onScroll")
                 // 如果当前滑动的 RecyclerView 不是源 RecyclerView，则同步横向滑动
                 if (binding.horizontalRecyclerView != source) {
-                    binding.horizontalRecyclerView.smoothScrollBy(dx, 0)
+                    val scroller = CustomLinearSmoothScroller(binding.horizontalRecyclerView.context)
+                    scroller.targetPosition = binding.horizontalRecyclerView.computeHorizontalScrollOffset() + dx
+                    binding.horizontalRecyclerView.layoutManager?.startSmoothScroll(scroller)
                 }
             }
         }
@@ -103,5 +106,11 @@ class ListActivity : BaseActivity() {
             }
 
         }
+    }
+}
+
+class CustomLinearSmoothScroller(context: Context) : LinearSmoothScroller(context) {
+    override fun getHorizontalSnapPreference(): Int {
+        return SNAP_TO_START
     }
 }
