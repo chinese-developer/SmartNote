@@ -50,6 +50,7 @@ class ListActivity : BaseActivity() {
 
         inner class VH(
             parent: ViewGroup,
+            private onScrollListener: OnScrollListener,
             val binding: ItemListBinding = ItemListBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -68,10 +69,9 @@ class ListActivity : BaseActivity() {
                 logDebug("ViewHolder onScroll")
                 // 如果当前滑动的 RecyclerView 不是源 RecyclerView，则同步横向滑动
                 if (binding.horizontalRecyclerView != source) {
-                    val scroller = CustomLinearSmoothScroller(binding.horizontalRecyclerView.context)
-                    scroller.targetPosition = binding.horizontalRecyclerView.computeHorizontalScrollOffset() + dx
-
                     viewHolders.forEach { viewHolder ->
+                        val scroller = CustomLinearSmoothScroller(binding.horizontalRecyclerView.context)
+                        scroller.targetPosition = binding.horizontalRecyclerView.computeHorizontalScrollOffset() + dx
                         viewHolder.binding.horizontalRecyclerView.layoutManager?.startSmoothScroll(scroller)
                     }
                 }

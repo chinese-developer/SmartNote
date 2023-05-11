@@ -2,15 +2,15 @@ package com.smarternote.feature.sport
 
 import androidx.recyclerview.widget.RecyclerView
 
-interface HorizontalScrollObserver {
-    fun onScroll(source: RecyclerView, dx: Int)
+interface OnScrollListener {
+    fun onScroll(dx: Int)
 }
 
 class HorizontalScrollListener : RecyclerView.OnScrollListener() {
 
-    val observers = mutableListOf<HorizontalScrollObserver>()
+    val observers = mutableListOf<OnScrollListener>()
 
-    fun addObserver(observer: HorizontalScrollObserver) {
+    fun addObserver(observer: OnScrollListener) {
         if (!observers.contains(observer)) {
             observers.add(observer)
         }
