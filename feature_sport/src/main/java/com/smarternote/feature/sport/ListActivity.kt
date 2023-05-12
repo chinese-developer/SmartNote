@@ -56,6 +56,8 @@ class ListActivity : BaseActivity() {
         private val lifecycleCoroutineScope: LifecycleCoroutineScope
     ) : BaseQuickAdapter<Title, VerticalRecyclerViewAdapter.VH>() {
 
+        private var currentPage = 0
+
         inner class VH(
             parent: ViewGroup,
             val binding: ItemListBinding = ItemListBinding.inflate(
@@ -65,7 +67,6 @@ class ListActivity : BaseActivity() {
             )
         ) : RecyclerView.ViewHolder(binding.root) {
 
-            private var currentPage = 0
             private val itemViews = mutableListOf<View>()
             private val horizontalPagerAdapter = HorizontalPagerAdapter2(itemViews)
 
@@ -152,7 +153,6 @@ class ListActivity : BaseActivity() {
             }
 
             fun bind(item: List<String>?) {
-                binding.viewPager2.setCurrentItem(currentPage, false) // 添加这一行以设置当前页面
 //                binding.viewPager2.offscreenPageLimit = item?.size ?: ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
 //                binding.viewPager2.adapter = horizontalPagerAdapter
 //                horizontalPagerAdapter.submitList(item)
@@ -168,6 +168,7 @@ class ListActivity : BaseActivity() {
                 }
 
                 binding.viewPager2.adapter = horizontalPagerAdapter
+                binding.viewPager2.setCurrentItem(currentPage, false)
             }
         }
 
