@@ -65,6 +65,7 @@ class ListActivity : BaseActivity() {
             )
         ) : RecyclerView.ViewHolder(binding.root) {
 
+            private var currentPage = 0
             private val itemViews = mutableListOf<View>()
             private val horizontalPagerAdapter = HorizontalPagerAdapter2(itemViews)
 
@@ -93,12 +94,15 @@ class ListActivity : BaseActivity() {
 
                 override fun onPageSelected(position: Int) {
                     lifecycleCoroutineScope.launch {
-                        pageScrollStateFlow.emit(
-                            OnPageChanged(
-                                viewPager2 = binding.viewPager2,
-                                onPageSelected = OnPageChanged.OnPageSelected(position)
+                        currentPage = position
+                        lifecycleCoroutineScope.launch {
+                            pageScrollStateFlow.emit(
+                                OnPageChanged(
+                                    viewPager2 = binding.viewPager2,
+                                    onPageSelected = OnPageChanged.OnPageSelected(position)
+                                )
                             )
-                        )
+                        }
                     }
                 }
 
@@ -148,7 +152,7 @@ class ListActivity : BaseActivity() {
             }
 
             fun bind(item: List<String>?) {
-
+                binding.viewPager2.setCurrentItem(currentPage, false) // 添加这一行以设置当前页面
 //                binding.viewPager2.offscreenPageLimit = item?.size ?: ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
 //                binding.viewPager2.adapter = horizontalPagerAdapter
 //                horizontalPagerAdapter.submitList(item)
