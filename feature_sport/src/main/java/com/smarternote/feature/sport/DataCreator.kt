@@ -8,7 +8,7 @@ object DataCreator {
     val titles = mutableListOf<Title>().apply {
       repeat(10) {
           val childs = mutableListOf<String>()
-          repeat(10) { position ->
+          repeat(2) { position ->
               childs.add("child[$position]")
           }
           add(Title(id = "$it", name = "Number $it", childs = childs))
