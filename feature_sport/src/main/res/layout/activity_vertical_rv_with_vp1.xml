@@ -25,7 +25,7 @@
             android:layout_marginBottom="10dp"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_list"
+            tools:listitem="@layout/item_vertical_rv_with_vp1"
             android:scrollbars="none"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

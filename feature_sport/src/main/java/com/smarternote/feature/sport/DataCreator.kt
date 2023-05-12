@@ -6,7 +6,7 @@ import java.io.Serializable
 object DataCreator {
 
     val titles = mutableListOf<Title>().apply {
-      repeat(10) {
+      repeat(50) {
           val childs = mutableListOf<String>()
           repeat(2) { position ->
               childs.add("child[$position]")

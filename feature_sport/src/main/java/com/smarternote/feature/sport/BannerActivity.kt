@@ -15,10 +15,10 @@ import com.smarternote.core.config.RouterPath
 import com.smarternote.core.ui.banner.Banner
 import com.smarternote.core.utils.logDebug
 import com.smarternote.core.utils.toast
-import com.smarternote.feature.sport.SportActivity.BannerAdapter2.VH
+import com.smarternote.feature.sport.BannerActivity.BannerAdapter2.VH
 import com.smarternote.feature.sport.databinding.ItemBannerBinding
 
-class SportActivity : StatusBarBaseActivity() {
+class BannerActivity : StatusBarBaseActivity() {
 
     val imageUrl = "https://lh6.googleusercontent.com/-55osAWw3x0Q/URquUtcFr5I/AAAAAAAAAbs/rWlj1RUKrYI/s1024/A%252520Photographer.jpg"
     val imageUrl2 = "https://images.techhive.com/images/article/2017/01/google-android-apps-100705848-large.jpg?auto=webp&quality=85,70"
@@ -27,7 +27,7 @@ class SportActivity : StatusBarBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_sport)
+        setContentView(R.layout.activity_banner)
 
         val banner = findViewById<Banner>(R.id.banner)
         val adapter = BannerAdapter()
@@ -41,18 +41,21 @@ class SportActivity : StatusBarBaseActivity() {
         lifecycleScope.launchWhenResumed {
             adapter.submitList(imageUrlList)
         }
-
-        adapter.animationEnable = true
     }
 
     class BannerAdapter : BaseQuickAdapter<String, DataBindingHolder<ItemBannerBinding>>() {
         override fun onBindViewHolder(holder: DataBindingHolder<ItemBannerBinding>, position: Int, item: String?) {
             holder.binding.imageUrl = item
             holder.binding.imageView.setOnClickListener {
-                toast("position$position")
-                ARouter.getInstance()
-                    .build(RouterPath.Test.Matches)
-                    .navigation()
+                if (position % 2 != 0) {
+                    ARouter.getInstance()
+                        .build(RouterPath.Test.ViewPager1Page)
+                        .navigation()
+                } else {
+                    ARouter.getInstance()
+                        .build(RouterPath.Test.ViewPager2Page)
+                        .navigation()
+                }
             }
             holder.binding.executePendingBindings()
         }

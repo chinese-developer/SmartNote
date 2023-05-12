@@ -20,7 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.ViewPager2
-import com.smarternote.core.ui.viewpager.transformer.ParallaxTransformation
+import androidx.viewpager2.widget.ViewPager2.PageTransformer
+import com.smarternote.core.ui.viewpager.transformer.DepthPageTransformation
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -48,10 +49,12 @@ class Banner @JvmOverloads constructor(
     private val viewPager: ViewPager2
     private val adapter: WrapperAdapter
     private val compositePagetransformer: CompositePageTransformer
+    private val defaultTransformer by lazy { DepthPageTransformation() }
 
     private var autoPlay = false
     private var isPollingStarted = false
     private var lifecycleOwner: LifecycleOwner? = null
+
     /**
      * Current page 的范围是 [1-size], 而不是从 0 开始
      * 这是为了当展示第0页数据时, 可以右滑返回最后一页数据.
@@ -68,7 +71,7 @@ class Banner @JvmOverloads constructor(
             offscreenPageLimit = ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             compositePagetransformer = CompositePageTransformer()
-            compositePagetransformer.addTransformer(ParallaxTransformation())
+            compositePagetransformer.addTransformer(defaultTransformer)
             setPageTransformer(compositePagetransformer)
             registerOnPageChangeCallback(OnPageChangeCallback())
         }
@@ -145,6 +148,12 @@ class Banner @JvmOverloads constructor(
         if (indicator != null) {
             addView(indicator.getView(), indicator.getLayoutParams())
         }
+        return this
+    }
+
+    fun setTransformer(transformer: PageTransformer): Banner {
+        compositePagetransformer.removeTransformer(defaultTransformer)
+        compositePagetransformer.addTransformer(transformer)
         return this
     }
 
@@ -283,7 +292,8 @@ class Banner @JvmOverloads constructor(
          * 仅当首次或页面切换时会触发回调, 当页面切换后会先触发 onPageSelected 在触发 onPageScrolled
          */
         override fun onPageSelected(position: Int) {
-            val onVirtualPage = currentPagePosition == 0 || currentPagePosition == draggingExtraPageCount || (position != currentPagePosition && draggingExtraPageCount - currentPagePosition == 1)
+            val onVirtualPage =
+                currentPagePosition == 0 || currentPagePosition == draggingExtraPageCount || (position != currentPagePosition && draggingExtraPageCount - currentPagePosition == 1)
             currentPagePosition = position
             if (onVirtualPage) return
             val realPageSelectedPosition = getRealPosition(position)

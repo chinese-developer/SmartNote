@@ -25,12 +25,12 @@ class HorizontalScrollListener(private val mainObserver: HorizontalScrollObserve
             }
         }
 
-        val rvParent = (mainObserver.getHolder() as? ListActivity.VerticalRecyclerViewAdapter.VH)?.binding?.root?.parent as? RecyclerView
+        val rvParent = (mainObserver.getHolder() as? VerticalRecyclerViewWithViewPagerActivity.VerticalRecyclerViewAdapter.VH)?.binding?.root?.parent as? RecyclerView
         rvParent?.let { parent ->
             for (i in 0 until parent.childCount) {
                 val child = parent.getChildAt(i)
                 val viewHolder = parent.getChildViewHolder(child)
-                if (viewHolder is ListActivity.VerticalRecyclerViewAdapter.VH && viewHolder != mainObserver.getHolder()) {
+                if (viewHolder is VerticalRecyclerViewWithViewPagerActivity.VerticalRecyclerViewAdapter.VH && viewHolder != mainObserver.getHolder()) {
 //                    viewHolder.smoothScrollBy(dx)
                 }
             }

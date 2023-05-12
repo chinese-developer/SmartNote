@@ -4,7 +4,8 @@ object RouterPath {
 
   object Test {
 
-    const val Matches = "/matches_page/main"
+    const val ViewPager1Page = "/matches_page/vp_page1"
+    const val ViewPager2Page = "/matches_page/vp_page2"
 
   }
 

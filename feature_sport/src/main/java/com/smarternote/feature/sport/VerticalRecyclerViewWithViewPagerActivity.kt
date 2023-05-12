@@ -13,31 +13,32 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.viewholder.DataBindingHolder
 import com.smarternote.core.base.activity.BaseActivity
 import com.smarternote.core.base.delegates.contentView
 import com.smarternote.core.config.RouterPath
-import com.smarternote.feature.sport.databinding.ActivityListBinding
+import com.smarternote.core.utils.logDebug
+import com.smarternote.feature.sport.ViewPagerScrollObserver.pageScrollStateFlow
+import com.smarternote.feature.sport.databinding.ActivityVerticalRvWithVp1Binding
 import com.smarternote.feature.sport.databinding.ItemHorizontalBinding
-import com.smarternote.feature.sport.databinding.ItemListBinding
+import com.smarternote.feature.sport.databinding.ItemVerticalRvWithVp1Binding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@Route(path = RouterPath.Test.Matches)
+@Route(path = RouterPath.Test.ViewPager1Page)
 @AndroidEntryPoint
-class ListActivity : BaseActivity() {
+class VerticalRecyclerViewWithViewPagerActivity : BaseActivity() {
 
-    private val binding by contentView<ListActivity, ActivityListBinding>(R.layout.activity_list)
+    private val binding by contentView<VerticalRecyclerViewWithViewPagerActivity, ActivityVerticalRvWithVp1Binding>(R.layout.activity_vertical_rv_with_vp1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.lifecycleOwner = this
 
-        binding.toolbar.title = "列表"
+        binding.toolbar.title = "VP1列表"
         binding.toolbar.setOnBackListener {
             finish()
         }
@@ -60,27 +61,28 @@ class ListActivity : BaseActivity() {
 
         inner class VH(
             parent: ViewGroup,
-            val binding: ItemListBinding = ItemListBinding.inflate(
+            val binding: ItemVerticalRvWithVp1Binding = ItemVerticalRvWithVp1Binding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
         ) : RecyclerView.ViewHolder(binding.root) {
 
+            var pageScrollJob: Job? = null
             private val itemViews = mutableListOf<View>()
-            private val horizontalPagerAdapter = HorizontalPagerAdapter2(itemViews)
+            private val horizontalPagerAdapter = HorizontalPagerAdapter(itemViews)
 
             val pageChangeCallback = object : ViewPager.OnPageChangeListener {
                 override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                    binding.viewPager2.apply {
+                    binding.viewPager.apply {
                         val pageMargin = (layoutParams as? ViewGroup.MarginLayoutParams)?.let { it.leftMargin + it.rightMargin } ?: 0
                         val scrollToX: Int = (width + pageMargin) * position + positionOffsetPixels
                         val positionOffsetRatio = if (width == 0) 0f else positionOffsetPixels.toFloat() / width
                         lifecycleCoroutineScope.launch {
                             pageScrollStateFlow.emit(
-                                OnPageChanged(
-                                    viewPager2 = binding.viewPager2,
-                                    onPageScrolled = OnPageChanged.OnPageScrolled(
+                                ViewPagerScrollObserver.OnPageChanged(
+                                    viewPager = binding.viewPager,
+                                    onPageScrolled = ViewPagerScrollObserver.OnPageChanged.OnPageScrolled(
                                         position = position,
                                         positionOffset = positionOffset,
                                         positionOffsetPixels = positionOffsetPixels,
@@ -98,9 +100,9 @@ class ListActivity : BaseActivity() {
                         currentPage = position
                         lifecycleCoroutineScope.launch {
                             pageScrollStateFlow.emit(
-                                OnPageChanged(
-                                    viewPager2 = binding.viewPager2,
-                                    onPageSelected = OnPageChanged.OnPageSelected(position)
+                                ViewPagerScrollObserver.OnPageChanged(
+                                    viewPager = binding.viewPager,
+                                    onPageSelected = ViewPagerScrollObserver.OnPageChanged.OnPageSelected(position)
                                 )
                             )
                         }
@@ -110,27 +112,28 @@ class ListActivity : BaseActivity() {
                 override fun onPageScrollStateChanged(state: Int) {
                     lifecycleCoroutineScope.launch {
                         pageScrollStateFlow.emit(
-                            OnPageChanged(
-                                viewPager2 = binding.viewPager2,
-                                onPageScrollStateChanged = OnPageChanged.OnPageScrollStateChanged(state)
+                            ViewPagerScrollObserver.OnPageChanged(
+                                viewPager = binding.viewPager,
+                                onPageScrollStateChanged = ViewPagerScrollObserver.OnPageChanged.OnPageScrollStateChanged(state)
                             )
                         )
                     }
                 }
             }
 
-            init {
+            fun viewAttachedToWindow() {
                 binding.apply {
-                    viewPager2.addOnPageChangeListener(pageChangeCallback)
+                    viewPager.addOnPageChangeListener(pageChangeCallback)
 
-                    this@VerticalRecyclerViewAdapter.lifecycleCoroutineScope.launch {
+                    pageScrollJob = this@VerticalRecyclerViewAdapter.lifecycleCoroutineScope.launch {
                         pageScrollStateFlow.collectLatest { data ->
                             if (data == null) return@collectLatest
-                            val sourceViewPager = data.viewPager2
+                            val sourceViewPager = data.viewPager
 
                             data.onPageSelected?.let { source ->
-                                if (viewPager2 != sourceViewPager) {
-//                                    viewPager2.setCurrentItem(source.position, true)
+                                logDebug("onPageSelected[${pageChangeCallback.hashCode()}]")
+                                if (viewPager != sourceViewPager) {
+//                                    viewPager.setCurrentItem(source.position, true)
                                 }
                             }
                             data.onPageScrollStateChanged?.let { source ->
@@ -140,11 +143,11 @@ class ListActivity : BaseActivity() {
                                 val offset = source.positionOffset
                                 val scrollToX = source.scrollToX
 
-                                if (sourceViewPager != viewPager2
+                                if (sourceViewPager != viewPager
                                     && offset != 0f
-                                    && viewPager2.scrollX != scrollToX
+                                    && viewPager.scrollX != scrollToX
                                 ) {
-                                    viewPager2.scrollTo(scrollToX, 0)
+                                    viewPager.scrollTo(scrollToX, 0)
                                 }
                             }
                         }
@@ -153,9 +156,6 @@ class ListActivity : BaseActivity() {
             }
 
             fun bind(item: List<String>?) {
-//                binding.viewPager2.offscreenPageLimit = item?.size ?: ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
-//                binding.viewPager2.adapter = horizontalPagerAdapter
-//                horizontalPagerAdapter.submitList(item)
                 item?.forEach {
                     val itemBinding = DataBindingUtil.inflate<ItemHorizontalBinding>(
                         LayoutInflater.from(context),
@@ -167,8 +167,8 @@ class ListActivity : BaseActivity() {
                     itemBinding.m = it
                 }
 
-                binding.viewPager2.adapter = horizontalPagerAdapter
-                binding.viewPager2.setCurrentItem(currentPage, false)
+                binding.viewPager.adapter = horizontalPagerAdapter
+//                binding.viewPager.setCurrentItem(currentPage, false)
             }
         }
 
@@ -183,21 +183,26 @@ class ListActivity : BaseActivity() {
         override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
             super.onViewRecycled(holder)
             holder as VH
-            holder.binding.viewPager2.removeOnPageChangeListener(holder.pageChangeCallback)
+            holder.binding.viewPager.removeOnPageChangeListener(holder.pageChangeCallback)
+            holder.pageScrollJob?.cancel()
+            holder.pageScrollJob = null
         }
 
-        inner class HorizontalPagerAdapter : BaseQuickAdapter<String, DataBindingHolder<ItemHorizontalBinding>>() {
-            override fun onBindViewHolder(holder: DataBindingHolder<ItemHorizontalBinding>, position: Int, item: String?) {
-                holder.binding.m = item
-                holder.binding.executePendingBindings()
-            }
-
-            override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): DataBindingHolder<ItemHorizontalBinding> {
-                return DataBindingHolder(R.layout.item_horizontal, parent)
-            }
+        override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+            super.onViewAttachedToWindow(holder)
+            holder as VH
+            holder.viewAttachedToWindow()
         }
 
-        inner class HorizontalPagerAdapter2(private val data: List<View>): PagerAdapter() {
+        override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+            super.onViewDetachedFromWindow(holder)
+            holder as VH
+            holder.binding.viewPager.removeOnPageChangeListener(holder.pageChangeCallback)
+            holder.pageScrollJob?.cancel()
+            holder.pageScrollJob = null
+        }
+
+        inner class HorizontalPagerAdapter(private val data: List<View>): PagerAdapter() {
             override fun getCount(): Int = data.size
 
             override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
