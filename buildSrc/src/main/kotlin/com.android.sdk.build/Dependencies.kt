@@ -57,6 +57,7 @@ object Dependencies {
   const val loggingInterceptor = "5.0.0-alpha.10"
   const val retrofit = "2.9.0"
   const val gson = "2.9.1"
+  const val material = "1.9.0"
   const val moshi = "1.14.0"
   const val retrofitConverterGson = "2.9.0"
   const val multidex = "2.0.1"

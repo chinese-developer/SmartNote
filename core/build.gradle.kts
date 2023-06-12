@@ -53,7 +53,11 @@ dependencies {
     api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Dependencies.Core.kotlin}")
     // AndroidX 库中的一个核心库，它提供了许多与 Android UI 相关的类和函数
     api("androidx.appcompat:appcompat:${Dependencies.AndroidX.appcompat}")
+    // 是 Android Material Components 库中的一个依赖项。它提供了一组用于创建符合 Material Design 风格的 UI 元素和组件的类和资源。
+    // 如 AppBarLayout BottomNavigationView FloatingActionButton
+    api("com.google.android.material:material:${Dependencies.material}")
     // AndroidX 库中的一个核心库，它提供了许多与 Android 开发相关的扩展函数和属性
+    api("androidx.core:core:${Dependencies.AndroidX.coreKtx}")
     api("androidx.core:core-ktx:${Dependencies.AndroidX.coreKtx}")
     // 用于实现基于 SharedPreferences 的数据存储方式，支持数据加密和数据迁移。
     implementation("androidx.datastore:datastore-preferences:${Dependencies.AndroidX.dataStore}")
